@@ -137,6 +137,15 @@ const catPhotos = Array.from({ length: 23 }, (_, index) => {
   };
 });
 
+const thomasPhotos = Array.from({ length: 269 }, (_, index) => {
+  const photoNumber = index + 1;
+
+  return {
+    src: `/images/thomas/ThomasJonesMissyCass%20-%20${photoNumber}.jpeg`,
+    alt: `Thomas, Jones, Missy, and Cass photo ${photoNumber}`,
+  };
+});
+
 const contactLinks = [
   { label: "Email", href: "mailto:jason@arcadeghosts.org" },
   {
@@ -426,6 +435,31 @@ export default function Home() {
               />
             </figure>
           ))}
+        </div>
+        <div className="cat-subsection">
+          <h3>Thomas, Jones, Missy, and Cass from 2016 to 2025</h3>
+          <p>
+            Thomas was my buddy was 17 years and passed in 2025. Missy looks
+            like Thomas and both Missy and Jones were rehomed in 2024. Jones
+            died unexpectly shortly therafter. Cass belonged to my ex but got
+            along with Thomas.
+          </p>
+          <div
+            className="cat-gallery"
+            aria-label="Photos of Thomas, Jones, Missy, and Cass"
+          >
+            {thomasPhotos.map((photo) => (
+              <figure className="cat-photo" key={photo.src}>
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 980px) 50vw, 33vw"
+                  className="cat-photo-image"
+                />
+              </figure>
+            ))}
+          </div>
         </div>
       </section>
 
