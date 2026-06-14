@@ -1,6 +1,16 @@
 import Image from "next/image";
+import { writings } from "./writings";
 
-const navItems = ["About", "Projects", "Arcade", "Writing", "Music", "Cats", "Contact"];
+const navItems = [
+  { label: "About", href: "#about" },
+  { label: "Projects", href: "#projects" },
+  { label: "Arcade", href: "#arcade" },
+  { label: "Movies & TV Shows", href: "#movies-tv" },
+  { label: "Writing", href: "#writing" },
+  { label: "Music", href: "#music" },
+  { label: "Cats", href: "#cats" },
+  { label: "Contact", href: "#contact" },
+];
 
 const projects = [
   {
@@ -11,30 +21,6 @@ const projects = [
     href: "/games/between-two-lodges/index.html",
     cta: "Play",
   },
-  {
-    title: "Signal in the Static",
-    eyebrow: "Product / experiment",
-    description:
-      "A small tool for turning messy notes into honest next steps, with room for uncertainty and excellent snacks.",
-  },
-  {
-    title: "Diner Oracle",
-    eyebrow: "Interactive fiction",
-    description:
-      "A conversational story engine where every booth has a secret and the coffee knows a little too much.",
-  },
-  {
-    title: "Soft Launch Into the Void",
-    eyebrow: "Essay series",
-    description:
-      "Field notes on making things, changing your mind, and remaining tender in highly optimized environments.",
-  },
-];
-
-const writing = [
-  "How to tell when a dream is asking for project management",
-  "The case for leaving one friendly light on",
-  "Notes from the emotional support command line",
 ];
 
 const arcadeGames = [
@@ -102,6 +88,108 @@ const arcadeGames = [
     title: "Vs. Excitebike",
     image: "/images/arcade/vs-excitebike.jpg",
     sourceUrl: "https://en.wikipedia.org/wiki/Vs._Excitebike",
+  },
+];
+
+const visualMedia = [
+  {
+    title: "Twin Peaks Season 1",
+    image: "/images/movies-tv/twin-peaks-season-1.jpg",
+    sourceUrl: "https://watch.plex.tv/en-GB/show/twin-peaks/season/1",
+  },
+  {
+    title: "Twin Peaks Season 2",
+    image: "/images/movies-tv/twin-peaks-season-2.jpg",
+    sourceUrl: "https://watch.plex.tv/show/twin-peaks/season/2",
+  },
+  {
+    title: "Twin Peaks Season 3",
+    image: "/images/movies-tv/twin-peaks-season-3.jpg",
+    sourceUrl: "https://en.wikipedia.org/wiki/Twin_Peaks:_The_Return",
+  },
+  {
+    title: "Severance",
+    image: "/images/movies-tv/severance.png",
+    sourceUrl: "https://en.wikipedia.org/wiki/Severance_(TV_series)",
+    fit: "contain",
+  },
+  {
+    title: "Widow's Bay",
+    image: "/images/movies-tv/widows-bay.png",
+    sourceUrl: "https://en.wikipedia.org/wiki/Widow%27s_Bay",
+    fit: "contain",
+  },
+  {
+    title: "A Nightmare on Elm Street",
+    image: "/images/movies-tv/nightmare-on-elm-street.jpg",
+    itemUrl: "https://letterboxd.com/film/a-nightmare-on-elm-street/",
+    sourceUrl: "https://en.wikipedia.org/wiki/A_Nightmare_on_Elm_Street",
+  },
+  {
+    title: "Total Recall (1990)",
+    image: "/images/movies-tv/total-recall-1990.jpg",
+    itemUrl: "https://letterboxd.com/film/total-recall-1990/",
+    sourceUrl: "https://en.wikipedia.org/wiki/Total_Recall_(1990_film)",
+  },
+  {
+    title: "Pump Up the Volume",
+    image: "/images/movies-tv/pump-up-the-volume.jpg",
+    itemUrl: "https://letterboxd.com/film/pump-up-the-volume/",
+    sourceUrl: "https://en.wikipedia.org/wiki/Pump_Up_the_Volume_(film)",
+  },
+  {
+    title: "Deuce Bigalow",
+    image: "/images/movies-tv/deuce-bigalow.jpg",
+    itemUrl: "https://letterboxd.com/film/deuce-bigalow-male-gigolo/",
+    sourceUrl: "https://en.wikipedia.org/wiki/Deuce_Bigalow:_Male_Gigolo",
+  },
+  {
+    title: "Eternal Sunshine of the Spotless Mind",
+    image: "/images/movies-tv/eternal-sunshine.png",
+    itemUrl: "https://letterboxd.com/film/eternal-sunshine-of-the-spotless-mind/",
+    sourceUrl: "https://en.wikipedia.org/wiki/Eternal_Sunshine_of_the_Spotless_Mind",
+  },
+  {
+    title: "Donnie Darko",
+    image: "/images/movies-tv/donnie-darko.jpg",
+    itemUrl: "https://letterboxd.com/film/donnie-darko/",
+    sourceUrl: "https://en.wikipedia.org/wiki/Donnie_Darko",
+  },
+  {
+    title: "Groundhog Day",
+    image: "/images/movies-tv/groundhog-day.jpg",
+    itemUrl: "https://letterboxd.com/film/groundhog-day/",
+    sourceUrl: "https://en.wikipedia.org/wiki/Groundhog_Day_(film)",
+  },
+  {
+    title: "The Game",
+    image: "/images/movies-tv/the-game.jpg",
+    itemUrl: "https://letterboxd.com/film/the-game/",
+    sourceUrl: "https://en.wikipedia.org/wiki/The_Game_(1997_film)",
+  },
+  {
+    title: "MXC: Most Extreme Elimination Challenge",
+    image: "/images/movies-tv/mxc.png",
+    sourceUrl: "https://en.wikipedia.org/wiki/Most_Extreme_Elimination_Challenge",
+    fit: "contain",
+  },
+  {
+    title: "Just Like Heaven",
+    image: "/images/movies-tv/just-like-heaven.jpg",
+    itemUrl: "https://letterboxd.com/film/just-like-heaven-2005/",
+    sourceUrl: "https://en.wikipedia.org/wiki/Just_like_Heaven_(2005_film)",
+  },
+  {
+    title: "Return to Me",
+    image: "/images/movies-tv/return-to-me.jpg",
+    itemUrl: "https://letterboxd.com/film/return-to-me/",
+    sourceUrl: "https://en.wikipedia.org/wiki/Return_to_Me",
+  },
+  {
+    title: "Limitless",
+    image: "/images/movies-tv/limitless.jpg",
+    itemUrl: "https://letterboxd.com/film/limitless/",
+    sourceUrl: "https://en.wikipedia.org/wiki/Limitless_(film)",
   },
 ];
 
@@ -198,8 +286,8 @@ export default function Home() {
           </a>
           <div className="nav-links">
             {navItems.map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`}>
-                {item}
+              <a key={item.href} href={item.href}>
+                {item.label}
               </a>
             ))}
           </div>
@@ -379,15 +467,62 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="content-section media-section" id="movies-tv">
+        <SectionHeading eyebrow="Movies & TV" title="Movies & TV Shows.">
+          Visual media that resonated.
+        </SectionHeading>
+        <div className="media-grid">
+          {visualMedia.map((item) => (
+            <article className="media-card" key={item.title}>
+              <a
+                className="media-image-link"
+                href={item.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${item.title} image source`}
+              >
+                <Image
+                  src={item.image}
+                  alt={`${item.title} poster or key art`}
+                  fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 980px) 33vw, 20vw"
+                  className={`media-image${item.fit === "contain" ? " contain" : ""}`}
+                />
+              </a>
+              <div className="media-card-copy">
+                <h3>
+                  {item.itemUrl ? (
+                    <a href={item.itemUrl} target="_blank" rel="noreferrer">
+                      {item.title}
+                    </a>
+                  ) : (
+                    item.title
+                  )}
+                </h3>
+                <a href={item.sourceUrl} target="_blank" rel="noreferrer">
+                  Source
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="split-section" id="writing">
         <SectionHeading eyebrow="Writing" title="Essays from the booth by the window.">
           Notes on technology, identity, attention, grief, comedy, and the
           suspiciously heroic act of trying again tomorrow.
         </SectionHeading>
         <div className="list-panel">
-          {writing.map((item) => (
-            <a href="#" key={item}>
-              <span>{item}</span>
+          {writings.map((writing) => (
+            <a href={`/writings/${writing.slug}`} key={writing.slug}>
+              <span className="writing-icon" aria-hidden="true">
+                {writing.icon}
+              </span>
+              <span>
+                <span>{writing.title}</span>
+                <small>{writing.description}</small>
+              </span>
               <span aria-hidden="true">Read</span>
             </a>
           ))}
@@ -414,6 +549,37 @@ export default function Home() {
               />
             </article>
           ))}
+        </div>
+        <div className="music-league">
+          <div>
+            <h3>Music League</h3>
+            <p>Music Leagues I&apos;ve either run or participated in.</p>
+          </div>
+          <div className="music-league-card">
+            <a
+              className="music-league-link"
+              href="https://app.musicleague.com/user/8e855be976294ae0aedf7a0820572ffb/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Open Jason's Music League profile"
+            >
+              <Image
+                src="/images/music-league.png"
+                alt="Music League"
+                fill
+                sizes="(max-width: 860px) 100vw, 520px"
+                className="music-league-image"
+              />
+            </a>
+            <a
+              className="music-league-profile"
+              href="https://app.musicleague.com/user/8e855be976294ae0aedf7a0820572ffb/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              View Profile
+            </a>
+          </div>
         </div>
       </section>
 
