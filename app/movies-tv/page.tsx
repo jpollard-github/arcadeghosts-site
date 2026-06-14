@@ -4,7 +4,7 @@ import { SectionHeading } from "../SectionHeading";
 import { visualMedia } from "../site-data";
 
 export const metadata: Metadata = {
-  title: "Movies & TV | Neon Forest Personal Site",
+  title: "Movies & TV | Jason's person site",
   description: "Movies and TV shows that resonated, collected on their own page.",
 };
 

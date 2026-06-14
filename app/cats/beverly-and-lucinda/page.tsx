@@ -4,7 +4,7 @@ import { SectionHeading } from "../../SectionHeading";
 import { beverlyAndLucindaPhotos } from "../../site-data";
 
 export const metadata: Metadata = {
-  title: "Beverly and Lucinda | Neon Forest Personal Site",
+  title: "Beverly and Lucinda | Jason's person site",
   description: "A photo room for Beverly and Lucinda from 2025 to current.",
 };
 

@@ -1,4 +1,4 @@
-# Neon Forest Personal Site
+# Jason's person site
 
 A warm, weird, slightly spooky personal website built with Next.js App Router and deployed on Vercel.
 

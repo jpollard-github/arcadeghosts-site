@@ -3,7 +3,7 @@ import { SiteLogo } from "./SiteLogo";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Neon Forest Personal Site",
+  title: "Jason's person site",
   description:
     "A warm, weird, funny, slightly spooky personal website about projects, writing, music, cats, and guestbook signals.",
 };
