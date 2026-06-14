@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { SiteLogo } from "./SiteLogo";
 import "./globals.css";
 
@@ -18,6 +19,7 @@ export default function RootLayout({
       <body>
         <SiteLogo />
         {children}
+        <Analytics />
       </body>
     </html>
   );
