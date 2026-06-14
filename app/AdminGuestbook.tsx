@@ -30,7 +30,7 @@ export function AdminGuestbook() {
 
     const data = (await response.json()) as { entries: AdminGuestbookEntry[] };
     setEntries(data.entries);
-    setStatus(data.entries.length ? "" : "No pending signals.");
+    setStatus(data.entries.length ? "" : "No guestbook signals.");
   }
 
   useEffect(() => {
@@ -88,9 +88,25 @@ export function AdminGuestbook() {
     setStatus("Signed out.");
   }
 
-  async function moderateEntry(id: string, action: "approve" | "reject") {
+  async function moderateEntry(id: string, action: "approve" | "reject" | "delete") {
+    if (action === "delete") {
+      const confirmed = window.confirm(
+        "Delete this guestbook entry permanently? This cannot be undone.",
+      );
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
     setBusyId(id);
-    setStatus(action === "approve" ? "Approving signal..." : "Rejecting signal...");
+    setStatus(
+      action === "approve"
+        ? "Approving signal..."
+        : action === "reject"
+          ? "Rejecting signal..."
+          : "Deleting signal...",
+    );
 
     try {
       const response = await fetch("/api/admin/guestbook", {
@@ -116,7 +132,9 @@ export function AdminGuestbook() {
             : data.emailConfigured === false
               ? "Approved. Email sending is not configured."
               : "Approved."
-          : "Rejected.",
+          : action === "reject"
+            ? "Rejected."
+            : "Deleted.",
       );
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Unable to moderate entry.");
@@ -131,7 +149,7 @@ export function AdminGuestbook() {
         <div className="admin-heading">
           <p className="eyebrow">Admin</p>
           <h1>Guestbook Review</h1>
-          <p>Approve public guestbook entries and optional email copies.</p>
+          <p>Approve, reject, or delete guestbook entries and optional email copies.</p>
         </div>
 
         {!authenticated ? (
@@ -181,6 +199,7 @@ export function AdminGuestbook() {
               <article className="admin-entry" key={entry.id}>
                 <div className="admin-entry-meta">
                   <span>{categoryLabels.get(entry.category) ?? "Signal"}</span>
+                  <span>{entry.status}</span>
                   <time dateTime={entry.createdAt}>
                     {new Intl.DateTimeFormat("en", {
                       month: "short",
@@ -205,19 +224,31 @@ export function AdminGuestbook() {
                   </div>
                 </dl>
                 <div className="admin-entry-actions">
+                  {entry.status === "pending" ? (
+                    <>
+                      <button
+                        type="button"
+                        disabled={busyId === entry.id}
+                        onClick={() => moderateEntry(entry.id, "approve")}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        type="button"
+                        disabled={busyId === entry.id}
+                        onClick={() => moderateEntry(entry.id, "reject")}
+                      >
+                        Reject
+                      </button>
+                    </>
+                  ) : null}
                   <button
+                    className="admin-danger"
                     type="button"
                     disabled={busyId === entry.id}
-                    onClick={() => moderateEntry(entry.id, "approve")}
+                    onClick={() => moderateEntry(entry.id, "delete")}
                   >
-                    Approve
-                  </button>
-                  <button
-                    type="button"
-                    disabled={busyId === entry.id}
-                    onClick={() => moderateEntry(entry.id, "reject")}
-                  >
-                    Reject
+                    Delete
                   </button>
                 </div>
               </article>

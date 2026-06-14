@@ -1466,6 +1466,17 @@ p {
   background: rgba(255, 255, 255, 0.08);
 }
 
+.admin-entry-actions .admin-danger {
+  border-color: rgba(255, 54, 95, 0.5);
+  color: var(--ink);
+  background: rgba(255, 54, 95, 0.14);
+}
+
+.admin-entry-actions .admin-danger:hover:not(:disabled) {
+  border-color: rgba(255, 54, 95, 0.82);
+  background: rgba(255, 54, 95, 0.24);
+}
+
 .admin-login button:hover:not(:disabled),
 .admin-toolbar button:hover:not(:disabled),
 .admin-entry-actions button:hover:not(:disabled) {

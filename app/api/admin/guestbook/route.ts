@@ -74,8 +74,10 @@ export async function GET() {
     const rows = await sql`
       SELECT id, name, email, category, message, notify_owner, email_sent, status, created_at
       FROM guestbook_entries
-      WHERE status = 'pending'
-      ORDER BY created_at ASC
+      WHERE status IN ('pending', 'approved')
+      ORDER BY
+        CASE status WHEN 'pending' THEN 0 ELSE 1 END,
+        created_at DESC
       LIMIT 50
     `;
 
@@ -101,7 +103,8 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const id = typeof body.id === "string" ? body.id : "";
-    const action = body.action === "reject" ? "reject" : "approve";
+    const action =
+      body.action === "delete" ? "delete" : body.action === "reject" ? "reject" : "approve";
 
     if (!id) {
       return Response.json({ error: "Missing entry id." }, { status: 400 });
@@ -109,6 +112,25 @@ export async function POST(request: Request) {
 
     await ensureGuestbookTable();
     const sql = getGuestbookSql();
+
+    if (action === "delete") {
+      const rows = await sql`
+        DELETE FROM guestbook_entries
+        WHERE id = ${id}
+        RETURNING id, name, email, category, message, notify_owner, email_sent, status, created_at
+      `;
+
+      if (!rows.length) {
+        return Response.json({ error: "Entry was not found." }, { status: 404 });
+      }
+
+      return Response.json({
+        ok: true,
+        entry: toAdminGuestbookEntry((rows as GuestbookRow[])[0]),
+        deleted: true,
+        emailSent: false,
+      });
+    }
 
     if (action === "reject") {
       const rows = await sql`
