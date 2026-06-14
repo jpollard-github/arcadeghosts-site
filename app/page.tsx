@@ -1,9 +1,11 @@
 import Image from "next/image";
+import { SignalBooth } from "./SignalBooth";
 import { writings } from "./writings";
 
 const navItems = [
   { label: "About", href: "#about" },
   { label: "Projects", href: "#projects" },
+  { label: "Signal Booth", href: "#signal-booth" },
   { label: "Arcade", href: "#arcade" },
   { label: "Movies & TV Shows", href: "#movies-tv" },
   { label: "Writing", href: "#writing" },
@@ -269,6 +271,9 @@ function SectionHeading({
 export default function Home() {
   return (
     <main>
+      <a className="back-up-top" href="#top">
+        Back Up Top
+      </a>
       <section className="hero" id="top">
         <Image
           src="/images/neon-forest-diner.png"
@@ -428,6 +433,15 @@ export default function Home() {
             </article>
           ))}
         </div>
+      </section>
+
+      <section className="content-section signal-booth-section" id="signal-booth">
+        <SectionHeading eyebrow="Signal Booth" title="A random oracle for your people.">
+          Two hundred signals pulled from the site&apos;s obsessions: arcade glow,
+          cats, songs, road trips, comeback stories, weird films, AI tools, and
+          late-night notes that might know where they belong.
+        </SectionHeading>
+        <SignalBooth />
       </section>
 
       <section className="content-section arcade-section" id="arcade">
