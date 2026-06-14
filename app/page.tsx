@@ -106,9 +106,26 @@ const arcadeGames = [
 ];
 
 const music = [
-  "Nocturnal synths for cleaning the kitchen at midnight",
-  "Diner jukebox heartbreak with drum machines",
-  "Forest ambience, tape hiss, and small hopeful chords",
+  {
+    title: "Reflective Resilience",
+    embedUrl:
+      "https://open.spotify.com/embed/playlist/01pnqPSqX1p0Wlr2nAvTX6?utm_source=generator&si=715ecc7f74494f58",
+  },
+  {
+    title: "Arcode Ghosts After Midnight",
+    embedUrl:
+      "https://open.spotify.com/embed/playlist/5Ugcnm2Tsfea7Ww5gQpnu8?utm_source=generator&si=d94d276e65cb4555",
+  },
+  {
+    title: "Love Me Tomorrow Radio",
+    embedUrl:
+      "https://open.spotify.com/embed/playlist/37i9dQZF1E8N7ryesPcRvq?utm_source=generator&si=4cbb222de7e2480e",
+  },
+  {
+    title: "The Mountain Radio",
+    embedUrl:
+      "https://open.spotify.com/embed/playlist/37i9dQZF1E8EjBVdMRkm5J?utm_source=generator&si=f0f017613a7c4e1d",
+  },
 ];
 
 const catPhotos = Array.from({ length: 23 }, (_, index) => {
@@ -121,9 +138,17 @@ const catPhotos = Array.from({ length: 23 }, (_, index) => {
 });
 
 const contactLinks = [
-  { label: "Email", href: "mailto:hello@example.com" },
-  { label: "GitHub", href: "https://github.com/" },
-  { label: "Newsletter", href: "https://example.com/" },
+  { label: "Email", href: "mailto:jason@arcadeghosts.org" },
+  {
+    label: "GitHub",
+    href: "https://github.com/jpollard-github/personal",
+    target: "_blank",
+  },
+  {
+    label: "Newsletter",
+    href: "https://www.reddit.com/r/twinpeaks/",
+    target: "_blank",
+  },
 ];
 
 function SectionHeading({
@@ -172,7 +197,7 @@ export default function Home() {
         </nav>
 
         <div className="hero-content">
-          <p className="eyebrow">Personal site / emotional roadside attraction</p>
+          <p className="eyebrow">Jason&apos;s site / emotional roadside attraction</p>
           <h1>Warm dispatches from the neon forest.</h1>
           <p className="hero-copy">
             I make useful things with a strange little heartbeat: software,
@@ -197,25 +222,93 @@ export default function Home() {
       </section>
 
       <section className="content-section about" id="about">
-        <SectionHeading eyebrow="About" title="Tender systems, odd weather.">
-          I like building things that help people feel more capable, less alone,
-          and slightly more amused by the machinery of being alive.
-        </SectionHeading>
-        <div className="about-grid">
-          <div className="about-panel">
-            <h3>Current frequency</h3>
-            <p>
-              Designing tools, writing essays, making music, and learning how to
-              trust the quiet signal under the noise.
-            </p>
+        <div className="about-copy">
+          <p className="eyebrow">About</p>
+          <h2>Welcome to ArcadeGhosts.</h2>
+          <p>
+            I&apos;m Jason, a software developer, cat dad, music enthusiast,
+            arcade wanderer, and lifelong collector of strange ideas.
+          </p>
+          <p>
+            I built this site because social media profiles never seem to capture
+            the things that actually matter. The interesting parts of life happen
+            somewhere between a late-night conversation, a favorite song, a
+            forgotten arcade cabinet, a weird dream, and a moment when you
+            suddenly understand something about yourself.
+          </p>
+          <p>
+            I live in North Carolina&apos;s Triad region and spend a lot of time
+            exploring the intersection of technology, creativity, nostalgia, and
+            personal growth. Some of my favorite things include classic arcades,
+            80s music, horror movies, artificial intelligence, trivia nights, road
+            trips, coding projects, and stories that leave you wondering what was
+            real and what wasn&apos;t.
+          </p>
+
+          <h3>If you&apos;re the type of person who enjoys:</h3>
+          <ul className="about-list">
+            <li>The strange atmosphere of Twin Peaks</li>
+            <li>Finding hidden meaning in songs and films</li>
+            <li>Losing track of time in an old arcade</li>
+            <li>Deep conversations that skip the small talk</li>
+            <li>Learning for the sheer joy of learning</li>
+            <li>Cats</li>
+            <li>Building things just because they&apos;re interesting</li>
+            <li>The feeling of discovering your people</li>
+          </ul>
+          <p>...then you&apos;ll probably feel at home here.</p>
+
+          <h3>A few things that have shaped me:</h3>
+          <ul className="about-list">
+            <li>Exploring ideas through AI and technology</li>
+            <li>Growing up around academics, archaeology, and curiosity</li>
+            <li>Countless hours spent in arcades and game rooms</li>
+            <li>
+              Music ranging from Queen and Jefferson Starship to synthwave and
+              modern discoveries
+            </li>
+            <li>
+              The realization that life becomes much more interesting when you
+              stop trying to fit into the wrong crowd
+            </li>
+          </ul>
+
+          <p>
+            You&apos;ll find photos, projects, music, arcade adventures, thoughts,
+            experiments, and whatever else captures my attention.
+          </p>
+
+          <h3>Some places on the internet that resonate with me:</h3>
+          <div className="resonance-links">
+            <a href="https://welcometotwinpeaks.com" target="_blank" rel="noreferrer">
+              Twin Peaks fans
+            </a>
+            <a href="https://nightride.fm/" target="_blank" rel="noreferrer">
+              Synthwave and retro culture
+            </a>
+            <a href="https://rateyourmusic.com" target="_blank" rel="noreferrer">
+              Music discovery
+            </a>
+            <a href="https://www.arcade-museum.com" target="_blank" rel="noreferrer">
+              Arcade history and preservation
+            </a>
+            <a href="https://longreads.com" target="_blank" rel="noreferrer">
+              Curious minds and long-form ideas
+            </a>
+            <a href="https://www.are.na" target="_blank" rel="noreferrer">
+              Weird, beautiful internet projects
+            </a>
           </div>
-          <div className="about-panel">
-            <h3>Operating principles</h3>
-            <p>
-              Be kind. Be specific. Keep a lantern nearby. Leave room for the
-              joke and the feeling to both be true.
-            </p>
-          </div>
+
+          <p>ArcadeGhosts is ultimately an experiment.</p>
+          <p>Can a website still help people find each other?</p>
+          <p>
+            Can a collection of interests, stories, music, photos, and ideas
+            attract the right conversations?
+          </p>
+          <p>I don&apos;t know.</p>
+          <p>But if something here feels familiar, reach out.</p>
+          <p>Maybe you&apos;re one of my people.</p>
         </div>
       </section>
 
@@ -298,10 +391,18 @@ export default function Home() {
           directly at the void before asking whether it wants fries.
         </SectionHeading>
         <div className="tape-row">
-          {music.map((track, index) => (
-            <article className="tape" key={track}>
-              <span>0{index + 1}</span>
-              <p>{track}</p>
+          {music.map((playlist) => (
+            <article className="tape" key={playlist.title}>
+              <h3>{playlist.title}</h3>
+              <iframe
+                title={`${playlist.title} Spotify playlist`}
+                src={playlist.embedUrl}
+                width="100%"
+                height="352"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                allowFullScreen
+                loading="lazy"
+              />
             </article>
           ))}
         </div>
@@ -339,7 +440,12 @@ export default function Home() {
         </div>
         <div className="contact-links">
           {contactLinks.map((link) => (
-            <a key={link.label} href={link.href}>
+            <a
+              key={link.label}
+              href={link.href}
+              target={link.target}
+              rel={link.target === "_blank" ? "noreferrer" : undefined}
+            >
               {link.label}
             </a>
           ))}
