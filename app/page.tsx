@@ -44,6 +44,14 @@ const projects = [
     href: "https://github.com/jpollard-github/codex-vs-code-extension",
     cta: "View Repo",
   },
+  {
+    title: "SoftSignal",
+    eyebrow: "Dating product",
+    description:
+      "A dating product built around emotional resonance: prompts, short signals, memory, writing, mood, and resonance scoring before photos.",
+    href: "https://github.com/jpollard-github/softsignal",
+    cta: "View Repo",
+  },
 ];
 
 const music = [
@@ -246,7 +254,12 @@ export default function Home() {
               <h3>{project.title}</h3>
               <p>{project.description}</p>
               {"href" in project ? (
-                <a className="project-link" href={project.href}>
+                <a
+                  className="project-link"
+                  href={project.href}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {project.cta}
                 </a>
               ) : null}
