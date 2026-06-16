@@ -106,6 +106,12 @@ const currentChallenges = [
 
 const recentDecisions = [
   {
+    date: "2026-06-15",
+    decisions: [
+      "I don't start things I don't finish. I DO finish, and early. If I have an idea which doesn't come to fruition, no big deal, I close out however it needs.",
+    ],
+  },
+  {
     date: "2026-06-10",
     decisions: ["Decided to build Context Refresh Export into ArcadeGhosts"],
   },
