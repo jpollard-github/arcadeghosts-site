@@ -19,6 +19,15 @@ All game content lives in the `scenes` object in `game.js`. Each scene has:
 
 Effects can add inventory, add clues, change `intuition` or `darkness`, and set flags. Choices can include `requires` gates such as an item, clue, flag, or minimum intuition score.
 
+## Current expansion threads
+
+The adventure now includes several optional branches:
+
+- The hotel/waterfall path, which introduces the night clerk and the woman with the red umbrella.
+- The 3:17 radio path, which can uncover the hidden Bookhouse radio and a broadcast-based ending.
+- The hidden white pool path, which rewards mercy, recurring witnesses, and careful exploration.
+- Additional endings for becoming the town's better witness, finding the white pool, or sending the signal back.
+
 ## How to add scenes
 
 Add a new entry to the `scenes` map in `game.js`, then point to it from an existing scene choice:

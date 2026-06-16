@@ -55,7 +55,8 @@ const scenes = {
     choices: [
       { text: "Examine the diary page.", next: "diary_page" },
       { text: "Visit the high school.", next: "high_school" },
-      { text: "Ask about the scratched trees.", next: "bookhouse" }
+      { text: "Ask about the scratched trees.", next: "bookhouse" },
+      { text: "Follow up on the hotel receipt pinned to the board.", next: "great_northern_lobby" }
     ]
   },
   diary_page: {
@@ -100,7 +101,53 @@ const scenes = {
     choices: [
       { text: "Question the teenagers gently.", next: "diner_teens" },
       { text: "Inspect the jukebox.", next: "electricity_clue" },
-      { text: "Bring pie to the grieving family.", next: "palmer_house" }
+      { text: "Bring pie to the grieving family.", next: "palmer_house" },
+      { text: "Ask about the quiet hotel clerk leaving without his pie.", next: "great_northern_lobby" }
+    ]
+  },
+  great_northern_lobby: {
+    id: "great_northern_lobby",
+    chapter: "Town",
+    title: "The Hotel Above the Waterfall",
+    text: [
+      "The hotel lobby is all polished wood, carved masks, and waterfall thunder trying to sound like applause. A night clerk with silver hair has been waiting for you with a message he refuses to call a message.",
+      "He says a woman with a red umbrella checked in every Thursday for three weeks, always asked for the room nearest the falls, and always left before rain started."
+    ],
+    effects: { addItem: ["brass room key"], addClue: ["red umbrella woman"], intuition: 1, flag: { metNightClerk: true } },
+    choices: [
+      { text: "Use the brass key upstairs.", next: "waterfall_room" },
+      { text: "Ask why the waterfall sounds like voices.", next: "listening_balcony" },
+      { text: "Take the clue back to the sheriff.", next: "sheriff_station" }
+    ]
+  },
+  listening_balcony: {
+    id: "listening_balcony",
+    chapter: "Dreams",
+    title: "The Balcony That Listens Back",
+    text: [
+      "Mist rises from the falls and beads on your recorder. When you play it back, the water speaks in three layers: a girl's laugh, a man's apology, and an old radio announcer naming roads that no longer exist.",
+      "The night clerk appears beside you without footsteps. He says some witnesses are recurring because the town has not yet learned what they mean."
+    ],
+    effects: { addClue: ["waterfall voices"], intuition: 2, darkness: 1 },
+    choices: [
+      { text: "Tune the water's voices into a radio signal.", next: "radio_station" },
+      { text: "Return to the room nearest the falls.", next: "waterfall_room", requires: { item: "brass room key" } },
+      { text: "Follow the old roads into the woods.", next: "woods_owl" }
+    ]
+  },
+  waterfall_room: {
+    id: "waterfall_room",
+    chapter: "Dreams",
+    title: "The Room Nearest the Falls",
+    text: [
+      "The room is clean in the way a stage is clean before the actor enters. In the Bible drawer you find a room service receipt signed with a drawing of an umbrella, a blue thread, and one sentence: she is not the victim, she is the witness.",
+      "Behind the mirror is a tiny photograph of the diner counter taken from outside in the rain. Someone circled an empty stool."
+    ],
+    effects: { addItem: ["blue thread"], addClue: ["empty diner stool"], intuition: 1, flag: { foundWaterfallRoom: true } },
+    choices: [
+      { text: "Look for the woman with the red umbrella in town.", next: "umbrella_woman" },
+      { text: "Bring the blue thread to the Bookhouse.", next: "bookhouse" },
+      { text: "Leave before the mirror notices you.", next: "great_northern_lobby" }
     ]
   },
   diner_teens: {
@@ -130,7 +177,38 @@ const scenes = {
     choices: [
       { text: "Play the recording at the station.", next: "coded_message" },
       { text: "Keep listening until the room changes.", next: "red_curtain_dream", requires: { minIntuition: 4 } },
+      { text: "Tune the static to the local radio band.", next: "radio_station" },
       { text: "Back away and order more coffee.", next: "double_r_diner" }
+    ]
+  },
+  radio_station: {
+    id: "radio_station",
+    chapter: "Town",
+    title: "The Station That Broadcasts at 3:17",
+    text: [
+      "The local radio station sits behind a hardware store, broadcasting weather, school closures, and songs that briefly become coded confessions. The overnight host is a teenager from the diner, older now than he should be.",
+      "He remembers interviewing the same night clerk in 1972, 1989, and tomorrow. He gives you a reel labeled with a single instruction: play this only when the lights fail."
+    ],
+    effects: { addItem: ["3:17 radio reel"], addClue: ["recurring broadcast"], intuition: 2, flag: { metRadioKid: true } },
+    choices: [
+      { text: "Play the reel through the station antenna.", next: "broadcast_tower" },
+      { text: "Compare the broadcast with the coded message.", next: "coded_message", requires: { clue: "hunger uses love" } },
+      { text: "Take the reel to the Bookhouse basement.", next: "bookhouse_basement_radio" }
+    ]
+  },
+  broadcast_tower: {
+    id: "broadcast_tower",
+    chapter: "Dreams",
+    title: "The Broadcast Tower in the Trees",
+    text: [
+      "The tower stands where no tower was on the map, blinking red above cedar branches. When the reel turns, your own investigation becomes a radio drama heard by someone driving in circles through the rain.",
+      "A voice interrupts with a weather alert for the soul: heavy shame in the west, scattered mercy near the diner, severe doppelganger risk after midnight."
+    ],
+    effects: { addClue: ["weather alert for the soul"], intuition: 1, darkness: -1, flag: { sentBroadcast: true } },
+    choices: [
+      { text: "Use the broadcast as a trail marker.", next: "outside_time", requires: { flag: "timeJumped" } },
+      { text: "Follow the blinking tower deeper into the woods.", next: "woods_owl" },
+      { text: "Let the message pull you into the red room.", next: "red_curtain_dream", requires: { minIntuition: 5 } }
     ]
   },
   high_school: {
@@ -175,7 +253,8 @@ const scenes = {
     choices: [
       { text: "Ask about the casino token.", next: "one_eyed_jack", requires: { item: "casino token" } },
       { text: "Listen to the singer until you dream.", next: "red_curtain_dream", requires: { minIntuition: 4 } },
-      { text: "Visit the sawmill before closing.", next: "sawmill" }
+      { text: "Visit the sawmill before closing.", next: "sawmill" },
+      { text: "Follow the woman in the red umbrella through the side door.", next: "umbrella_woman", requires: { clue: "red umbrella woman" } }
     ]
   },
   one_eyed_jack: {
@@ -220,7 +299,23 @@ const scenes = {
     choices: [
       { text: "Take the map into the woods.", next: "woods_owl" },
       { text: "Investigate the motel room.", next: "motel_room", requires: { item: "motel key" } },
-      { text: "Go to the family home.", next: "palmer_house" }
+      { text: "Go to the family home.", next: "palmer_house" },
+      { text: "Unlock the radio cabinet under the floorboards.", next: "bookhouse_basement_radio", requires: { item: "3:17 radio reel" } }
+    ]
+  },
+  bookhouse_basement_radio: {
+    id: "bookhouse_basement_radio",
+    chapter: "Lodges",
+    title: "The Bookhouse Basement Radio",
+    text: [
+      "Below the false shelf is another false shelf, which seems excessive until the men behind the books look embarrassed. The radio there has no dial, only a brass keyhole and a microphone warm from recent use.",
+      "When the 3:17 reel turns, the blue thread in your pocket tightens toward every person you failed to ask a second question."
+    ],
+    effects: { addClue: ["blue-thread network"], intuition: 2, flag: { foundHiddenRadio: true } },
+    choices: [
+      { text: "Broadcast a warning to your future self.", next: "broadcast_tower" },
+      { text: "Trace the blue thread into the white woods.", next: "hidden_white_pool", requires: { item: "blue thread" } },
+      { text: "Use the signal to reach the electrical world.", next: "electric_world", requires: { clue: "switchboard" } }
     ]
   },
   motel_room: {
@@ -400,7 +495,53 @@ const scenes = {
     choices: [
       { text: "Enter the sycamore circle.", next: "sycamore_circle", requires: { clue: "sycamore ring" } },
       { text: "Leave an offering of cherry pie.", next: "white_lodge_hint", requires: { item: "cherry pie" } },
+      { text: "Search for the red umbrella between the trees.", next: "umbrella_woman", requires: { clue: "red umbrella woman" } },
       { text: "Keep walking until the trees repeat.", next: "repeating_path" }
+    ]
+  },
+  umbrella_woman: {
+    id: "umbrella_woman",
+    chapter: "Dreams",
+    title: "The Woman With the Red Umbrella",
+    text: [
+      "She stands under fir branches where no rain reaches, holding the umbrella open anyway. She is young at the diner, old at the hotel, and exactly your age in the woods.",
+      "She explains that recurring people are not clues to be solved. They are questions the story keeps asking until someone answers with care."
+    ],
+    effects: { addClue: ["recurring witness"], intuition: 2, darkness: -1, flag: { metUmbrellaWoman: true } },
+    choices: [
+      { text: "Ask what she has been trying to protect.", next: "protected_name" },
+      { text: "Follow her umbrella deeper into the white woods.", next: "hidden_white_pool", requires: { flag: "mercyPath" } },
+      { text: "Return to the town with her question.", next: "old_town", requires: { flag: "timeJumped" } }
+    ]
+  },
+  protected_name: {
+    id: "protected_name",
+    chapter: "Family",
+    title: "The Name She Would Not Say",
+    text: [
+      "She tells you the name is not hidden because it is dangerous. It is hidden because every time someone says it, they make it serve their theory.",
+      "You write it once on hotel stationery, fold it around the pressed flower, and promise not to use a life as decoration for an answer."
+    ],
+    effects: { addItem: ["protected name"], addClue: ["life beyond theory"], intuition: 2, darkness: -1, flag: { protectedName: true } },
+    choices: [
+      { text: "Carry the name into the trial of mercy.", next: "white_lodge_trial" },
+      { text: "Place the name beside the hidden diary fragment.", next: "diary_fragment", requires: { item: "hidden diary fragment" } },
+      { text: "Return to the red umbrella.", next: "umbrella_woman" }
+    ]
+  },
+  hidden_white_pool: {
+    id: "hidden_white_pool",
+    chapter: "Lodges",
+    title: "The Hidden White Pool",
+    text: [
+      "Past the sycamores, past the repeated stump, past the place where fear rehearses your voice, there is a pool of pale water holding the sky upside down.",
+      "The woman with the umbrella closes it for the first time. The night clerk, the radio kid, and the one-armed man stand at the edge like recurring thoughts finally gathered into one room."
+    ],
+    effects: { addClue: ["hidden white pool"], intuition: 2, darkness: -2, flag: { foundWhitePool: true } },
+    choices: [
+      { text: "Wash the ring bargain from your hand.", next: "white_lodge_trial", requires: { flag: "tookRing" } },
+      { text: "Send the gathered witnesses toward the final room.", next: "outside_time" },
+      { text: "Stay and listen until the pool gives you an ending.", next: "ending_white_pool" }
     ]
   },
   red_curtain_dream: {
@@ -640,7 +781,23 @@ const scenes = {
     choices: [
       { text: "Visit the house one final time.", next: "final_house" },
       { text: "Go straight to the sycamores.", next: "outside_time" },
+      { text: "Meet the red umbrella woman at the diner counter.", next: "umbrella_return", requires: { flag: "metUmbrellaWoman" } },
       { text: "Accept that time may not heal the town.", next: "ending_return_uncertain" }
+    ]
+  },
+  umbrella_return: {
+    id: "umbrella_return",
+    chapter: "Return",
+    title: "The Empty Stool Is Not Empty",
+    text: [
+      "The empty stool from the photograph is waiting at the diner. The woman with the umbrella sits there now, older than the room and younger than the song on the jukebox.",
+      "She orders coffee for everyone who has been reduced to a symbol: victims, witnesses, doubles, fools, investigators, and the living who still need breakfast."
+    ],
+    effects: { addClue: ["witnesses need breakfast"], intuition: 2, darkness: -1, flag: { fedWitnesses: true } },
+    choices: [
+      { text: "Let the diner become a door to the final room.", next: "outside_time" },
+      { text: "Ask the town to remember people without simplifying them.", next: "ending_town_witness" },
+      { text: "Carry breakfast to the white pool.", next: "hidden_white_pool", requires: { flag: "foundWhitePool" } }
     ]
   },
   electric_world: {
@@ -655,6 +812,7 @@ const scenes = {
     choices: [
       { text: "Send it forward and face your double.", next: "double_confrontation" },
       { text: "Send yourself backward to save her.", next: "outside_time", requires: { flag: "honoredVictim" } },
+      { text: "Send the 3:17 broadcast outside the story.", next: "ending_signal_returned", requires: { flag: "sentBroadcast" } },
       { text: "Touch every bell at once.", next: "ending_repeating_dream" }
     ]
   },
@@ -700,6 +858,7 @@ const scenes = {
     choices: [
       { text: "Speak the victim's humanity before the room.", next: "outside_time", requires: { flag: "honoredVictim" } },
       { text: "Trade your exit for another person's freedom.", next: "ending_left_behind", requires: { flag: "boreWitness" } },
+      { text: "Offer the protected name without using it.", next: "ending_town_witness", requires: { flag: "protectedName" } },
       { text: "Try to master the room.", next: "black_lodge_trial" }
     ]
   },
@@ -729,6 +888,9 @@ const scenes = {
     effects: { addClue: ["final room"], intuition: 1 },
     choices: [
       { text: "Break the cycle through compassion.", next: "ending_compassion", requires: { flag: "compassion" } },
+      { text: "Let the recurring witnesses finish the story.", next: "ending_town_witness", requires: { flag: "fedWitnesses" } },
+      { text: "Open the hidden white pool beneath the final room.", next: "ending_white_pool", requires: { flag: "foundWhitePool" } },
+      { text: "Broadcast a way out to whoever comes next.", next: "ending_signal_returned", requires: { flag: "sentBroadcast" } },
       { text: "Escape the Lodge and leave the double sealed inside.", next: "ending_left_behind" },
       { text: "Return to town decades later, unsure.", next: "ending_return_uncertain" }
     ]
@@ -765,6 +927,39 @@ const scenes = {
     ],
     effects: { flag: { ended: true } },
     choices: [{ text: "Visit the town again.", next: "arrival_bridge", restart: true }]
+  },
+  ending_town_witness: {
+    id: "ending_town_witness",
+    chapter: "Ending",
+    title: "Ending: Became the Town's Better Witness",
+    text: [
+      "You do not extract the truth from the town. You stay long enough to help it remember with less hunger: names before theories, meals before myth, grief before spectacle.",
+      "Years later, people still tell the story differently. But now they leave room at the counter for the person at the center, and for everyone still trying to become kind."
+    ],
+    effects: { flag: { ended: true } },
+    choices: [{ text: "Begin another record of the town.", next: "arrival_bridge", restart: true }]
+  },
+  ending_white_pool: {
+    id: "ending_white_pool",
+    chapter: "Ending",
+    title: "Ending: Found the Hidden White Pool",
+    text: [
+      "The pool does not erase the black room. It reflects it without flinching, which turns out to be different from surrender.",
+      "You leave with no perfect answer, only a steadier compass: when the woods become symbolic, look for the person who still needs care."
+    ],
+    effects: { flag: { ended: true } },
+    choices: [{ text: "Return to the bridge with a steadier compass.", next: "arrival_bridge", restart: true }]
+  },
+  ending_signal_returned: {
+    id: "ending_signal_returned",
+    chapter: "Ending",
+    title: "Ending: Sent the Signal Back",
+    text: [
+      "At 3:17, every radio in town plays your warning, not as prophecy but as permission: ask the second question, refuse the easy story, notice the recurring face.",
+      "Somewhere before the first scene, a younger investigator hears static turn into guidance and chooses the longer path."
+    ],
+    effects: { flag: { ended: true } },
+    choices: [{ text: "Tune the first frequency again.", next: "arrival_bridge", restart: true }]
   },
   ending_repeating_dream: {
     id: "ending_repeating_dream",
