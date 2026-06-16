@@ -4,9 +4,18 @@ import Link from "next/link";
 import { TwinPeaksSelfJourney } from "./TwinPeaksSelfJourney";
 
 export const metadata: Metadata = {
-  title: "The Lodges Within | Jason's Awesome 80s Site",
+  title: "The Lodges Within: Twin Peaks-Inspired Self Reflection",
   description:
-    "A Twin Peaks-inspired self-reflection journey through symbolic rooms, clues, and next steps.",
+    "A Twin Peaks-inspired self-guided reflection journey through symbolic rooms, personal mythology, clues, prompts, and usable next steps.",
+  alternates: {
+    canonical: "/twin-peaks-self",
+  },
+  openGraph: {
+    title: "The Lodges Within",
+    description:
+      "A Twin Peaks-inspired, self-guided reflection journey through symbolic rooms, clues, prompts, and next steps.",
+    url: "/twin-peaks-self",
+  },
 };
 
 export default function TwinPeaksSelfPage() {

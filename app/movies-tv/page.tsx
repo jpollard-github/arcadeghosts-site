@@ -5,8 +5,18 @@ import { SectionHeading } from "../SectionHeading";
 import { visualMedia } from "../site-data";
 
 export const metadata: Metadata = {
-  title: "Movies & TV | Jason's Awesome 80s Site",
-  description: "Movies and TV shows that resonated, collected on their own page.",
+  title: "Movies and TV Shows That Resonated",
+  description:
+    "Twin Peaks, Severance, horror, strange comedies, memory-loop movies, and other movies and TV shows that stuck with Jason Pollard.",
+  alternates: {
+    canonical: "/movies-tv",
+  },
+  openGraph: {
+    title: "Movies and TV Shows That Resonated",
+    description:
+      "Twin Peaks, Severance, horror, strange comedies, memory-loop movies, and other screen obsessions.",
+    url: "/movies-tv",
+  },
 };
 
 export default function MoviesTvPage() {

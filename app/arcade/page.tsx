@@ -5,8 +5,18 @@ import { SectionHeading } from "../SectionHeading";
 import { arcadeGames } from "../site-data";
 
 export const metadata: Metadata = {
-  title: "Arcade | Jason's Awesome 80s Site",
-  description: "Jason's favorite arcade cabinet glow, collected on its own page.",
+  title: "Arcade Favorites and Classic Cabinet Games",
+  description:
+    "Jason Pollard's favorite arcade cabinets, classic games, cabinet artwork, and quarter-light nostalgia collected on ArcadeGhosts.",
+  alternates: {
+    canonical: "/arcade",
+  },
+  openGraph: {
+    title: "Arcade Favorites and Classic Cabinet Games",
+    description:
+      "Classic arcade cabinet glow, favorite games, and quarter-light nostalgia from ArcadeGhosts.",
+    url: "/arcade",
+  },
 };
 
 export default function ArcadePage() {

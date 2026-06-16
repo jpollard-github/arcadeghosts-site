@@ -59,8 +59,26 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const writing = getWriting(slug);
 
+  if (!writing) {
+    return {
+      title: "Writing",
+      description: "Essays and short writing from Jason Pollard on ArcadeGhosts.",
+    };
+  }
+
   return {
-    title: writing ? `${writing.title} | ArcadeGhosts` : "Writing | ArcadeGhosts",
+    title: writing.title,
+    description: writing.description,
+    alternates: {
+      canonical: `/writings/${writing.slug}`,
+    },
+    openGraph: {
+      type: "article",
+      title: writing.title,
+      description: writing.description,
+      url: `/writings/${writing.slug}`,
+      authors: ["Jason Pollard"],
+    },
   };
 }
 

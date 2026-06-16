@@ -5,8 +5,17 @@ import { SectionHeading } from "../../SectionHeading";
 import { thomasJonesMissyCassPhotos } from "../../site-data";
 
 export const metadata: Metadata = {
-  title: "Thomas, Jones, Missy, and Cass | Jason's Awesome 80s Site",
-  description: "A photo room for Thomas, Jones, Missy, and Cass from 2016 to 2025.",
+  title: "Thomas, Jones, Missy, and Cass Cat Photos",
+  description:
+    "A photo room for Thomas, Jones, Missy, and Cass, Jason Pollard's cats from 2016 to 2025.",
+  alternates: {
+    canonical: "/cats/thomas-jones-missy-cass",
+  },
+  openGraph: {
+    title: "Thomas, Jones, Missy, and Cass Cat Photos",
+    description: "A photo room for Thomas, Jones, Missy, and Cass from 2016 to 2025.",
+    url: "/cats/thomas-jones-missy-cass",
+  },
 };
 
 export default function ThomasJonesMissyCassPage() {
