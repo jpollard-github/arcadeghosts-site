@@ -24,6 +24,7 @@ function emptyProject(): SiteProject {
     title: "",
     description: "",
     href: "",
+    imageUrl: "",
     status: "planning",
     phase: "",
     nextAction: "None",
@@ -45,6 +46,7 @@ export function AdminProjects() {
   const [savedProjects, setSavedProjects] = useState<SiteProject[]>([]);
   const [status, setStatus] = useState("Checking admin session...");
   const [busy, setBusy] = useState(false);
+  const [uploadingProjectId, setUploadingProjectId] = useState("");
   const dirty = useMemo(
     () => projectFingerprint(projects) !== projectFingerprint(savedProjects),
     [projects, savedProjects],
@@ -160,6 +162,40 @@ export function AdminProjects() {
     }
   }
 
+  async function uploadProjectImage(projectId: string, file: File | null) {
+    if (!file) {
+      return;
+    }
+
+    setUploadingProjectId(projectId);
+    setStatus("Uploading project image...");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/admin/projects/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = (await response.json()) as {
+        imageUrl?: string;
+        error?: string;
+      };
+
+      if (!response.ok || !data.imageUrl) {
+        throw new Error(data.error ?? "Unable to upload project image.");
+      }
+
+      updateProject(projectId, "imageUrl", data.imageUrl);
+      setStatus("Project image uploaded. Save changes to persist.");
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Unable to upload image.");
+    } finally {
+      setUploadingProjectId("");
+    }
+  }
+
   return (
     <main className="admin-page">
       <section className="admin-shell projects-admin-shell">
@@ -248,6 +284,48 @@ export function AdminProjects() {
                         }
                       />
                     </label>
+                    <div className="projects-admin-wide projects-admin-image-field">
+                      <span>Project image</span>
+                      {project.imageUrl ? (
+                        <div className="projects-admin-image-preview">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={project.imageUrl}
+                            alt={`${project.title || "Project"} preview`}
+                            className="projects-admin-image"
+                          />
+                          <button
+                            type="button"
+                            disabled={busy || uploadingProjectId === project.id}
+                            onClick={() => {
+                              updateProject(project.id, "imageUrl", "");
+                              setStatus("Project image removed from draft. Save changes to persist.");
+                            }}
+                          >
+                            Remove Image
+                          </button>
+                        </div>
+                      ) : null}
+                      <label>
+                        <span>Upload image file</span>
+                        <input
+                          type="file"
+                          accept="image/png,image/jpeg,image/gif,image/webp"
+                          disabled={busy || uploadingProjectId === project.id}
+                          onChange={(event) => {
+                            uploadProjectImage(
+                              project.id,
+                              event.target.files?.[0] ?? null,
+                            );
+                            event.target.value = "";
+                          }}
+                        />
+                        <small className="guestbook-help">PNG, JPG, GIF, or WebP. 5 MB max.</small>
+                      </label>
+                      {uploadingProjectId === project.id ? (
+                        <small className="guestbook-help">Uploading...</small>
+                      ) : null}
+                    </div>
                     <label>
                       <span>Project status</span>
                       <select

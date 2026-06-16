@@ -128,6 +128,16 @@ export function AdminDashboard() {
                 <div className="admin-entry-meta">
                   <span>Edit</span>
                 </div>
+                <h2>Now</h2>
+                <p>Create, edit, delete, and save homepage Now cards.</p>
+                <Link className="admin-action-link" href="/admin/now">
+                  Open Edit Now
+                </Link>
+              </article>
+              <article className="admin-entry">
+                <div className="admin-entry-meta">
+                  <span>Edit</span>
+                </div>
                 <h2>Projects</h2>
                 <p>Create, edit, delete, and save homepage project cards.</p>
                 <Link className="admin-action-link" href="/admin/projects">

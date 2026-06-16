@@ -34,6 +34,7 @@ function normalizeProject(value: unknown): SiteProject | null {
   const type = normalizeProjectText(candidate.type, 120);
   const description = normalizeProjectText(candidate.description, 1200);
   const href = normalizeProjectHref(candidate.href);
+  const imageUrl = normalizeProjectHref(candidate.imageUrl);
   const status =
     typeof candidate.status === "string" && isProjectStatus(candidate.status)
       ? candidate.status
@@ -49,6 +50,7 @@ function normalizeProject(value: unknown): SiteProject | null {
     title,
     description,
     href,
+    imageUrl,
     status,
     phase: normalizeProjectText(candidate.phase, 160),
     nextAction: normalizeProjectText(candidate.nextAction, 240) || "None",
@@ -130,6 +132,7 @@ export async function PUT(request: Request) {
           title,
           description,
           href,
+          image_url,
           status,
           phase,
           next_action,
@@ -145,6 +148,7 @@ export async function PUT(request: Request) {
           ${project.title},
           ${project.description},
           ${project.href},
+          ${project.imageUrl},
           ${project.status},
           ${project.phase},
           ${project.nextAction},
@@ -160,6 +164,7 @@ export async function PUT(request: Request) {
           title = EXCLUDED.title,
           description = EXCLUDED.description,
           href = EXCLUDED.href,
+          image_url = EXCLUDED.image_url,
           status = EXCLUDED.status,
           phase = EXCLUDED.phase,
           next_action = EXCLUDED.next_action,
@@ -188,6 +193,7 @@ export async function PUT(request: Request) {
         title,
         description,
         href,
+        image_url,
         status,
         phase,
         next_action,

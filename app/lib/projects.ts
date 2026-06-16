@@ -24,6 +24,7 @@ export type SiteProject = {
   title: string;
   description: string;
   href: string;
+  imageUrl: string;
   status: ProjectStatus;
   phase: string;
   nextAction: string;
@@ -39,6 +40,7 @@ export type SiteProjectRow = {
   title: string;
   description: string;
   href: string;
+  image_url: string | null;
   status: ProjectStatus;
   phase: string | null;
   next_action: string | null;
@@ -59,6 +61,7 @@ export const defaultProjects: SiteProject[] = [
     description:
       "A moody, original text adventure about coffee, woods, clues, dreams, and the kind of hallway that knows your name.",
     href: "/games/between-two-lodges/index.html",
+    imageUrl: "",
     status: "active",
     phase: "",
     nextAction: "None",
@@ -74,6 +77,7 @@ export const defaultProjects: SiteProject[] = [
     description:
       "Command palette helpers that turn selections, changed files, diffs, PRs, and repo metadata into compact Codex-ready prompts.",
     href: "https://github.com/jpollard-github/codex-vs-code-extension",
+    imageUrl: "",
     status: "active",
     phase: "",
     nextAction: "None",
@@ -89,6 +93,7 @@ export const defaultProjects: SiteProject[] = [
     description:
       "A dating product built around emotional resonance: prompts, short signals, memory, writing, mood, and resonance scoring before photos.",
     href: "https://github.com/jpollard-github/softsignal",
+    imageUrl: "",
     status: "planning",
     phase: "",
     nextAction: "None",
@@ -174,6 +179,7 @@ export function toSiteProject(row: SiteProjectRow): SiteProject {
     title: row.title,
     description: row.description,
     href: row.href,
+    imageUrl: row.image_url ?? "",
     status: row.status,
     phase: row.phase ?? "",
     nextAction: row.next_action?.trim() || "None",
@@ -196,6 +202,7 @@ export async function ensureProjectsTable() {
       title TEXT NOT NULL,
       description TEXT NOT NULL,
       href TEXT NOT NULL DEFAULT '',
+      image_url TEXT NOT NULL DEFAULT '',
       status TEXT NOT NULL DEFAULT 'active' CHECK (
         status IN ('active', 'paused', 'planning', 'shipped', 'archived')
       ),
@@ -214,6 +221,11 @@ export async function ensureProjectsTable() {
   await sql`
     ALTER TABLE site_projects
     ADD COLUMN IF NOT EXISTS include_in_context_refresh BOOLEAN NOT NULL DEFAULT true
+  `;
+
+  await sql`
+    ALTER TABLE site_projects
+    ADD COLUMN IF NOT EXISTS image_url TEXT NOT NULL DEFAULT ''
   `;
 
   await sql`
@@ -251,6 +263,7 @@ async function loadStoredPublicProjects() {
       title,
       description,
       href,
+      image_url,
       status,
       phase,
       next_action,
@@ -280,6 +293,7 @@ export async function getAdminProjects() {
       title,
       description,
       href,
+      image_url,
       status,
       phase,
       next_action,

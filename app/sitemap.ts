@@ -5,6 +5,7 @@ import { absoluteUrl } from "./seo";
 const staticRoutes = [
   "",
   "/arcade",
+  "/music",
   "/movies-tv",
   "/twin-peaks-self",
   "/cats/beverly-and-lucinda",

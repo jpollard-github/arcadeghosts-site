@@ -5,6 +5,7 @@ import { Guestbook } from "./Guestbook";
 import { SectionHeading } from "./SectionHeading";
 import { SignalBooth } from "./SignalBooth";
 import { TinyThoughts } from "./TinyThoughts";
+import { getPublicNowItems } from "./lib/now";
 import { getPublicProjects } from "./lib/projects";
 import { absoluteUrl, siteConfig } from "./seo";
 import {
@@ -16,14 +17,12 @@ import {
 import { writings } from "./writings";
 
 const navItems = [
-  { label: "About", href: "#about" },
+  { label: "Now", href: "#now" },
   { label: "Projects", href: "#projects" },
-  { label: "Signal Booth", href: "#signal-booth" },
-  { label: "Tiny Thoughts", href: "#tiny-thoughts" },
-  { label: "Arcade", href: "/arcade" },
-  { label: "Movies & TV Shows", href: "/movies-tv" },
   { label: "Writing", href: "#writing" },
-  { label: "Music", href: "#music" },
+  { label: "Fun & Games", href: "#fun-and-games" },
+  { label: "About", href: "#about" },
+  { label: "Music", href: "/music" },
   { label: "Cats", href: "#cats" },
   { label: "Guestbook", href: "#guestbook" },
 ];
@@ -47,28 +46,61 @@ export const metadata: Metadata = {
   },
 };
 
-const music = [
+const funAndGamesCards = [
   {
-    title: "Reflective Resilience",
-    embedUrl:
-      "https://open.spotify.com/embed/playlist/01pnqPSqX1p0Wlr2nAvTX6?utm_source=generator&si=715ecc7f74494f58",
+    eyebrow: "Interactive",
+    title: "Signal Booth",
+    text: "A random oracle for people who communicate through arcade glow, cats, songs, road trips, odd films, and late-night notes.",
+    href: "#signal-booth",
+    cta: "Try it",
   },
   {
-    title: "Arcode Ghosts After Midnight",
-    embedUrl:
-      "https://open.spotify.com/embed/playlist/5Ugcnm2Tsfea7Ww5gQpnu8?utm_source=generator&si=d94d276e65cb4555",
+    eyebrow: "Reflection",
+    title: "The Lodges Within",
+    text: "A Twin Peaks-inspired self-guided journey for naming the room you are in and leaving with one usable next step.",
+    href: "/twin-peaks-self",
+    cta: "Enter",
   },
   {
-    title: "Love Me Tomorrow Radio",
-    embedUrl:
-      "https://open.spotify.com/embed/playlist/37i9dQZF1E8N7ryesPcRvq?utm_source=generator&si=4cbb222de7e2480e",
-  },
-  {
-    title: "The Mountain Radio",
-    embedUrl:
-      "https://open.spotify.com/embed/playlist/37i9dQZF1E8EjBVdMRkm5J?utm_source=generator&si=f0f017613a7c4e1d",
+    eyebrow: "Game",
+    title: "Between Two Lodges",
+    text: "A browser text adventure about coffee, woods, clues, dreams, recurring witnesses, and alternate endings.",
+    href: "/games/between-two-lodges/",
+    cta: "Play",
   },
 ];
+
+const aboutCards = [
+  {
+    eyebrow: "Field Guide",
+    title: "Arcade Room",
+    text: `${arcadeGames.length} favorite cabinets and the quarter-light nostalgia that still hums behind the projects.`,
+    href: "/arcade",
+    cta: "Open",
+  },
+  {
+    eyebrow: "Taste Map",
+    title: "Movies & TV",
+    text: `${visualMedia.length} screen signals: Twin Peaks, Severance, horror, memory loops, strange comedies, and other resonant static.`,
+    href: "/movies-tv",
+    cta: "Browse",
+  },
+  {
+    eyebrow: "Listening Room",
+    title: "Music",
+    text: "Synths, late-night tenderness, Music League, and songs for fluorescent weather.",
+    href: "/music",
+    cta: "Listen",
+  },
+];
+
+const projectStatusLabels = new Map([
+  ["active", "Active"],
+  ["planning", "Planning"],
+  ["paused", "Paused"],
+  ["shipped", "Shipped"],
+  ["archived", "Archived"],
+]);
 
 function projectCta(href: string) {
   if (!href) {
@@ -97,7 +129,10 @@ function formatProjectDate(value: string) {
 }
 
 export default async function Home() {
-  const projects = await getPublicProjects();
+  const [nowItems, projects] = await Promise.all([
+    getPublicNowItems(),
+    getPublicProjects(),
+  ]);
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -175,18 +210,19 @@ export default async function Home() {
         </nav>
 
         <div className="hero-content">
-          <p className="eyebrow">Jason&apos;s site / emotional roadside attraction</p>
-          <h1>Warm dispatches from the neon forest.</h1>
+          <p className="eyebrow">Jason Pollard / living portfolio</p>
+          <h1>Useful tools with a strange little heartbeat.</h1>
           <p className="hero-copy">
-            I make useful things with a strange little heartbeat: software,
-            essays, songs, jokes with tiny fangs, and maps back to myself.
+            I&apos;m a software developer building thoughtful products,
+            self-reflection systems, writing spaces, games, and small signals
+            from the neon forest.
           </p>
           <div className="hero-actions" aria-label="Primary links">
-            <a className="button primary" href="#projects">
-              See Projects
+            <a className="button primary" href="#now">
+              What&apos;s Now
             </a>
-            <a className="button secondary" href="#guestbook">
-              Send a Signal
+            <a className="button secondary" href="#projects">
+              See Projects
             </a>
           </div>
         </div>
@@ -194,8 +230,8 @@ export default async function Home() {
 
       <section className="intro-band" aria-label="Site mood">
         <p>
-          Equal parts diner coffee, haunted jukebox, field guide, and hopeful
-          note found in a jacket pocket.{" "}
+          A living portfolio for software, writing, experiments, personal
+          mythology, and the kind of ideas that keep tapping on the glass.{" "}
           <Link
             className="admin-cup-link"
             href="/admin"
@@ -207,106 +243,44 @@ export default async function Home() {
         </p>
       </section>
 
-      <section className="content-section about" id="about">
-        <div className="about-copy">
-          <p className="eyebrow">About</p>
-          <h2>Welcome to ArcadeGhosts.</h2>
-          <p>
-            I&apos;m Jason, a software developer, cat dad, music enthusiast,
-            arcade wanderer, and lifelong collector of strange ideas.
-          </p>
-          <p>
-            I built this site because social media profiles never seem to capture
-            the things that actually matter. The interesting parts of life happen
-            somewhere between a late-night conversation, a favorite song, a
-            forgotten arcade cabinet, a weird dream, and a moment when you
-            suddenly understand something about yourself.
-          </p>
-          <p>
-            I live in North Carolina&apos;s Triad region and spend a lot of time
-            exploring the intersection of technology, creativity, nostalgia, and
-            personal growth. Some of my favorite things include classic arcades,
-            80s music, horror movies, artificial intelligence, trivia nights, road
-            trips, coding projects, and stories that leave you wondering what was
-            real and what wasn&apos;t.
-          </p>
-
-          <h3>If you&apos;re the type of person who enjoys:</h3>
-          <ul className="about-list">
-            <li>The strange atmosphere of Twin Peaks</li>
-            <li>Finding hidden meaning in songs and films</li>
-            <li>Losing track of time in an old arcade</li>
-            <li>Deep conversations that skip the small talk</li>
-            <li>Learning for the sheer joy of learning</li>
-            <li>Cats</li>
-            <li>Building things just because they&apos;re interesting</li>
-            <li>The feeling of discovering your people</li>
-          </ul>
-          <p>...then you&apos;ll probably feel at home here.</p>
-
-          <h3>A few things that have shaped me:</h3>
-          <ul className="about-list">
-            <li>Exploring ideas through AI and technology</li>
-            <li>Growing up around academics, archaeology, and curiosity</li>
-            <li>Countless hours spent in arcades and game rooms</li>
-            <li>
-              Music ranging from Queen and Jefferson Starship to synthwave and
-              modern discoveries
-            </li>
-            <li>
-              The realization that life becomes much more interesting when you
-              stop trying to fit into the wrong crowd
-            </li>
-          </ul>
-
-          <p>
-            You&apos;ll find photos, projects, music, arcade adventures, thoughts,
-            experiments, and whatever else captures my attention.
-          </p>
-
-          <h3>Some places on the internet that resonate with me:</h3>
-          <div className="resonance-links">
-            <a href="https://welcometotwinpeaks.com" target="_blank" rel="noreferrer">
-              Twin Peaks fans
-            </a>
-            <a href="https://nightride.fm/" target="_blank" rel="noreferrer">
-              Synthwave and retro culture
-            </a>
-            <a href="https://rateyourmusic.com" target="_blank" rel="noreferrer">
-              Music discovery
-            </a>
-            <a href="https://www.arcade-museum.com" target="_blank" rel="noreferrer">
-              Arcade history and preservation
-            </a>
-            <a href="https://longreads.com" target="_blank" rel="noreferrer">
-              Curious minds and long-form ideas
-            </a>
-            <a href="https://www.are.na" target="_blank" rel="noreferrer">
-              Weird, beautiful internet projects
-            </a>
-          </div>
-
-          <p>ArcadeGhosts is ultimately an experiment.</p>
-          <p>Can a website still help people find each other?</p>
-          <p>
-            Can a collection of interests, stories, music, photos, and ideas
-            attract the right conversations?
-          </p>
-          <p>I don&apos;t know.</p>
-          <p>But if something here feels familiar, reach out.</p>
-          <p>Maybe you&apos;re one of my people.</p>
+      <section className="content-section now-section" id="now">
+        <SectionHeading eyebrow="Now" title="What I&apos;m building and thinking about.">
+          The current shape of the work: active projects, ideas that are still
+          glowing, and the next practical moves that keep the whole thing alive.
+        </SectionHeading>
+        <div className="now-grid">
+          {nowItems.map((item) => (
+            <article className="now-card" key={item.title}>
+              <p className="card-eyebrow">{item.label}</p>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))}
         </div>
       </section>
 
       <section className="content-section" id="projects">
-        <SectionHeading eyebrow="Projects" title="Things with knobs and souls.">
-          A few editable placeholders for work that can be practical, poetic, or
-          charmingly suspicious of false binaries.
+        <SectionHeading eyebrow="Projects" title="Shipped, active, paused, and becoming.">
+          The workbench: products, games, tools, and experiments with visible
+          status so the site feels current instead of frozen in amber.
         </SectionHeading>
         <div className="card-grid">
           {projects.map((project) => (
             <article className="project-card" key={project.title}>
-              <p className="card-eyebrow">{project.type}</p>
+              {project.imageUrl ? (
+                <div className="project-image-wrap">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={project.imageUrl}
+                    alt={`${project.title} project image`}
+                    className="project-image"
+                  />
+                </div>
+              ) : null}
+              <div className="project-card-meta">
+                <p className="card-eyebrow">{project.type}</p>
+                <span>{projectStatusLabels.get(project.status) ?? project.status}</span>
+              </div>
               <h3>{project.title}</h3>
               <p>{project.description}</p>
               {project.lastUpdatedAt ? (
@@ -326,61 +300,6 @@ export default async function Home() {
               ) : null}
             </article>
           ))}
-        </div>
-      </section>
-
-      <section className="content-section signal-booth-section" id="signal-booth">
-        <SectionHeading eyebrow="Signal Booth" title="A random oracle for your people.">
-          Two hundred signals pulled from the site&apos;s obsessions: arcade glow,
-          cats, songs, road trips, comeback stories, weird films, AI tools, and
-          late-night notes that might know where they belong.
-        </SectionHeading>
-        <SignalBooth />
-      </section>
-
-      <section className="content-section tiny-thought-section" id="tiny-thoughts">
-        <SectionHeading eyebrow="Tiny Thoughts" title="Short signals from the counter.">
-          Quick observations, lessons learned, funny experiences, opinions, and
-          small notes that do not need to become full essays.
-        </SectionHeading>
-        <TinyThoughts />
-      </section>
-
-      <section className="content-section arcade-section" id="arcade">
-        <SectionHeading eyebrow="Arcade" title="Quarter-light favorites.">
-          I would spend hours in arcades, following cabinet glow from one
-          obsession to the next. I even skipped art class upstairs from my
-          favorite childhood arcade in Plattsburgh, NY, because sometimes the
-          real curriculum was vector beams, joysticks, and the sound of another
-          coin dropping.
-        </SectionHeading>
-        <div className="section-link-grid">
-          <a className="section-link-card feature-card" href="/arcade">
-            <span className="card-eyebrow">{arcadeGames.length} cabinets</span>
-            <h3>Open the arcade room</h3>
-            <p>
-              Galaga, Robotron, Tron, Ms. Pac-Man, Dragon&apos;s Lair, and the
-              rest of the cabinet glow now live on their own page.
-            </p>
-            <span>Enter</span>
-          </a>
-        </div>
-      </section>
-
-      <section className="content-section media-section" id="movies-tv">
-        <SectionHeading eyebrow="Movies & TV" title="Movies & TV Shows.">
-          Visual media that resonated.
-        </SectionHeading>
-        <div className="section-link-grid">
-          <a className="section-link-card feature-card" href="/movies-tv">
-            <span className="card-eyebrow">{visualMedia.length} signals</span>
-            <h3>Open the screening room</h3>
-            <p>
-              Twin Peaks, Severance, horror, strange comedies, memory-loop
-              movies, and other shows and films that stuck around.
-            </p>
-            <span>Watchlist</span>
-          </a>
         </div>
       </section>
 
@@ -405,56 +324,111 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="content-section music-section" id="music">
-        <SectionHeading eyebrow="Music" title="Songs for fluorescent weather.">
-          Synths, small rituals, late-night tenderness, and melodies that look
-          directly at the void before asking whether it wants fries.
+      <section className="content-section tiny-thought-section" id="tiny-thoughts">
+        <SectionHeading eyebrow="Tiny Thoughts" title="Short signals from the counter.">
+          Quick observations, lessons learned, funny experiences, opinions, and
+          small notes that do not need to become full essays.
         </SectionHeading>
-        <div className="tape-row">
-          {music.map((playlist) => (
-            <article className="tape" key={playlist.title}>
-              <h3>{playlist.title}</h3>
-              <iframe
-                title={`${playlist.title} Spotify playlist`}
-                src={playlist.embedUrl}
-                width="100%"
-                height="352"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                allowFullScreen
-                loading="lazy"
-              />
-            </article>
+        <TinyThoughts />
+      </section>
+
+      <section className="content-section fun-games-section" id="fun-and-games">
+        <SectionHeading eyebrow="Fun and Games" title="Oracles, rooms, and playable static.">
+          The playful side of the site: interactive toys, symbolic journeys, and
+          game-shaped paths through the neon forest.
+        </SectionHeading>
+        <div className="section-link-grid fun-games-grid">
+          {funAndGamesCards.map((card) => (
+            <a className="section-link-card" href={card.href} key={card.title}>
+              <span className="card-eyebrow">{card.eyebrow}</span>
+              <h3>{card.title}</h3>
+              <p>{card.text}</p>
+              <span>{card.cta}</span>
+            </a>
           ))}
         </div>
-        <div className="music-league">
-          <div>
-            <h3>Music League</h3>
-            <p>Music Leagues I&apos;ve either run or participated in.</p>
+        <section className="signal-booth-section" id="signal-booth">
+          <SectionHeading eyebrow="Signal Booth" title="A random oracle for your people.">
+            Two hundred signals pulled from the site&apos;s obsessions: arcade
+            glow, cats, songs, road trips, comeback stories, weird films, AI
+            tools, and late-night notes that might know where they belong.
+          </SectionHeading>
+          <SignalBooth />
+        </section>
+      </section>
+
+      <section className="content-section about" id="about">
+        <div className="about-copy">
+          <p className="eyebrow">About</p>
+          <h2>Who I am and how I think.</h2>
+          <p>
+            I&apos;m Jason Pollard, a software developer, cat dad, music
+            enthusiast, arcade wanderer, and lifelong collector of strange ideas.
+            I build tools and experiments that are practical enough to use and
+            personal enough to remember.
+          </p>
+          <p>
+            I live in North Carolina&apos;s Triad region and spend a lot of time
+            exploring the intersection of technology, creativity, nostalgia,
+            personal growth, AI, writing, games, and stories that leave you
+            wondering what was real and what wasn&apos;t.
+          </p>
+          <p>
+            ArcadeGhosts exists because social profiles rarely capture the parts
+            that matter: late-night conversations, favorite songs, forgotten
+            arcade cabinets, weird dreams, cat rituals, and sudden
+            self-understanding.
+          </p>
+
+          <h3>If you&apos;re the type of person who enjoys:</h3>
+          <ul className="about-list">
+            <li>The strange atmosphere of Twin Peaks</li>
+            <li>Finding hidden meaning in songs and films</li>
+            <li>Losing track of time in an old arcade</li>
+            <li>Deep conversations that skip the small talk</li>
+            <li>Learning for the sheer joy of learning</li>
+            <li>Cats</li>
+            <li>Building things just because they&apos;re interesting</li>
+            <li>The feeling of discovering your people</li>
+          </ul>
+
+          <h3>Some places on the internet that resonate with me:</h3>
+          <div className="resonance-links">
+            <a href="https://welcometotwinpeaks.com" target="_blank" rel="noreferrer">
+              Twin Peaks fans
+            </a>
+            <a href="https://nightride.fm/" target="_blank" rel="noreferrer">
+              Synthwave and retro culture
+            </a>
+            <a href="https://rateyourmusic.com" target="_blank" rel="noreferrer">
+              Music discovery
+            </a>
+            <a href="https://www.arcade-museum.com" target="_blank" rel="noreferrer">
+              Arcade history and preservation
+            </a>
+            <a href="https://longreads.com" target="_blank" rel="noreferrer">
+              Curious minds and long-form ideas
+            </a>
+            <a href="https://www.are.na" target="_blank" rel="noreferrer">
+              Weird, beautiful internet projects
+            </a>
           </div>
-          <div className="music-league-card">
-            <a
-              className="music-league-link"
-              href="https://app.musicleague.com/user/8e855be976294ae0aedf7a0820572ffb/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Open Jason's Music League profile"
-            >
-              <Image
-                src="/images/music-league.png"
-                alt="Music League"
-                fill
-                sizes="(max-width: 860px) 100vw, 520px"
-                className="music-league-image"
-              />
-            </a>
-            <a
-              className="music-league-profile"
-              href="https://app.musicleague.com/user/8e855be976294ae0aedf7a0820572ffb/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              View Profile
-            </a>
+
+          <p>
+            ArcadeGhosts is ultimately an experiment in whether a collection of
+            interests, stories, projects, music, photos, and ideas can attract
+            the right conversations. If something here feels familiar, reach out.
+          </p>
+
+          <div className="section-link-grid about-card-grid">
+            {aboutCards.map((card) => (
+              <a className="section-link-card" href={card.href} key={card.title}>
+                <span className="card-eyebrow">{card.eyebrow}</span>
+                <h3>{card.title}</h3>
+                <p>{card.text}</p>
+                <span>{card.cta}</span>
+              </a>
+            ))}
           </div>
         </div>
       </section>
