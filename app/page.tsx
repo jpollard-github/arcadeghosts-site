@@ -22,6 +22,7 @@ const navItems = [
   { label: "Writing", href: "#writing" },
   { label: "Fun & Games", href: "#fun-and-games" },
   { label: "About", href: "#about" },
+  { label: "Work With Me", href: "/work-with-me" },
   { label: "Music", href: "/music" },
   { label: "Cats", href: "#cats" },
   { label: "Guestbook", href: "#guestbook" },
@@ -91,6 +92,13 @@ const aboutCards = [
     text: "Synths, late-night tenderness, Music League, and songs for fluorescent weather.",
     href: "/music",
     cta: "Listen",
+  },
+  {
+    eyebrow: "Side Projects",
+    title: "Work With Me",
+    text: "I occasionally take on small fixed-price projects involving web apps, automation, AI workflows, developer tooling, and practical problem solving.",
+    href: "/work-with-me",
+    cta: "Inquire",
   },
 ];
 
@@ -418,6 +426,8 @@ export default async function Home() {
             ArcadeGhosts is ultimately an experiment in whether a collection of
             interests, stories, projects, music, photos, and ideas can attract
             the right conversations. If something here feels familiar, reach out.
+            {" "}
+            <Link href="/work-with-me">I occasionally take on small side projects too.</Link>
           </p>
 
           <div className="section-link-grid about-card-grid">

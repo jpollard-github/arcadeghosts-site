@@ -245,12 +245,7 @@ export async function ensureProjectsTable() {
 }
 
 export async function getPublicProjects() {
-  const storedProjects = loadStoredPublicProjects().catch(() => defaultProjects);
-  const fallback = new Promise<SiteProject[]>((resolve) => {
-    setTimeout(() => resolve(defaultProjects), 1200);
-  });
-
-  return Promise.race([storedProjects, fallback]);
+  return loadStoredPublicProjects().catch(() => defaultProjects);
 }
 
 async function loadStoredPublicProjects() {
