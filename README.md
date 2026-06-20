@@ -8,6 +8,12 @@ Maintainability roadmap:
 
 - `docs/refactor-roadmap.md` - phased refactor plan with copy-paste prompts for future cleanup work
 
+Working docs for future Codex sessions:
+
+- `docs/repo-summary.md` - high-level repo orientation, feature map, data model summary, and recent refactor state
+- `docs/architecture.md` - route/component/data/API architecture and the main patterns to preserve
+- `docs/current-work.md` - current stability snapshot, risk areas, and the best next improvement targets
+
 ## Tech Stack
 
 - Next.js 16 App Router
@@ -81,6 +87,29 @@ Maintainability roadmap:
 - `public/images/` - site images, generated Signal Booth art, cat galleries, arcade/media art, logo
 - `public/games/between-two-lodges/` - static browser game project
 - `public/writings/` - markdown source for writing pages
+
+## Using Codex Well In This Repo
+
+For future idea generation, development, debugging, or refactoring sessions, start with these docs:
+
+- `docs/repo-summary.md`
+- `docs/architecture.md`
+- `docs/current-work.md`
+- `docs/refactor-roadmap.md`
+
+Suggested use:
+
+- use `repo-summary.md` for quick orientation
+- use `architecture.md` before making structural changes
+- use `current-work.md` to understand what was recently stabilized and what still needs attention
+- use `refactor-roadmap.md` when asking for cleanup in safe phases
+
+These files are meant to give Codex enough context to:
+
+- brainstorm ideas without re-reading the entire repo
+- make code changes that fit the current structure
+- continue refactors without undoing recent cleanup
+- pick sensible next steps when you want maintenance or improvement work
 
 ## Environment Variables
 
