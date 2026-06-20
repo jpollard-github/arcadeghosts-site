@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { isAdminAuthenticated } from "../../../../lib/admin-auth";
-import { putProjectBlob } from "../../../../lib/blob";
+import { hasBlobWriteAccess, putProjectBlob } from "../../../../lib/blob";
 
 export const runtime = "nodejs";
 
@@ -27,9 +27,9 @@ export async function POST(request: Request) {
     return Response.json({ error: "Admin login required." }, { status: 401 });
   }
 
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+  if (!hasBlobWriteAccess()) {
     return Response.json(
-      { error: "BLOB_READ_WRITE_TOKEN is not configured." },
+      { error: "Blob storage is not configured for this environment." },
       { status: 500 },
     );
   }

@@ -2,11 +2,19 @@ import { del, put } from "@vercel/blob";
 
 type PutBlobOptions = Parameters<typeof put>[2];
 
+function isVercelRuntime() {
+  return Boolean(process.env.VERCEL || process.env.VERCEL_ENV);
+}
+
 function readWriteToken() {
   return process.env.BLOB_READ_WRITE_TOKEN?.trim().replace(/^["']|["']$/g, "");
 }
 
 function withLocalReadWriteToken<T extends object>(options: T): T & { token?: string } {
+  if (isVercelRuntime()) {
+    return options as T & { token?: string };
+  }
+
   const token = readWriteToken();
 
   if (!token) {
@@ -17,6 +25,10 @@ function withLocalReadWriteToken<T extends object>(options: T): T & { token?: st
     ...options,
     token,
   };
+}
+
+export function hasBlobWriteAccess() {
+  return isVercelRuntime() || Boolean(readWriteToken());
 }
 
 export function putTinyThoughtBlob(

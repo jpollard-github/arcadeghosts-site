@@ -212,6 +212,73 @@ export const musicInsights = {
       jumpHref: "#music-current-title",
     },
   ],
+  oddFindingsArcade: [
+    {
+      title: "Most Unhinged Repeat Day",
+      period: "December 8, 2016",
+      subject: `Elvis Presley / "That's All Right"`,
+      stat: "70 plays in one day",
+      variant: "legendary",
+      explanation:
+        "At some point this stopped being a song choice and became an event the room had to survive.",
+      jumpHref: "#music-fixation-title",
+    },
+    {
+      title: "Album You Apparently Moved Into",
+      period: "2024-W11",
+      subject: "Sleep Research Facility / Deep Frieze",
+      stat: "20.1h in one week",
+      variant: "frosted",
+      explanation:
+        "This was less listening to an album than temporarily relocating into a frozen research station.",
+      jumpHref: "#music-fixation-title",
+    },
+    {
+      title: "Artist That Haunted One Year",
+      period: "2024",
+      subject: "Sleep Research Facility",
+      stat: "76.4h, all concentrated in one year",
+      explanation:
+        "An artist arrived, turned the weather system monochrome, and then mostly drifted back into the fog.",
+      jumpHref: "#music-dna-title",
+    },
+    {
+      title: "Genre Weather Warning",
+      period: "Whole archive",
+      subject: "Black metal",
+      stat: "1,132.6h across 158 artists",
+      explanation:
+        "Meteorologists advise sustained darkness, theological static, and very poor visibility after midnight.",
+      jumpHref: "#music-genre-title",
+    },
+    {
+      title: "Skip Rate Crime Scene",
+      period: "2014",
+      subject: "Early archive behavior",
+      stat: "75.5% skip rate",
+      explanation:
+        "The evidence suggests a maniac with the next-track button and absolutely no patience for setup time.",
+      jumpHref: "#music-timeline-title",
+    },
+    {
+      title: "Comfort Artist Beacon",
+      period: "2014-2026",
+      subject: "Def Leppard",
+      stat: "13-year streak",
+      explanation:
+        "No matter what weird corridor the archive wandered into, this beacon stayed lit the entire time.",
+      jumpHref: "#music-dna-title",
+    },
+    {
+      title: "Sudden Obsession Detected",
+      period: "2026-W19",
+      subject: "Chappell Roan / The Rise and Fall of a Midwest Princess",
+      stat: "95 plays, 4.2h in one week",
+      explanation:
+        "The sort of pop detour that starts as curiosity and ends with the whole dashboard wearing glitter.",
+      jumpHref: "#music-current-title",
+    },
+  ],
   eras: [
     {
       title: "The Black Metal Autumn",
