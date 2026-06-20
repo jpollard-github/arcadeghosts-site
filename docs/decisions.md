@@ -9,7 +9,7 @@ These notes mix auto-generated repo facts with human-maintained context.
 - Current caveat: the context refresh e2e test performs a real export-creation mutation, so future test expansion should prefer isolated test data or explicit cleanup for DB-backed admin mutations.
 
 <!-- codex-session-kit:auto-start -->
-> Auto-generated snapshot. Refreshed 6/20/2026, 4:27:34 PM. This section is managed by Codex Session Kit.
+> Auto-generated snapshot. Refreshed 6/20/2026, 5:21:50 PM. This section is managed by Codex Session Kit.
 
 ## Auto Snapshot
 

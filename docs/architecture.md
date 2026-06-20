@@ -263,7 +263,7 @@ Likely safe future improvements:
 - selective browser/integration verification for admin upload workflows
 
 <!-- codex-session-kit:auto-start -->
-> Auto-generated snapshot. Refreshed 6/20/2026, 4:27:34 PM. This section is managed by Codex Session Kit.
+> Auto-generated snapshot. Refreshed 6/20/2026, 5:21:50 PM. This section is managed by Codex Session Kit.
 
 ## Auto Snapshot
 
@@ -284,11 +284,11 @@ Likely safe future improvements:
 ### File mix
 - .jpeg: 292
 - .tsx: 59
-- .ts: 43
+- .ts: 48
 - .png: 24
 - .jpg: 20
-- .md: 10
-- .json: 6
+- .md: 11
+- .json: 7
 - .css: 4
 
 ### Likely integration points

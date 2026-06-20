@@ -169,36 +169,31 @@ If another session needs a 30-second orientation:
 - future work should extend the split module patterns, not collapse them back into giant files
 
 <!-- codex-session-kit:auto-start -->
-> Auto-generated snapshot. Refreshed 6/20/2026, 4:27:34 PM. This section is managed by Codex Session Kit.
+> Auto-generated snapshot. Refreshed 6/20/2026, 5:21:50 PM. This section is managed by Codex Session Kit.
 
 ## Auto Snapshot
 
 ### Current repo activity
 - Active git branch: `main`
-- Working tree has 6 changed file(s).
+- Working tree appears clean.
 
 ### Changed files
-- M docs/architecture.md
-- M docs/current-work.md
-- M docs/refactor-roadmap.md
-- M docs/repo-summary.md
-- ?? .vscode/
-- ?? docs/decisions.md
+- No git changes detected.
 
 ### Open editors
 - No visible editors detected.
 
 ### Recently modified files
-- .vscode/ai-context-state.json (6/20/2026, 4:27:21 PM)
-- docs/decisions.md (6/20/2026, 4:27:21 PM)
-- docs/refactor-roadmap.md (6/20/2026, 4:27:21 PM)
-- docs/architecture.md (6/20/2026, 4:27:21 PM)
-- docs/current-work.md (6/20/2026, 4:27:21 PM)
-- docs/repo-summary.md (6/20/2026, 4:27:21 PM)
-- .vscode/ai-context.json (6/20/2026, 4:27:21 PM)
-- README.md (6/20/2026, 3:27:57 PM)
-- app/TinyThoughts.tsx (6/20/2026, 3:18:50 PM)
-- app/site-content/visual-media.ts (6/20/2026, 3:18:27 PM)
-- tests/upload.test.ts (6/20/2026, 3:18:11 PM)
-- app/lib/upload.ts (6/20/2026, 3:18:11 PM)
+- docs/decisions.md (6/20/2026, 4:50:58 PM)
+- docs/current-work.md (6/20/2026, 4:50:57 PM)
+- docs/architecture.md (6/20/2026, 4:50:57 PM)
+- docs/repo-summary.md (6/20/2026, 4:50:57 PM)
+- .vscode/ai-context-state.json (6/20/2026, 4:49:54 PM)
+- playwright-report/index.html (6/20/2026, 4:49:42 PM)
+- test-results/.last-run.json (6/20/2026, 4:49:42 PM)
+- README.md (6/20/2026, 4:48:22 PM)
+- tests/e2e/admin.spec.ts (6/20/2026, 4:46:55 PM)
+- tests/e2e/public-pages.spec.ts (6/20/2026, 4:42:20 PM)
+- tests/e2e/helpers/admin-env.ts (6/20/2026, 4:42:02 PM)
+- tests/e2e/home.spec.ts (6/20/2026, 4:39:05 PM)
 <!-- codex-session-kit:auto-end -->

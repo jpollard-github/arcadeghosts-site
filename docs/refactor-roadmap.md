@@ -352,7 +352,7 @@ If you want to keep future asks very short, any of these are enough:
 - Browser verification is especially valuable after CSS or page-composition refactors
 
 <!-- codex-session-kit:auto-start -->
-> Auto-generated snapshot. Refreshed 6/20/2026, 4:27:34 PM. This section is managed by Codex Session Kit.
+> Auto-generated snapshot. Refreshed 6/20/2026, 5:21:50 PM. This section is managed by Codex Session Kit.
 
 ## Auto Snapshot
 
@@ -368,5 +368,5 @@ If you want to keep future asks very short, any of these are enough:
 
 ### Testing and maintenance gaps
 - A test directory appears to exist.
-- There are local changes, so docs may need a refresh before handoff.
+- Working tree is clean, which lowers short-term drift risk.
 <!-- codex-session-kit:auto-end -->

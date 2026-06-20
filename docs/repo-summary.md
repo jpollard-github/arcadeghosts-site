@@ -155,7 +155,7 @@ It combines:
 That mix is the main architectural characteristic to keep in mind when changing it.
 
 <!-- codex-session-kit:auto-start -->
-> Auto-generated snapshot. Refreshed 6/20/2026, 4:27:34 PM. This section is managed by Codex Session Kit.
+> Auto-generated snapshot. Refreshed 6/20/2026, 5:21:50 PM. This section is managed by Codex Session Kit.
 
 ## Auto Snapshot
 
@@ -191,4 +191,7 @@ That mix is the main architectural characteristic to keep in mind when changing 
 - `start`
 - `lint`
 - `test`
+- `test:e2e`
+- `test:e2e:headed`
+- `test:e2e:install`
 <!-- codex-session-kit:auto-end -->
