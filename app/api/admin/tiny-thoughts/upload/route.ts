@@ -56,8 +56,9 @@ export async function POST(request: Request) {
       );
     }
 
+    const buffer = Buffer.from(await file.arrayBuffer());
     const pathname = `tiny-thoughts/${randomUUID()}.${fileExtension(file)}`;
-    const blob = await putTinyThoughtBlob(pathname, file, {
+    const blob = await putTinyThoughtBlob(pathname, buffer, {
       access: "public",
       contentType: file.type,
     });
@@ -70,9 +71,21 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error("Tiny Thoughts Blob upload failed", error);
+    const message =
+      error instanceof Error ? error.message : "Unknown Tiny Thoughts Blob upload error.";
+
+    console.error("Tiny Thoughts Blob upload failed", {
+      message,
+      error,
+    });
+
     return Response.json(
-      { error: "Image could not be uploaded." },
+      {
+        error:
+          process.env.NODE_ENV === "production"
+            ? "Image could not be uploaded."
+            : `Image could not be uploaded. ${message}`,
+      },
       { status: 500 },
     );
   }

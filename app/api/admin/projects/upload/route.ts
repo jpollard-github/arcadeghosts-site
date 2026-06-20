@@ -56,8 +56,9 @@ export async function POST(request: Request) {
       );
     }
 
+    const buffer = Buffer.from(await file.arrayBuffer());
     const pathname = `projects/${randomUUID()}.${fileExtension(file)}`;
-    const blob = await putProjectBlob(pathname, file, {
+    const blob = await putProjectBlob(pathname, buffer, {
       access: "public",
       contentType: file.type,
     });
@@ -67,9 +68,21 @@ export async function POST(request: Request) {
       imageUrl: blob.url,
     });
   } catch (error) {
-    console.error("Project Blob upload failed", error);
+    const message =
+      error instanceof Error ? error.message : "Unknown project Blob upload error.";
+
+    console.error("Project Blob upload failed", {
+      message,
+      error,
+    });
+
     return Response.json(
-      { error: "Project image could not be uploaded." },
+      {
+        error:
+          process.env.NODE_ENV === "production"
+            ? "Project image could not be uploaded."
+            : `Project image could not be uploaded. ${message}`,
+      },
       { status: 500 },
     );
   }
