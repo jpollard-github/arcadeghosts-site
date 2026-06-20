@@ -1844,6 +1844,154 @@ p {
   padding: 1rem;
 }
 
+.time-machine {
+  display: grid;
+  gap: 1rem;
+}
+
+.time-machine-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+}
+
+.time-machine-toolbar p {
+  max-width: 720px;
+}
+
+.time-machine-random {
+  min-height: 2.85rem;
+  border: 1px solid rgba(255, 198, 109, 0.44);
+  border-radius: 999px;
+  padding: 0.75rem 1rem;
+  color: #120a0d;
+  font-weight: 900;
+  background: var(--amber);
+  box-shadow: 0 0 34px rgba(255, 198, 109, 0.26);
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.time-machine-random:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 44px rgba(255, 198, 109, 0.36);
+}
+
+.time-machine-card-row {
+  display: grid;
+  gap: 1rem;
+}
+
+.time-machine-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(41, 240, 212, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025)),
+    rgba(8, 9, 12, 0.78);
+  box-shadow: 0 24px 76px rgba(0, 0, 0, 0.28);
+}
+
+.time-machine-card > button {
+  width: 100%;
+  display: grid;
+  gap: 0.4rem;
+  padding: 1rem 1.1rem;
+  border: 0;
+  color: inherit;
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+}
+
+.time-machine-card > button span,
+.time-machine-detail dt,
+.time-machine-meta span,
+.time-machine-meta a {
+  color: var(--teal);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.time-machine-card > button strong {
+  color: var(--ink);
+  font-size: clamp(1.3rem, 2.5vw, 2rem);
+  line-height: 1.05;
+}
+
+.time-machine-card > button small {
+  color: var(--amber);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.time-machine-card.active {
+  border-color: rgba(41, 240, 212, 0.5);
+  background:
+    linear-gradient(135deg, rgba(255, 54, 95, 0.14), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)),
+    rgba(8, 9, 12, 0.82);
+}
+
+.time-machine-detail {
+  display: grid;
+  gap: 1rem;
+  padding: 0 1.1rem 1.1rem;
+}
+
+.time-machine-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.time-machine-meta a:hover {
+  color: var(--amber);
+}
+
+.time-machine-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin: 0;
+}
+
+.time-machine-stats div {
+  border: 1px solid rgba(248, 239, 227, 0.12);
+  border-radius: 8px;
+  padding: 0.8rem 0.85rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.time-machine-stats dd {
+  margin: 0.3rem 0 0;
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 760;
+  line-height: 1.45;
+}
+
+.time-machine-weather,
+.time-machine-fixation {
+  margin: 0;
+}
+
+.time-machine-weather {
+  color: var(--ink);
+  font-size: 1.02rem;
+}
+
+.time-machine-fixation {
+  border-left: 3px solid rgba(255, 198, 109, 0.7);
+  padding-left: 0.85rem;
+}
+
 .music-rank-panel h3,
 .music-panel h3,
 .genre-weather-card h3,
@@ -3040,6 +3188,7 @@ p {
   .music-era-grid,
   .music-dna-grid,
   .music-fixation-grid,
+  .time-machine-stats,
   .work-copy-grid,
   .work-fit-grid,
   .work-offering-grid {

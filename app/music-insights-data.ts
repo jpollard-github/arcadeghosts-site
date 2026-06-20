@@ -120,6 +120,98 @@ export const musicInsights = {
       { name: "Hysteria", value: "46 plays", meta: "Def Leppard" },
     ],
   },
+  listeningTimeMachine: [
+    {
+      id: "moment-peak-feb-2024",
+      label: "Peak month",
+      title: "Feb 2024",
+      period: "February 2024",
+      badge: "120h",
+      topArtist: "Sleep Research Facility",
+      topAlbum: "Deep Frieze",
+      topSong: "79ºs 83ºw",
+      dominantGenre: "Ambient",
+      totalHours: "119.6h",
+      playCount: "1,317 plays",
+      moodWeather:
+        "A frozen, nocturnal drift chamber where the room stops blinking and the snow starts humming back.",
+      weirdFixation:
+        "Deep Frieze week: 20.1 hours in 2024-W11, with Sleep Research Facility turning one stretch of the month into pure weather.",
+      jumpHref: "#music-timeline-title",
+    },
+    {
+      id: "moment-black-metal-autumn",
+      label: "Black Metal Autumn",
+      title: "Nov 2018",
+      period: "November 2018",
+      badge: "69.5h",
+      topArtist: "Deathspell Omega",
+      topAlbum: "Si Monumentum Requires, Circumspice",
+      topSong: "The Repellent Scars of Abandon and Election",
+      dominantGenre: "Black metal",
+      totalHours: "69.5h",
+      playCount: "1,083 plays",
+      moodWeather:
+        "Dense cathedral smoke, theological static, and the feeling that every hallway leads deeper underground.",
+      weirdFixation:
+        "Si Monumentum Requires, Circumspice week: 5.2 hours in 2018-W46, enough to make the month feel like one long sermon.",
+      jumpHref: "#music-era-title",
+    },
+    {
+      id: "moment-heavy-metal-summer",
+      label: "Heavy Metal Summer",
+      title: "Jun 2022",
+      period: "June 2022",
+      badge: "90.5h",
+      topArtist: "Mercyful Fate",
+      topAlbum: "Metal Church",
+      topSong: "The Ivory Gate of Dreams",
+      dominantGenre: "Heavy metal",
+      totalHours: "90.5h",
+      playCount: "1,596 plays",
+      moodWeather:
+        "Windows down, iron in the air, classic riffs everywhere, but still with enough drama to feel like a late-night side quest.",
+      weirdFixation:
+        "Penetralia week: 4.3 hours of Jute Gyte in 2022-W10, a nearby glitch in an otherwise straight-ahead metal season.",
+      jumpHref: "#music-era-title",
+    },
+    {
+      id: "moment-ambient-winter",
+      label: "Ambient Winter",
+      title: "Feb 2024",
+      period: "February 2024",
+      badge: "56% ambient",
+      topArtist: "Sleep Research Facility",
+      topAlbum: "Deep Frieze",
+      topSong: "79ºs 83ºw",
+      dominantGenre: "Ambient",
+      totalHours: "119.6h",
+      playCount: "1,317 plays",
+      moodWeather:
+        "Glacial, suspended, and strangely comforting, like a radar station at the edge of the map quietly taking notes on the storm.",
+      weirdFixation:
+        "Deep Frieze week: 20.1 hours in 2024-W11, with the album briefly becoming the climate rather than the soundtrack.",
+      jumpHref: "#music-genre-title",
+    },
+    {
+      id: "moment-chvrches-chappell-era",
+      label: "Recent era",
+      title: "Apr-Jun 2026",
+      period: "April through June 2026",
+      badge: "CHVRCHES / Chappell",
+      topArtist: "CHVRCHES",
+      topAlbum: "The Bones of What You Believe (Special Edition)",
+      topSong: "My Kink Is Karma",
+      dominantGenre: "Synthpop",
+      totalHours: "75.9h",
+      playCount: "1,780 plays",
+      moodWeather:
+        "Glossy neon recovery music: bright hooks, identity voltage, and enough bite to keep the sweetness from getting sleepy.",
+      weirdFixation:
+        "The Bones of What You Believe week: 4.8 hours in 2026-W18, right before the Chappell Roan surge took over the front of the room.",
+      jumpHref: "#music-current-title",
+    },
+  ],
   eras: [
     {
       title: "The Black Metal Autumn",

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { SectionHeading } from "../SectionHeading";
 import { music } from "../music-data";
 import { musicInsights } from "../music-insights-data";
+import { ListeningTimeMachine } from "./ListeningTimeMachine";
 
 export const metadata: Metadata = {
   title: "Music, Playlists, and Music League",
@@ -77,6 +78,18 @@ export default function MusicPage() {
           </div>
         </section>
 
+        <section className="music-insight-band" aria-labelledby="music-time-machine-title">
+          <InsightHeading
+            eyebrow="Jump To A Moment"
+            id="music-time-machine-title"
+            title="A listening time machine with five illuminated buttons."
+          >
+            Pick a spike, season, or mini-era and open a more specific room in
+            the archive without reading the whole report straight through.
+          </InsightHeading>
+          <ListeningTimeMachine moments={musicInsights.listeningTimeMachine} />
+        </section>
+
         <section className="music-insight-band" aria-labelledby="music-timeline-title">
           <InsightHeading
             eyebrow="Signal History"
@@ -101,7 +114,7 @@ export default function MusicPage() {
               </div>
             </div>
             <div className="music-panel">
-              <h3>Recent Months</h3>
+              <h3>Monthly Pulse</h3>
               <div className="month-signal-strip" aria-label="Latest 36 monthly listening totals">
                 {musicInsights.recentMonths.map((month) => (
                   <span
