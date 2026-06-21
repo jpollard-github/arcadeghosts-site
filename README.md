@@ -186,6 +186,33 @@ npm run go
 
 `npm run go` is useful when you want a quick production-style local run after the usual safety checks. It will keep running because `npm run start` launches the server.
 
+## VS Code Tasks
+
+This repo includes a simple VS Code task setup in `.vscode/tasks.json` for the most common local workflows:
+
+- `Dev: Start Next.js`
+- `Check: Lint`
+- `Check: Unit Tests`
+- `Check: Playwright`
+- `Docs: Open Codex Context`
+
+Open them from:
+
+- `Terminal: Run Task`
+- or `Cmd/Ctrl+Shift+P` -> `Tasks: Run Task`
+
+The docs task opens:
+
+- `docs/repo-summary.md`
+- `docs/architecture.md`
+- `docs/current-work.md`
+- `docs/refactor-roadmap.md`
+- `docs/decisions.md`
+
+Note:
+
+- `Docs: Open Codex Context` uses the VS Code `code` CLI. If that task does nothing on your machine, install the VS Code shell command from the editor first.
+
 ## Testing Notes
 
 Current browser coverage includes:

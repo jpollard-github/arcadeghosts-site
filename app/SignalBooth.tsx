@@ -1,27 +1,42 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import { signalBoothOptions } from "./signal-booth-data";
+import { useMemo, useState } from "react";
+import {
+  getSignalBoothOptionsForMode,
+  signalBoothModes,
+  type SignalBoothMode,
+} from "./signal-booth-data";
 
-function randomIndex(except: number) {
-  if (signalBoothOptions.length < 2) {
+function randomIndex(length: number, except: number) {
+  if (length < 2) {
     return 0;
   }
 
-  let nextIndex = Math.floor(Math.random() * signalBoothOptions.length);
+  let nextIndex = Math.floor(Math.random() * length);
 
   while (nextIndex === except) {
-    nextIndex = Math.floor(Math.random() * signalBoothOptions.length);
+    nextIndex = Math.floor(Math.random() * length);
   }
 
   return nextIndex;
 }
 
 export function SignalBooth() {
+  const [activeMode, setActiveMode] = useState<SignalBoothMode>("random");
   const [activeIndex, setActiveIndex] = useState(0);
-  const activeSignal = signalBoothOptions[activeIndex];
-  const signalNumber = String(activeIndex + 1).padStart(3, "0");
+  const filteredSignals = useMemo(
+    () => getSignalBoothOptionsForMode(activeMode),
+    [activeMode],
+  );
+  const safeActiveIndex =
+    filteredSignals.length > 0 ? Math.min(activeIndex, filteredSignals.length - 1) : 0;
+  const activeSignal = filteredSignals[safeActiveIndex];
+  const signalNumber = String(safeActiveIndex + 1).padStart(3, "0");
+
+  if (!activeSignal) {
+    return null;
+  }
 
   return (
     <div className="signal-booth-machine">
@@ -39,8 +54,24 @@ export function SignalBooth() {
       <div className="signal-booth-panel">
         <div className="signal-booth-meta">
           <span>Signal {signalNumber}</span>
-          <span>{signalBoothOptions.length} options online</span>
+          <span>{filteredSignals.length} options online</span>
         </div>
+        <label className="signal-booth-mode">
+          <span>Mode</span>
+          <select
+            value={activeMode}
+            onChange={(event) => {
+              setActiveMode(event.target.value as SignalBoothMode);
+              setActiveIndex(0);
+            }}
+          >
+            {signalBoothModes.map((mode) => (
+              <option key={mode.value} value={mode.value}>
+                {mode.label}
+              </option>
+            ))}
+          </select>
+        </label>
         <h3>{activeSignal.title}</h3>
         <p>{activeSignal.prompt}</p>
         <div className="signal-booth-action">{activeSignal.action}</div>
@@ -52,7 +83,9 @@ export function SignalBooth() {
         <button
           className="signal-booth-button"
           type="button"
-          onClick={() => setActiveIndex((current) => randomIndex(current))}
+          onClick={() =>
+            setActiveIndex((current) => randomIndex(filteredSignals.length, current))
+          }
         >
           Tune Another Signal
         </button>

@@ -1,11 +1,11 @@
 {
   "lastStartPromptAt": "2026-06-20T23:07:45.003Z",
-  "lastFinishPromptAt": "2026-06-21T00:12:03.123Z",
+  "lastFinishPromptAt": "2026-06-21T00:28:33.641Z",
   "branchAwareness": {
-    "lastSeenBranch": "main",
-    "previousBranch": null,
-    "lastSwitchedAt": null,
-    "lastWarnedTransitionKey": null
+    "lastSeenBranch": "feat/tasks",
+    "previousBranch": "main",
+    "lastSwitchedAt": "2026-06-21T00:22:36.244Z",
+    "lastWarnedTransitionKey": "main->feat/tasks"
   },
   "docs": {
     "docs/decisions.md": {

@@ -4,7 +4,21 @@ export type SignalBoothOption = {
   action: string;
   image: string;
   tags: string[];
+  modes: SignalBoothMode[];
 };
+
+export const signalBoothModes = [
+  { value: "random", label: "Any Signal" },
+  { value: "spooky", label: "Spooky" },
+  { value: "funny", label: "Funny" },
+  { value: "reflective", label: "Reflective" },
+  { value: "career", label: "Career" },
+  { value: "arcade", label: "Arcade" },
+  { value: "cat", label: "Cat" },
+  { value: "twin-peaks", label: "Twin Peaks" },
+] as const;
+
+export type SignalBoothMode = (typeof signalBoothModes)[number]["value"];
 
 const signalImages = [
   "/images/signal-booth/radio-tower.png",
@@ -104,13 +118,117 @@ function toTitle(seed: string) {
     .join(" ");
 }
 
+function modeKeywords(option: Omit<SignalBoothOption, "modes">) {
+  return `${option.title} ${option.prompt} ${option.action} ${option.tags.join(" ")}`
+    .toLowerCase();
+}
+
+export function detectSignalBoothModes(
+  option: Omit<SignalBoothOption, "modes">,
+): SignalBoothMode[] {
+  const text = modeKeywords(option);
+  const modes = new Set<SignalBoothMode>();
+
+  if (
+    text.includes("haunted") ||
+    text.includes("horror") ||
+    text.includes("ghost") ||
+    text.includes("midnight") ||
+    text.includes("red room") ||
+    text.includes("fangs")
+  ) {
+    modes.add("spooky");
+  }
+
+  if (
+    text.includes("joke") ||
+    text.includes("karaoke") ||
+    text.includes("funny") ||
+    text.includes("qualified cat") ||
+    text.includes("ping pong ball") ||
+    text.includes("trivia")
+  ) {
+    modes.add("funny");
+  }
+
+  if (
+    text.includes("reflection") ||
+    text.includes("meaning") ||
+    text.includes("future-you") ||
+    text.includes("hope") ||
+    text.includes("gratitude") ||
+    text.includes("witness")
+  ) {
+    modes.add("reflective");
+  }
+
+  if (
+    text.includes("software") ||
+    text.includes("project") ||
+    text.includes("coding") ||
+    text.includes("tool") ||
+    text.includes("ai") ||
+    text.includes("interactive")
+  ) {
+    modes.add("career");
+  }
+
+  if (
+    text.includes("arcade") ||
+    text.includes("cabinet") ||
+    text.includes("quarter") ||
+    text.includes("game-room") ||
+    text.includes("arcadeghosts")
+  ) {
+    modes.add("arcade");
+  }
+
+  if (
+    text.includes("cat") ||
+    text.includes("kitten") ||
+    text.includes("beverly") ||
+    text.includes("lucinda") ||
+    text.includes("finnegan") ||
+    text.includes("thomas")
+  ) {
+    modes.add("cat");
+  }
+
+  if (
+    text.includes("twin peaks") ||
+    text.includes("red room") ||
+    text.includes("diner") ||
+    text.includes("pine") ||
+    text.includes("lodge")
+  ) {
+    modes.add("twin-peaks");
+  }
+
+  return Array.from(modes);
+}
+
 export const signalBoothOptions: SignalBoothOption[] = signalSeeds.flatMap(
   (seed, seedIndex) =>
-    signalLenses.map((lens, lensIndex) => ({
-      title: `${lens.titlePrefix}: ${toTitle(seed)}`,
-      prompt: `${lens.promptPrefix} ${seed}.`,
-      action: `${lens.actionPrefix} ${seed}.`,
-      image: signalImages[(seedIndex + lensIndex) % signalImages.length],
-      tags: [...lens.tags, seedIndex % 2 === 0 ? "arcadeghosts" : "night-kitchen"],
-    })),
+    signalLenses.map((lens, lensIndex) => {
+      const option = {
+        title: `${lens.titlePrefix}: ${toTitle(seed)}`,
+        prompt: `${lens.promptPrefix} ${seed}.`,
+        action: `${lens.actionPrefix} ${seed}.`,
+        image: signalImages[(seedIndex + lensIndex) % signalImages.length],
+        tags: [...lens.tags, seedIndex % 2 === 0 ? "arcadeghosts" : "night-kitchen"],
+      };
+
+      return {
+        ...option,
+        modes: detectSignalBoothModes(option),
+      };
+    }),
 );
+
+export function getSignalBoothOptionsForMode(mode: SignalBoothMode) {
+  if (mode === "random") {
+    return signalBoothOptions;
+  }
+
+  return signalBoothOptions.filter((option) => option.modes.includes(mode));
+}

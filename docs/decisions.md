@@ -17,6 +17,8 @@ These notes mix auto-generated repo facts with human-maintained context.
 - The site now has explicit custom `not-found`, route `error`, and `global-error` pages with Twin Peaks-style copy, plus `/admin/error-previews` for convenient manual review.
 - `/error-preview/server-error` must remain dynamic. It intentionally throws to preview the 500 page, and prerendering it would break `next build`.
 - `package.json` now includes a `go` script that runs lint, build, and then starts the production server locally.
+- Signal Booth mode filtering was added in a deliberately lightweight way: the default remains the full random pool, and category membership is derived from keyword-based helpers in `app/signal-booth-data.ts` rather than a large manual tagging pass.
+- The repo now includes a simple `.vscode/tasks.json` for common workflows and opening the Codex memory docs. Keep it small and repo-specific rather than turning it into a full editor configuration project.
 
 <!-- codex-session-kit:auto-start -->
 > Auto-generated snapshot. Refreshed 6/20/2026, 5:21:50 PM. This section is managed by Codex Session Kit.

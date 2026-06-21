@@ -83,6 +83,8 @@ Homepage-specific interactive helpers:
 - `app/home/HomeDevTerminal.tsx`
 - `app/home/terminal-data.ts`
 - `app/home/HomeHashScroller.tsx`
+- `app/SignalBooth.tsx`
+- `app/signal-booth-data.ts`
 
 Important current homepage behavior:
 
@@ -90,6 +92,7 @@ Important current homepage behavior:
 - terminal commands are data-driven and intentionally easy to extend
 - command links open in a new tab instead of navigating in place
 - a small homepage-only hash scroller re-applies cold-load `/#anchor` scroll on first render so fresh-tab anchor links land more like the in-page nav links
+- Signal Booth still defaults to the old random pool, but now supports a lightweight mode filter for spooky, funny, reflective, career, arcade, cat, and Twin Peaks signals
 
 ### Music page
 
@@ -295,6 +298,7 @@ Current focus:
 - text/url normalization
 - upload validation
 - project helper normalization
+- Signal Booth mode-filter helper coverage
 - selected music formatting helpers
 - public route smoke coverage for `/`, `/music`, `/work-with-me`, `/arcade`, and `/movies-tv`
 - homepage terminal interaction coverage for `help`, `reset`, `hello`, and command-link rendering

@@ -28,6 +28,7 @@ Interactive/public features:
 - guestbook with moderated submissions
 - Tiny Thoughts short-form posts
 - Signal Booth random prompt/oracle experience
+- Signal Booth mode selector for filtering prompts by mood/category
 - faux `80s Dev Terminal` widget on the homepage hero
 - Spotify playlist embeds and curated listening insights
 - custom Twin Peaks-style 404 and 500 pages
@@ -67,6 +68,8 @@ Important top-level areas:
   Reference SQL
 - `tests/`
   Small regression tests for helpers and validation logic
+- `.vscode/`
+  Workspace task setup and local Codex context helpers
 
 ## Important App Folders
 
@@ -130,6 +133,7 @@ Current tests are lightweight and focused on:
 - upload validation
 - project normalization helpers
 - Tiny Thoughts normalization helpers
+- Signal Booth mode-filter helper coverage
 - selected music formatting helpers
 - Playwright browser coverage for stable public pages, custom error-page previews, homepage terminal behavior, and admin session-protected routes
 

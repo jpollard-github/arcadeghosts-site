@@ -23,6 +23,7 @@ What is now in place:
 - homepage hero now includes a faux `80s Dev Terminal` widget with data-driven commands
 - custom Twin Peaks-style 404/500 pages now exist, plus an admin preview page for opening them intentionally
 - `package.json` now includes a `go` script that runs lint, build, then start
+- Signal Booth now includes a lightweight mode selector while preserving the original random behavior as the default
 
 The app currently passes:
 
@@ -89,6 +90,25 @@ Current supported commands include:
 - `arcade`
 - `contact`
 
+### Signal Booth
+
+Signal Booth now has a small mode selector with:
+
+- `Any Signal`
+- `Spooky`
+- `Funny`
+- `Reflective`
+- `Career`
+- `Arcade`
+- `Cat`
+- `Twin Peaks`
+
+Important implementation notes:
+
+- `Any Signal` preserves the old fully random pool
+- mode filtering is data-driven through `app/signal-booth-data.ts`
+- the filtering logic is intentionally lightweight and keyword-based rather than a large manual tagging system
+
 ## Known Patterns To Preserve
 
 - checked-in curated data is preferred over runtime external fetching for music insights
@@ -98,12 +118,14 @@ Current supported commands include:
 - route-specific CSS should stay local when a feature gets large
 - for projects admin specifically, keep reorder persistence tied to `display_order` instead of inventing a separate client-only ordering model
 - for the homepage terminal, keep commands data-driven in `app/home/terminal-data.ts` instead of scattering command logic across the component
+- for Signal Booth, prefer extending the shared mode/filter helpers instead of hard-coding mode behavior in the component
 
 ## Current Risk Areas
 
 These are the files or areas most likely to need attention next if they grow:
 
 - `app/home/HomeDevTerminal.tsx`
+- `app/signal-booth-data.ts`
 - `app/AdminProjects.tsx`
 - `app/AdminNow.tsx`
 - `app/AdminContextRefresh.tsx`
@@ -142,6 +164,7 @@ Current tests live in `tests/` and cover:
 - project normalization helpers
 - Tiny Thoughts normalization helpers
 - selected music formatting helpers
+- Signal Booth mode-filter helper coverage
 - Playwright public route coverage for `/`, `/music`, `/work-with-me`, `/arcade`, `/movies-tv`, and the custom error preview routes
 - Playwright admin coverage for login/logout plus `/admin/guestbook`, `/admin/projects`, `/admin/now`, `/admin/context-refresh`, and `/admin/error-previews`
 
@@ -192,6 +215,13 @@ If updating the homepage terminal specifically, start in:
 - `app/home/HomeHashScroller.tsx`
 - `app/globals.css`
 
+If updating Signal Booth modes or filtering specifically, start in:
+
+- `app/SignalBooth.tsx`
+- `app/signal-booth-data.ts`
+- `app/globals.css`
+- `tests/signal-booth.test.ts`
+
 ### If updating music content or presentation
 
 Start in:
@@ -232,10 +262,11 @@ If more cleanup happens later, the best next candidates are:
 
 1. Split `AdminProjects.tsx` into smaller hooks/components now that it owns expand/collapse, per-card save/delete, and drag state
 2. Split `HomeDevTerminal.tsx` further if command behavior, transcript formatting, or anchor-link handling grows more complex
-3. Split `AdminNow.tsx` if it continues to grow
-4. Add mutation-focused e2e coverage for project save/reorder flows, ideally with cleanup or isolated test data
-5. Add a few more tests around admin route normalization and payload validation
-6. Reduce `app/globals.css` further for other large feature areas
+3. Consider whether Signal Booth should eventually move from keyword-derived modes to explicit curated tagging if the mode list grows
+4. Split `AdminNow.tsx` if it continues to grow
+5. Add mutation-focused e2e coverage for project save/reorder flows, ideally with cleanup or isolated test data
+6. Add a few more tests around admin route normalization and payload validation
+7. Reduce `app/globals.css` further for other large feature areas
 
 ## Short Re-entry Summary
 
@@ -246,6 +277,7 @@ If another session needs a 30-second orientation:
 - Tiny Thoughts admin/upload cleanup is already done
 - projects admin now uses collapsed cards, per-project persistence, and desktop drag-and-drop reorder for saved items
 - the homepage hero now includes a data-driven retro terminal widget
+- Signal Booth now supports simple mood/category filtering while keeping random mode as the default
 - the site has custom 404/500 pages plus an admin preview surface for them
 - unit tests, e2e tests, build, and lint are green
 - future work should extend the split module patterns, not collapse them back into giant files
