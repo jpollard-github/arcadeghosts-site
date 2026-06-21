@@ -38,6 +38,7 @@ Admin areas:
 - `/admin/tiny-thoughts`
 - `/admin/now`
 - `/admin/projects`
+- `/admin/social-quest-log`
 - `/admin/context-refresh`
 - `/admin/error-previews`
 
@@ -56,11 +57,10 @@ Admin areas:
 
 Useful internal docs:
 
-- `docs/repo-summary.md`
-- `docs/architecture.md`
+- `docs/project-brief.md`
 - `docs/current-work.md`
-- `docs/refactor-roadmap.md`
 - `docs/decisions.md`
+- `docs/project-memory-snapshot.md`
 
 If you are using Codex or another AI coding assistant here, those docs should be treated as the primary source of truth before inspecting implementation files.
 
@@ -203,11 +203,10 @@ Open them from:
 
 The docs task opens:
 
-- `docs/repo-summary.md`
-- `docs/architecture.md`
+- `docs/project-brief.md`
 - `docs/current-work.md`
-- `docs/refactor-roadmap.md`
 - `docs/decisions.md`
+- `docs/project-memory-snapshot.md`
 
 Note:
 

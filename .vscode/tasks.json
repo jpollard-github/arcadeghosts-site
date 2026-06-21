@@ -76,7 +76,7 @@
     {
       "label": "Docs: Open Codex Context",
       "type": "shell",
-      "command": "code -g docs/repo-summary.md docs/architecture.md docs/current-work.md docs/refactor-roadmap.md docs/decisions.md",
+      "command": "code -g docs/project-brief.md docs/current-work.md docs/decisions.md docs/project-memory-snapshot.md",
       "options": {
         "cwd": "${workspaceFolder}"
       },

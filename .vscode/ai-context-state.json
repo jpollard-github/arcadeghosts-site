@@ -1,27 +1,21 @@
 {
-  "lastStartPromptAt": "2026-06-20T23:07:45.003Z",
-  "lastFinishPromptAt": "2026-06-21T00:28:33.641Z",
+  "lastStartPromptAt": "2026-06-21T15:38:49.627Z",
+  "lastFinishPromptAt": "2026-06-21T15:59:56.240Z",
   "branchAwareness": {
     "lastSeenBranch": "main",
-    "previousBranch": "feat/tasks",
-    "lastSwitchedAt": "2026-06-21T00:41:48.584Z",
-    "lastWarnedTransitionKey": "feat/tasks->main"
+    "previousBranch": null,
+    "lastSwitchedAt": null,
+    "lastWarnedTransitionKey": null
   },
   "docs": {
-    "docs/decisions.md": {
-      "lastRefreshedAt": "2026-06-20T21:21:50.808Z"
-    },
-    "docs/repo-summary.md": {
-      "lastRefreshedAt": "2026-06-20T21:21:50.805Z"
-    },
-    "docs/architecture.md": {
-      "lastRefreshedAt": "2026-06-20T21:21:50.806Z"
+    "docs/project-memory-snapshot.md": {
+      "lastRefreshedAt": "2026-06-21T15:59:15.659Z"
     },
     "docs/current-work.md": {
-      "lastRefreshedAt": "2026-06-20T23:53:36.317Z"
+      "lastRefreshedAt": "2026-06-21T15:59:20.337Z"
     },
-    "docs/refactor-roadmap.md": {
-      "lastRefreshedAt": "2026-06-20T21:21:50.807Z"
+    "docs/decisions.md": {
+      "lastRefreshedAt": "2026-06-21T15:59:20.338Z"
     }
   }
 }

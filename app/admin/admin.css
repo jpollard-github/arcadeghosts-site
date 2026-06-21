@@ -615,12 +615,110 @@
   overflow-wrap: anywhere;
 }
 
+.social-quest-form,
+.social-quest-filterbar {
+  display: grid;
+  gap: 1rem;
+}
+
+.social-quest-note,
+.social-quest-next-step,
+.social-quest-victory {
+  margin: 0;
+  line-height: 1.65;
+}
+
+.social-quest-note,
+.social-quest-next-step {
+  color: var(--muted);
+}
+
+.social-quest-victory {
+  color: var(--amber);
+  font-weight: 700;
+}
+
+.social-quest-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.social-quest-stat-card strong {
+  display: block;
+  color: var(--ink);
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  line-height: 1;
+}
+
+.social-quest-filterbar {
+  grid-template-columns: minmax(0, 1.6fr) minmax(14rem, 0.8fr) auto;
+  align-items: end;
+  margin-top: 1rem;
+}
+
+.social-quest-filterbar label {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.social-quest-filterbar span {
+  color: var(--teal);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.social-quest-filterbar input,
+.social-quest-filterbar select {
+  min-height: 3rem;
+  border: 1px solid rgba(248, 239, 227, 0.18);
+  border-radius: 8px;
+  padding: 0.78rem 0.9rem;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.07);
+  outline: none;
+}
+
+.social-quest-filterbar select {
+  color-scheme: dark;
+}
+
+.social-quest-filterbar input:focus,
+.social-quest-filterbar select:focus {
+  border-color: rgba(41, 240, 212, 0.55);
+  box-shadow: 0 0 0 3px rgba(41, 240, 212, 0.1);
+}
+
+.social-quest-type-totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.social-quest-card-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.social-quest-pagination {
+  align-items: center;
+}
+
 @media (max-width: 560px) {
+  .social-quest-stats-grid,
   .projects-admin-summary,
   .admin-entry dl,
   .context-refresh-filebar,
   .context-refresh-profile-grid,
   .projects-admin-form,
+  .social-quest-filterbar,
+  .social-quest-card-grid,
   .tiny-thought-attachment-form,
   .tiny-thought-attachment-list li {
     grid-template-columns: 1fr;

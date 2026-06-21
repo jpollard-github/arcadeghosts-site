@@ -146,6 +146,16 @@ export function AdminDashboard() {
               </article>
               <article className="admin-entry">
                 <div className="admin-entry-meta">
+                  <span>Reflect</span>
+                </div>
+                <h2>Social Quest Log</h2>
+                <p>Track social reps, lessons, and next experiments without turning it into a people database.</p>
+                <Link className="admin-action-link" href="/admin/social-quest-log">
+                  Open Social Quest Log
+                </Link>
+              </article>
+              <article className="admin-entry">
+                <div className="admin-entry-meta">
                   <span>Export</span>
                 </div>
                 <h2>Context Refresh Export</h2>
