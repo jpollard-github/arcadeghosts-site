@@ -4,15 +4,16 @@ export function HomeIntroBand() {
   return (
     <section className="intro-band" aria-label="Site mood">
       <p>
-        A living portfolio for software, writing, experiments, personal
-        mythology, and the kind of ideas that keep tapping on the glass.{" "}
+        A living portfolio for software, writing, and strange little
+        experiments.{" "}
         <Link
           className="admin-cup-link"
           href="/admin"
-          aria-label="Open admin dashboard"
-          title="Admin dashboard"
+          aria-label="Open Control Room"
+          title="Control Room"
         >
-          ☕
+          <span aria-hidden="true">☕</span>
+          <span className="admin-cup-label">Control Room</span>
         </Link>
       </p>
     </section>
