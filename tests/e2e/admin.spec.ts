@@ -108,15 +108,19 @@ test("authenticated admin can create a context refresh export", async ({ page })
   await expect(
     page.getByLabel("Redact sensitive fields"),
   ).toBeVisible();
+  await expect(
+    page.getByRole("button", {
+      name: /Save Static Profile|Static Profile Saved/,
+    }),
+  ).toBeVisible();
+  await expect(page.getByText("Memory Core")).toBeVisible();
 
   await page
     .getByRole("button", { name: "Create ChatGPT Context Refresh File" })
     .click();
 
   await expect(
-    page.getByText(
-      "Context refresh export created. Edit the Markdown, then save when ready.",
-    ),
+    page.getByText("Context refresh export created from the saved static profile and site data."),
   ).toBeVisible();
   await expect(
     page.getByLabel("Markdown + YAML front matter"),

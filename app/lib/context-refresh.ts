@@ -46,6 +46,47 @@ export type ContextRefreshExportRow = {
   saved_at: string | null;
 };
 
+export type ContextRefreshProfile = {
+  id: string;
+  name: string;
+  preferredName: string;
+  region: string;
+  siteName: string;
+  githubRepo: string;
+  identitySummary: string;
+  memoryCore: string[];
+  longTermGoals: string[];
+  currentPriorities: string[];
+  activeSocialContext: string[];
+  creativeThemes: string[];
+  conversationPreferences: string[];
+  additionalContext: string[];
+  updatedAt: string;
+};
+
+export type ContextRefreshProfileRow = {
+  id: string;
+  name: string;
+  preferred_name: string;
+  region: string;
+  site_name: string;
+  github_repo: string;
+  identity_summary: string;
+  memory_core: string;
+  long_term_goals: string;
+  current_priorities: string;
+  active_social_context: string;
+  creative_themes: string;
+  conversation_preferences: string;
+  additional_context: string;
+  updated_at: string;
+};
+
+export type ContextRefreshProfileInput = Omit<
+  ContextRefreshProfile,
+  "id" | "updatedAt"
+>;
+
 type TinyThoughtForExport = {
   category: string;
   content: string;
@@ -53,6 +94,8 @@ type TinyThoughtForExport = {
   inspiredBy: string;
   createdAt: string;
 };
+
+const DEFAULT_CONTEXT_REFRESH_PROFILE_ID = "default";
 
 const variantLabels: Record<ContextRefreshVariant, string> = {
   concise: "Export concise context",
@@ -62,88 +105,53 @@ const variantLabels: Record<ContextRefreshVariant, string> = {
   "dev-technical": "Export dev/technical context",
 };
 
-const staticProfile = {
+export const defaultContextRefreshProfile: ContextRefreshProfile = {
+  id: DEFAULT_CONTEXT_REFRESH_PROFILE_ID,
   name: "Jason Pollard",
   preferredName: "Jason",
-  age: 53,
   region: "North Carolina Triad region",
-  site: "ArcadeGhosts",
+  siteName: "ArcadeGhosts",
   githubRepo: "https://github.com/jpollard-github/personal",
+  identitySummary:
+    "Software developer, ArcadeGhosts creator, writer, and curious generalist who likes building useful weird things.",
+  memoryCore: [
+    "Software developer",
+    "Creator of ArcadeGhosts",
+    "Writer and creative builder",
+    "Values meaningful connection over shallow networking",
+    "Prefers direct, practical advice",
+    "Interested in psychology and self-reflection",
+    "Enjoys Twin Peaks, arcade culture, cats, and 80s music",
+    "Thomas died in 2025",
+    "Often balances multiple simultaneous projects",
+  ],
+  longTermGoals: [
+    "Build the ArcadeGhosts ecosystem into a durable creative home",
+    "Develop writing projects that combine memory, myth, and personal reflection",
+    "Keep making useful software and playful web experiments",
+    "Improve social and dating life through real connection, not performance",
+  ],
+  currentPriorities: ["Build", "Write", "Socialize"],
+  activeSocialContext: [
+    "Recurring locations include Empourium and Fair Witness",
+    "Prefers meaningful conversations over high-volume networking",
+  ],
+  creativeThemes: ["Connection", "Identity", "Nostalgia", "Resilience"],
+  conversationPreferences: [
+    "Be warm, practical, and direct",
+    "Preserve Jason's voice in writing and messages",
+    "Ask clarifying questions when stakes are personal or details are missing",
+    "Avoid startup-theater language and generic motivational filler",
+  ],
+  additionalContext: [
+    "Use current-state context rather than overfocusing on old timelines",
+    "Project knowledge and notes can live outside ChatGPT memory when they get too detailed",
+  ],
+  updatedAt: "",
 };
-
-const music = [
-  "Reflective Resilience",
-  "Arcade Ghosts After Midnight",
-  "Love Me Tomorrow Radio",
-  "The Mountain Radio",
-  "Music League profile: https://app.musicleague.com/user/8e855be976294ae0aedf7a0820572ffb/",
-];
-
-const aboutSummary = [
-  "Jason is a software developer, cat dad, music enthusiast, arcade wanderer, and lifelong collector of strange ideas.",
-  "He built ArcadeGhosts because ordinary social profiles do not capture the interesting parts of life: late-night conversations, favorite songs, forgotten arcade cabinets, weird dreams, and sudden self-understanding.",
-  "He spends time exploring technology, creativity, nostalgia, personal growth, AI, trivia nights, road trips, coding projects, horror movies, 80s music, and stories that blur reality.",
-  "He tends to like Twin Peaks atmosphere, hidden meaning in songs and films, old arcades, deep conversations, learning for joy, cats, building things because they are interesting, and finding his people.",
-  "A recurring theme: life gets more interesting when you stop trying to fit into the wrong crowd.",
-];
 
 const redactionNote =
   "Sensitive details are intentionally omitted or generalized: exact addresses, passwords, private names, financial details, medical details, API keys, and anything that should not be pasted into a chat.";
-
-const currentPriorities = [
-  "Finish ArcadeGhosts improvements",
-  "Investigate creating my own therapy model like DBT",
-  "Expand writing collection",
-  "Meet more people and improve dating life",
-  "Maintain health and work-life balance",
-];
-
-const currentChallenges = [
-  "Loneliness and desire for deeper connection",
-  "Wants meaningful social connection rather than high-volume socializing",
-  "Balancing exploration with focus",
-  "Avoiding overengineering when building products",
-];
-
-const recentDecisions = [
-  {
-    date: "2026-06-15",
-    decisions: [
-      "I don't start things I don't finish. I DO finish, and early. If I have an idea which doesn't come to fruition, no big deal, I close out however it needs.",
-    ],
-  },
-  {
-    date: "2026-06-10",
-    decisions: ["Decided to build Context Refresh Export into ArcadeGhosts"],
-  },
-  {
-    date: "2026-06-05",
-    decisions: ["SoftSignal should prioritize resonance before photos"],
-  },
-  {
-    date: "2026-05-28",
-    decisions: [
-      "Focus on practical VS Code tooling instead of broader AI platform ideas",
-    ],
-  },
-];
-
-const commonIncorrectAssumptions = [
-  "Not actively trying to become a startup founder",
-  "Values interesting work over maximum income",
-  "Likes AI as a tool, not as an identity",
-  "Prefers thoughtful relationships over dating-app optimization",
-  "Really looking to meet kindred spirits and dating partners",
-];
-
-const datingAndSocialContext = [
-  "Jason values emotional resonance, curiosity, direct but kind communication, and conversations that skip shallow performance.",
-  "SoftSignal is an active dating-product idea centered on prompts, memory, writing, mood, and resonance before photos.",
-  "Useful advice should balance warmth, clarity, self-respect, and realistic next steps.",
-  "Avoid generic dating scripts; help preserve Jason's voice.",
-  "Jason is actively trying to meet people, dating apps don't work very well but have produced the most dates",
-  "Jason has liked the bars Empourium, Social Habit, Fair Witness. There is a girl he likes named Rebecca who sometimes shows up at Empourium.",
-];
 
 export function countContextRefreshWords(value: string) {
   return value.trim().split(/\s+/).filter(Boolean).length;
@@ -165,6 +173,135 @@ export function normalizeContextRefreshContent(value: unknown) {
     .replace(/[ \t]+\n/g, "\n")
     .replace(/\n{4,}/g, "\n\n\n")
     .trim();
+}
+
+function normalizeContextRefreshField(value: unknown, maxLength = 600) {
+  if (typeof value !== "string") {
+    return "";
+  }
+
+  return value
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "")
+    .replace(/[ \t]+/g, " ")
+    .trim()
+    .slice(0, maxLength);
+}
+
+function splitStoredLines(value: string) {
+  return value
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+export function normalizeContextRefreshLineList(
+  value: unknown,
+  {
+    maxItems = 12,
+    maxLength = 240,
+  }: {
+    maxItems?: number;
+    maxLength?: number;
+  } = {},
+) {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => normalizeContextRefreshField(item, maxLength))
+      .filter(Boolean)
+      .slice(0, maxItems);
+  }
+
+  if (typeof value !== "string") {
+    return [];
+  }
+
+  return value
+    .split(/\r?\n/)
+    .map((item) => normalizeContextRefreshField(item, maxLength))
+    .filter(Boolean)
+    .slice(0, maxItems);
+}
+
+function linesToStorage(value: string[]) {
+  return value.join("\n");
+}
+
+function withFallback(value: string[], fallback: string[]) {
+  return value.length ? value : fallback;
+}
+
+export function normalizeContextRefreshProfileInput(
+  value: unknown,
+): ContextRefreshProfileInput {
+  const source =
+    value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+
+  return {
+    name:
+      normalizeContextRefreshField(source.name, 120) ||
+      defaultContextRefreshProfile.name,
+    preferredName:
+      normalizeContextRefreshField(source.preferredName, 120) ||
+      defaultContextRefreshProfile.preferredName,
+    region:
+      normalizeContextRefreshField(source.region, 160) ||
+      defaultContextRefreshProfile.region,
+    siteName:
+      normalizeContextRefreshField(source.siteName, 120) ||
+      defaultContextRefreshProfile.siteName,
+    githubRepo:
+      normalizeContextRefreshField(source.githubRepo, 240) ||
+      defaultContextRefreshProfile.githubRepo,
+    identitySummary:
+      normalizeContextRefreshField(source.identitySummary, 320) ||
+      defaultContextRefreshProfile.identitySummary,
+    memoryCore: withFallback(
+      normalizeContextRefreshLineList(source.memoryCore, {
+        maxItems: 12,
+        maxLength: 180,
+      }),
+      defaultContextRefreshProfile.memoryCore,
+    ),
+    longTermGoals: withFallback(
+      normalizeContextRefreshLineList(source.longTermGoals, {
+        maxItems: 10,
+        maxLength: 220,
+      }),
+      defaultContextRefreshProfile.longTermGoals,
+    ),
+    currentPriorities: withFallback(
+      normalizeContextRefreshLineList(source.currentPriorities, {
+        maxItems: 10,
+        maxLength: 180,
+      }),
+      defaultContextRefreshProfile.currentPriorities,
+    ),
+    activeSocialContext: normalizeContextRefreshLineList(
+      source.activeSocialContext,
+      {
+        maxItems: 10,
+        maxLength: 220,
+      },
+    ),
+    creativeThemes: withFallback(
+      normalizeContextRefreshLineList(source.creativeThemes, {
+        maxItems: 10,
+        maxLength: 120,
+      }),
+      defaultContextRefreshProfile.creativeThemes,
+    ),
+    conversationPreferences: withFallback(
+      normalizeContextRefreshLineList(source.conversationPreferences, {
+        maxItems: 10,
+        maxLength: 220,
+      }),
+      defaultContextRefreshProfile.conversationPreferences,
+    ),
+    additionalContext: normalizeContextRefreshLineList(source.additionalContext, {
+      maxItems: 12,
+      maxLength: 240,
+    }),
+  };
 }
 
 export function contextRefreshFilename(date = new Date()) {
@@ -201,6 +338,30 @@ export async function ensureContextRefreshExportsTable() {
   `;
 }
 
+export async function ensureContextRefreshProfileTable() {
+  const sql = getGuestbookSql();
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS context_refresh_profiles (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      preferred_name TEXT NOT NULL,
+      region TEXT NOT NULL,
+      site_name TEXT NOT NULL,
+      github_repo TEXT NOT NULL,
+      identity_summary TEXT NOT NULL,
+      memory_core TEXT NOT NULL DEFAULT '',
+      long_term_goals TEXT NOT NULL DEFAULT '',
+      current_priorities TEXT NOT NULL DEFAULT '',
+      active_social_context TEXT NOT NULL DEFAULT '',
+      creative_themes TEXT NOT NULL DEFAULT '',
+      conversation_preferences TEXT NOT NULL DEFAULT '',
+      additional_context TEXT NOT NULL DEFAULT '',
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `;
+}
+
 export function toContextRefreshExport(
   row: ContextRefreshExportRow,
 ): ContextRefreshExport {
@@ -217,6 +378,193 @@ export function toContextRefreshExport(
   };
 }
 
+export function toContextRefreshProfile(
+  row: ContextRefreshProfileRow,
+): ContextRefreshProfile {
+  return {
+    id: row.id,
+    name: row.name,
+    preferredName: row.preferred_name,
+    region: row.region,
+    siteName: row.site_name,
+    githubRepo: row.github_repo,
+    identitySummary: row.identity_summary,
+    memoryCore: withFallback(
+      splitStoredLines(row.memory_core),
+      defaultContextRefreshProfile.memoryCore,
+    ),
+    longTermGoals: withFallback(
+      splitStoredLines(row.long_term_goals),
+      defaultContextRefreshProfile.longTermGoals,
+    ),
+    currentPriorities: withFallback(
+      splitStoredLines(row.current_priorities),
+      defaultContextRefreshProfile.currentPriorities,
+    ),
+    activeSocialContext: splitStoredLines(row.active_social_context),
+    creativeThemes: withFallback(
+      splitStoredLines(row.creative_themes),
+      defaultContextRefreshProfile.creativeThemes,
+    ),
+    conversationPreferences: withFallback(
+      splitStoredLines(row.conversation_preferences),
+      defaultContextRefreshProfile.conversationPreferences,
+    ),
+    additionalContext: splitStoredLines(row.additional_context),
+    updatedAt: row.updated_at,
+  };
+}
+
+async function seedDefaultContextRefreshProfile() {
+  const sql = getGuestbookSql();
+  const profile = defaultContextRefreshProfile;
+
+  await sql`
+    INSERT INTO context_refresh_profiles (
+      id,
+      name,
+      preferred_name,
+      region,
+      site_name,
+      github_repo,
+      identity_summary,
+      memory_core,
+      long_term_goals,
+      current_priorities,
+      active_social_context,
+      creative_themes,
+      conversation_preferences,
+      additional_context
+    )
+    VALUES (
+      ${profile.id},
+      ${profile.name},
+      ${profile.preferredName},
+      ${profile.region},
+      ${profile.siteName},
+      ${profile.githubRepo},
+      ${profile.identitySummary},
+      ${linesToStorage(profile.memoryCore)},
+      ${linesToStorage(profile.longTermGoals)},
+      ${linesToStorage(profile.currentPriorities)},
+      ${linesToStorage(profile.activeSocialContext)},
+      ${linesToStorage(profile.creativeThemes)},
+      ${linesToStorage(profile.conversationPreferences)},
+      ${linesToStorage(profile.additionalContext)}
+    )
+    ON CONFLICT (id) DO NOTHING
+  `;
+}
+
+export async function getContextRefreshProfile() {
+  await ensureContextRefreshProfileTable();
+  await seedDefaultContextRefreshProfile();
+  const sql = getGuestbookSql();
+  const rows = await sql`
+    SELECT
+      id,
+      name,
+      preferred_name,
+      region,
+      site_name,
+      github_repo,
+      identity_summary,
+      memory_core,
+      long_term_goals,
+      current_priorities,
+      active_social_context,
+      creative_themes,
+      conversation_preferences,
+      additional_context,
+      updated_at
+    FROM context_refresh_profiles
+    WHERE id = ${DEFAULT_CONTEXT_REFRESH_PROFILE_ID}
+    LIMIT 1
+  `;
+
+  if (!rows.length) {
+    return defaultContextRefreshProfile;
+  }
+
+  return toContextRefreshProfile((rows as ContextRefreshProfileRow[])[0]);
+}
+
+export async function saveContextRefreshProfile(value: unknown) {
+  await ensureContextRefreshProfileTable();
+  const sql = getGuestbookSql();
+  const profile = normalizeContextRefreshProfileInput(value);
+  const rows = await sql`
+    INSERT INTO context_refresh_profiles (
+      id,
+      name,
+      preferred_name,
+      region,
+      site_name,
+      github_repo,
+      identity_summary,
+      memory_core,
+      long_term_goals,
+      current_priorities,
+      active_social_context,
+      creative_themes,
+      conversation_preferences,
+      additional_context,
+      updated_at
+    )
+    VALUES (
+      ${DEFAULT_CONTEXT_REFRESH_PROFILE_ID},
+      ${profile.name},
+      ${profile.preferredName},
+      ${profile.region},
+      ${profile.siteName},
+      ${profile.githubRepo},
+      ${profile.identitySummary},
+      ${linesToStorage(profile.memoryCore)},
+      ${linesToStorage(profile.longTermGoals)},
+      ${linesToStorage(profile.currentPriorities)},
+      ${linesToStorage(profile.activeSocialContext)},
+      ${linesToStorage(profile.creativeThemes)},
+      ${linesToStorage(profile.conversationPreferences)},
+      ${linesToStorage(profile.additionalContext)},
+      now()
+    )
+    ON CONFLICT (id) DO UPDATE
+    SET
+      name = EXCLUDED.name,
+      preferred_name = EXCLUDED.preferred_name,
+      region = EXCLUDED.region,
+      site_name = EXCLUDED.site_name,
+      github_repo = EXCLUDED.github_repo,
+      identity_summary = EXCLUDED.identity_summary,
+      memory_core = EXCLUDED.memory_core,
+      long_term_goals = EXCLUDED.long_term_goals,
+      current_priorities = EXCLUDED.current_priorities,
+      active_social_context = EXCLUDED.active_social_context,
+      creative_themes = EXCLUDED.creative_themes,
+      conversation_preferences = EXCLUDED.conversation_preferences,
+      additional_context = EXCLUDED.additional_context,
+      updated_at = now()
+    RETURNING
+      id,
+      name,
+      preferred_name,
+      region,
+      site_name,
+      github_repo,
+      identity_summary,
+      memory_core,
+      long_term_goals,
+      current_priorities,
+      active_social_context,
+      creative_themes,
+      conversation_preferences,
+      additional_context,
+      updated_at
+  `;
+
+  return toContextRefreshProfile((rows as ContextRefreshProfileRow[])[0]);
+}
+
 async function readWritingExcerpt(slug: string) {
   try {
     const file = await readFile(
@@ -224,7 +572,7 @@ async function readWritingExcerpt(slug: string) {
       "utf8",
     );
 
-    return file.replace(/\*\*/g, "").replace(/\s+/g, " ").trim().slice(0, 620);
+    return file.replace(/\*\*/g, "").replace(/\s+/g, " ").trim().slice(0, 280);
   } catch {
     return "";
   }
@@ -257,7 +605,7 @@ async function loadTinyThoughts() {
         updated_at
       FROM tiny_thoughts
       ORDER BY created_at DESC
-      LIMIT 10
+      LIMIT 3
     `;
 
     return (rows as TinyThoughtRow[]).map(toTinyThought).map(
@@ -275,28 +623,15 @@ async function loadTinyThoughts() {
 }
 
 function listItems(items: string[]) {
-  return items.map((item) => `- ${item}`).join("\n");
-}
+  if (!items.length) {
+    return "- None listed";
+  }
 
-function numberedItems(items: string[]) {
-  return items.map((item, index) => `${index + 1}. ${item}`).join("\n");
+  return items.map((item) => `- ${item}`).join("\n");
 }
 
 function yamlList(label: string, items: string[]) {
   return [label, ...items.map((item) => `  - ${item}`)];
-}
-
-function projectBlockerLines(value: string) {
-  const blockers = value
-    .split("\n")
-    .map((blocker) => blocker.trim())
-    .filter(Boolean);
-
-  if (!blockers.length) {
-    return ["- Blockers: None listed"];
-  }
-
-  return ["- Blockers:", ...blockers.map((blocker) => `  - ${blocker}`)];
 }
 
 function projectPriorityLabel(value: number) {
@@ -306,69 +641,51 @@ function projectPriorityLabel(value: number) {
   );
 }
 
-function musicSnapshotLines() {
-  return [
-    "## Music page snapshot",
-    `- Source range: ${musicInsights.sourceRange}`,
-    `- Public summary: ${musicInsights.summary.totalHours} listening hours across ${musicInsights.summary.totalStreams} plays; peak year ${musicInsights.summary.peakYear} (${musicInsights.summary.peakYearHours}h).`,
-    `- Recent window shown on the page: ${musicInsights.recentWindow.start} through ${musicInsights.recentWindow.end}.`,
-    `- Recent top artists: ${musicInsights.recentRankings.artists
-      .slice(0, 4)
-      .map((artist) => `${artist.name} (${artist.value})`)
-      .join(", ")}.`,
-    `- Genre weather highlights: ${musicInsights.genres
-      .slice(0, 5)
-      .map((genre) => `${genre.name} (${genre.hours}h)`)
-      .join(", ")}.`,
-    `- Current mood color on the page: ${musicInsights.moodReads[0].value}.`,
-    `- Whole-archive mood color on the page: ${musicInsights.moodReads[1].value}.`,
-    `- Musical DNA panels include: ${musicInsights.musicalDna
-      .map((panel) => panel.title)
-      .join(", ")}.`,
-    `- Era highlights: ${musicInsights.eras
-      .slice(0, 3)
-      .map((era) => `${era.title} (${era.period})`)
-      .join(", ")}.`,
-    `- Fixation highlights: ${musicInsights.fixations
-      .slice(0, 3)
-      .map((item) => `${item.title} (${item.value})`)
-      .join(", ")}.`,
-    "",
-  ];
+function projectBlockerSummary(value: string) {
+  const blockers = value
+    .split("\n")
+    .map((blocker) => blocker.trim())
+    .filter(Boolean);
+
+  if (!blockers.length) {
+    return "";
+  }
+
+  return `- Blockers: ${blockers.join("; ")}`;
 }
 
 function frontMatter({
   generatedAt,
   variant,
   redacted,
+  profile,
+  activeProjects,
 }: {
   generatedAt: Date;
   variant: ContextRefreshVariant;
   redacted: boolean;
+  profile: ContextRefreshProfile;
+  activeProjects: string[];
 }) {
   return [
     "---",
     `generated_at: ${generatedAt.toISOString()}`,
-    `user: ${staticProfile.name}`,
-    `preferred_name: ${staticProfile.preferredName}`,
+    `user: ${profile.name}`,
+    `preferred_name: ${profile.preferredName}`,
     `purpose: ChatGPT context refresh`,
     `privacy_level: ${redacted ? "personal_redacted" : "personal"}`,
     `export_type: ${variant}`,
     `redacted: ${redacted}`,
-    ...yamlList("current_focus:", ["ArcadeGhosts", "SoftSignal"]),
-    ...yamlList("active_projects:", [
-      "ArcadeGhosts",
-      "SoftSignal",
-      "Between Two Lodges",
-    ]),
-    ...yamlList("interests:", [
-      "Cats",
-      "80s Music",
-      "Twin Peaks",
-      "Arcade Games",
-      "Writing",
-    ]),
-    ...yamlList("conversation_style:", ["Practical", "Curious", "Direct"]),
+    ...yamlList(
+      "current_focus:",
+      profile.currentPriorities.slice(0, 5),
+    ),
+    ...yamlList("active_projects:", activeProjects.slice(0, 6)),
+    ...yamlList("themes:", profile.creativeThemes.slice(0, 6)),
+    ...yamlList(
+      "conversation_style:",
+      profile.conversationPreferences.slice(0, 4),
+    ),
     "---",
   ].join("\n");
 }
@@ -376,13 +693,13 @@ function frontMatter({
 function variantGuidance(variant: ContextRefreshVariant) {
   switch (variant) {
     case "project":
-      return "Use this export primarily for project planning, product thinking, writing, implementation help, and continuity across active work.";
+      return "Use this export primarily for project planning, product thinking, writing implementation, and continuity across active work.";
     case "dating-social":
-      return "Use this export primarily for dating, social advice, communication style, self-understanding, and emotional pattern recognition.";
+      return "Use this export primarily for dating, social advice, self-understanding, communication style, and emotional pattern recognition.";
     case "dev-technical":
       return "Use this export primarily for coding help, architecture, repo context, implementation decisions, and developer workflow.";
     case "full":
-      return "Use this export when a deep context refresh is useful and the conversation can absorb richer background.";
+      return "Use this export when a deeper refresh is useful and the conversation can absorb richer current-state context.";
     case "concise":
     default:
       return "Use this export as the default lightweight refresh before advice, writing, planning, or technical help.";
@@ -391,13 +708,15 @@ function variantGuidance(variant: ContextRefreshVariant) {
 
 function includeForVariant(
   variant: ContextRefreshVariant,
-  section: "projects" | "dating" | "technical" | "creative" | "favorites",
+  section:
+    | "projects"
+    | "social"
+    | "technical"
+    | "creative"
+    | "website"
+    | "tiny-thoughts",
 ) {
-  if (variant === "full") {
-    return true;
-  }
-
-  if (variant === "concise") {
+  if (variant === "full" || variant === "concise") {
     return true;
   }
 
@@ -405,17 +724,68 @@ function includeForVariant(
     return (
       section === "projects" ||
       section === "technical" ||
-      section === "creative"
+      section === "creative" ||
+      section === "website"
     );
   }
 
   if (variant === "dating-social") {
     return (
-      section === "dating" || section === "creative" || section === "favorites"
+      section === "social" ||
+      section === "creative" ||
+      section === "website" ||
+      section === "tiny-thoughts"
     );
   }
 
-  return section === "technical" || section === "projects";
+  return (
+    section === "projects" ||
+    section === "technical" ||
+    section === "website"
+  );
+}
+
+function websiteSignalLines({
+  profile,
+  writingSummaries,
+  tinyThoughts,
+}: {
+  profile: ContextRefreshProfile;
+  writingSummaries: Array<{
+    title: string;
+    excerpt: string;
+    link: string;
+  }>;
+  tinyThoughts: TinyThoughtForExport[];
+}) {
+  const lines = [
+    "## Website Signals",
+    `- Public site hub: ${profile.siteName}. The tone blends portfolio work, writing, nostalgia, Twin Peaks atmosphere, cats, music, arcade culture, and playful developer experiments.`,
+    `- Writings currently featured: ${writingSummaries
+      .slice(0, 3)
+      .map((writing) => writing.title)
+      .join(", ")}.`,
+    `- Music page snapshot: ${musicInsights.summary.totalHours} listening hours across ${musicInsights.summary.totalStreams} plays, with peak year ${musicInsights.summary.peakYear}.`,
+    `- Favorite arcade signals surfaced on the site: ${arcadeGames
+      .slice(0, 4)
+      .map((game) => game.title)
+      .join(", ")}.`,
+    `- Favorite movie/TV signals surfaced on the site: ${visualMedia
+      .slice(0, 4)
+      .map((item) => item.title)
+      .join(", ")}.`,
+  ];
+
+  if (tinyThoughts.length) {
+    lines.push(
+      `- Recent Tiny Thoughts energy: ${tinyThoughts
+        .map((thought) => `${thought.category}: ${thought.content}`)
+        .join(" | ")}`,
+    );
+  }
+
+  lines.push("");
+  return lines;
 }
 
 export async function buildContextRefreshContent({
@@ -426,124 +796,121 @@ export async function buildContextRefreshContent({
   redacted: boolean;
 }) {
   const generatedAt = new Date();
+  const profile = await getContextRefreshProfile();
   const writingSummaries = await loadWritingSummaries();
   const tinyThoughts = await loadTinyThoughts();
   const projects = await getContextRefreshProjects();
+  const activeProjects = projects.map((project) => project.title);
   const lines: string[] = [
-    frontMatter({ generatedAt, variant, redacted }),
+    frontMatter({
+      generatedAt,
+      variant,
+      redacted,
+      profile,
+      activeProjects,
+    }),
     "",
-    "# Context Refresh Export",
+    "# Context Export",
     "",
-    `Generated for ${staticProfile.preferredName} from ArcadeGhosts. Export mode: ${variantLabels[variant]}.`,
+    `Generated for ${profile.preferredName} from ${profile.siteName}. Export mode: ${variantLabels[variant]}.`,
     "",
-    "## What changed since last export",
-    "- Fill this in after editing. Include new projects, decisions, life updates, preferences, or anything ChatGPT should stop assuming.",
-    "",
-    "## Current priorities (June 2026)",
-    numberedItems(currentPriorities),
-    "",
-    "## Current challenges",
-    listItems(currentChallenges),
-    "",
-    "## Recent decisions",
-    ...recentDecisions.flatMap((entry) => [
-      entry.date,
-      ...entry.decisions.map((decision) => `- ${decision}`),
-      "",
-    ]),
-    "## Common incorrect assumptions",
-    listItems(commonIncorrectAssumptions),
-    "",
-    "## How to use this",
+    "## How To Use This",
     `- ${variantGuidance(variant)}`,
-    "- Treat this as user-authored context, but ask before relying on anything sensitive or ambiguous.",
-    "- Prefer specific, practical help with a warm, curious style.",
-    "",
-    "## Profile",
-    `- Name: ${staticProfile.name}`,
-    `- Preferred name: ${staticProfile.preferredName}`,
-    `- Age: ${staticProfile.age}`,
-    `- General region: ${redacted ? staticProfile.region : staticProfile.region}`,
-    `- Personal site/project hub: ${staticProfile.site}`,
-    "",
-    "## Privacy and redaction",
-    `- Redaction enabled: ${redacted ? "yes" : "no"}`,
+    "- Treat this as a current-state operating manual, not a full autobiography.",
+    "- The Memory Core section is the durable stuff. The Current Context sections are the things most likely to change.",
     `- ${redacted ? redactionNote : "This export may include personal context. Do not include passwords, API keys, private addresses, or details that should not be pasted into a chat."}`,
     "",
-    "## About Jason",
-    listItems(aboutSummary),
-    "",
-    "## Dating and social context",
-    listItems(datingAndSocialContext),
+    "## Memory Core",
+    `- Identity summary: ${profile.identitySummary}`,
+    listItems(profile.memoryCore),
     "",
   ];
 
-  if (includeForVariant(variant, "favorites")) {
-    lines.push(
-      "## Favorites and recurring interests",
-      "",
-      "### Arcade games",
-      listItems(arcadeGames.map((game) => game.title)),
-      "",
-      "### Movies and TV shows",
-      listItems(visualMedia.map((item) => item.title)),
-      "",
-      "### Music signals",
-      listItems(music),
-      "",
-      ...musicSnapshotLines(),
-    );
+  if (
+    includeForVariant(variant, "projects") ||
+    includeForVariant(variant, "social") ||
+    includeForVariant(variant, "creative")
+  ) {
+    lines.push("## Current Context", "");
   }
 
   if (includeForVariant(variant, "projects")) {
-    lines.push(
-      "## Ongoing projects",
-      "",
-      ...projects.flatMap((project) =>
-        [
-          `### ${project.title}`,
-          `- Type: ${project.type}`,
-          `- Description: ${project.description}`,
-          `- Project Status: ${project.status}`,
-          `- Project Priority: ${projectPriorityLabel(project.priority)}`,
-          `- Current Phase: ${project.phase || "Not specified"}`,
-          `- Next Action: ${project.nextAction || "Not specified"}`,
-          ...projectBlockerLines(project.blockers),
-          project.href ? `- Link: ${project.href}` : "",
-          "",
-        ].filter((line): line is string => Boolean(line)),
-      ),
-    );
+    lines.push("### Active Projects");
+
+    if (projects.length) {
+      lines.push(
+        "",
+        ...projects.flatMap((project) =>
+          [
+            `#### ${project.title}`,
+            `- Type: ${project.type}`,
+            `- Status: ${project.status}`,
+            `- Priority: ${projectPriorityLabel(project.priority)}`,
+            `- Description: ${project.description}`,
+            project.phase ? `- Current phase: ${project.phase}` : "",
+            project.nextAction && project.nextAction !== "None"
+              ? `- Next action: ${project.nextAction}`
+              : "",
+            projectBlockerSummary(project.blockers),
+            project.href ? `- Link: ${project.href}` : "",
+            "",
+          ].filter(Boolean),
+        ),
+      );
+    } else {
+      lines.push("", "- No projects are currently marked for context refresh.", "");
+    }
+
+    lines.push("### Current Priorities", listItems(profile.currentPriorities), "");
+  }
+
+  if (includeForVariant(variant, "social")) {
+    lines.push("### Active Social Context", listItems(profile.activeSocialContext), "");
+  }
+
+  if (includeForVariant(variant, "creative")) {
+    lines.push("### Creative Direction", listItems(profile.creativeThemes), "");
   }
 
   if (includeForVariant(variant, "technical")) {
     lines.push(
-      "## Technical context",
-      "- Stack: Next.js App Router, React, TypeScript, Neon Postgres, Vercel Blob, Resend, Vercel hosting.",
-      `- Main repo: ${staticProfile.githubRepo}`,
-      "- Current site admin tools include Guestbook moderation, Tiny Thoughts publishing, and this Context Refresh Export editor.",
-      "- Preference: pragmatic implementation, close fit with existing code patterns, careful verification, and useful automation without overbuilding.",
+      "## Technical Context",
+      `- Main repo: ${profile.githubRepo}`,
+      "- Stack: Next.js App Router, React, TypeScript, Neon Postgres, Vercel Blob, Resend, and Vercel hosting.",
+      "- Admin-managed content includes projects, Now cards, Tiny Thoughts, guestbook moderation, and context-refresh exports.",
+      "- Preferred implementation style: pragmatic changes, close fit with the existing repo, careful verification, and useful automation without overbuilding.",
       "",
     );
   }
 
-  if (includeForVariant(variant, "creative")) {
+  if (includeForVariant(variant, "website")) {
     lines.push(
-      "## Writing excerpts",
-      "",
-      ...writingSummaries.flatMap((writing) => [
-        `### ${writing.title}`,
-        `- Description: ${writing.description}`,
-        `- Link: ${writing.link}`,
-        writing.excerpt
-          ? `- Excerpt: ${writing.excerpt}${writing.excerpt.length >= 620 ? "..." : ""}`
-          : "",
-        "",
-      ]),
+      ...websiteSignalLines({
+        profile,
+        writingSummaries,
+        tinyThoughts,
+      }),
     );
   }
 
-  if (tinyThoughts.length && variant !== "dating-social") {
+  lines.push(
+    "## Long-Term Goals",
+    listItems(profile.longTermGoals),
+    "",
+    "## Conversation Preferences",
+    listItems(profile.conversationPreferences),
+    "",
+  );
+
+  if (profile.additionalContext.length) {
+    lines.push(
+      "## Additional Context",
+      listItems(profile.additionalContext),
+      "",
+    );
+  }
+
+  if (includeForVariant(variant, "tiny-thoughts") && tinyThoughts.length) {
     lines.push(
       "## Recent Tiny Thoughts",
       "",
@@ -560,17 +927,14 @@ export async function buildContextRefreshContent({
   }
 
   lines.push(
-    "## Conversation guidance",
-    "- Do: be warm, specific, thoughtful, practical, and willing to ask sharp clarifying questions.",
-    "- Do: preserve Jason's voice when helping with writing, dating messages, product ideas, and code.",
-    "- Do: notice patterns across projects, music, nostalgia, cats, technology, and personal growth.",
-    "- Avoid: bland motivational filler, overconfident assumptions, generic advice, and flattening weird or personal details into something ordinary.",
-    "- Assume: Jason appreciates curiosity, emotional nuance, humor with a little bite, and technical competence.",
-    "- Ask me when: stakes are personal, details are missing, privacy matters, or there are multiple plausible directions.",
+    "## Maintenance Notes",
+    "- ChatGPT Memory should hold only durable facts that improve conversations over long periods.",
+    "- This export should stay focused on what matters now: active projects, priorities, social context, themes, and current direction.",
+    "- Project knowledge, decisions, and raw notes can live in external knowledge systems instead of bloating the export.",
     "",
-    "## Open editing notes",
-    "- Add project-specific status and open questions.",
-    "- Add anything important that is not represented on the public website.",
+    "## Open Editing Notes",
+    "- Update new decisions, priorities, and active social context before using this in a new chat.",
+    "- Remove stale projects or themes rather than preserving every old version of the story.",
   );
 
   return lines

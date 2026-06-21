@@ -5,8 +5,11 @@ import {
   countContextRefreshWords,
   createContextRefreshExport,
   ensureContextRefreshExportsTable,
+  ensureContextRefreshProfileTable,
+  getContextRefreshProfile,
   isContextRefreshVariant,
   normalizeContextRefreshContent,
+  saveContextRefreshProfile,
   toContextRefreshExport,
   type ContextRefreshExportRow,
 } from "../../../lib/context-refresh";
@@ -30,6 +33,7 @@ export async function GET() {
 
   try {
     await ensureContextRefreshExportsTable();
+    await ensureContextRefreshProfileTable();
     const sql = getGuestbookSql();
     const rows = await sql`
       SELECT
@@ -51,6 +55,7 @@ export async function GET() {
       export: rows.length
         ? toContextRefreshExport((rows as ContextRefreshExportRow[])[0])
         : null,
+      profile: await getContextRefreshProfile(),
       variants: contextRefreshVariants,
     });
   } catch (error) {
@@ -147,6 +152,27 @@ export async function PUT(request: Request) {
     console.error("Admin context refresh PUT failed", error);
     return Response.json(
       { error: "Context refresh export could not be saved." },
+      { status: 500 },
+    );
+  }
+}
+
+export async function PATCH(request: Request) {
+  const unauthorized = await requireAdmin();
+
+  if (unauthorized) {
+    return unauthorized;
+  }
+
+  try {
+    const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+    const profile = await saveContextRefreshProfile(body);
+
+    return Response.json({ ok: true, profile });
+  } catch (error) {
+    console.error("Admin context refresh PATCH failed", error);
+    return Response.json(
+      { error: "Context refresh profile could not be saved." },
       { status: 500 },
     );
   }
