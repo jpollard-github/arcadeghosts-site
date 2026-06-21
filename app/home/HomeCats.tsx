@@ -4,10 +4,12 @@ import { catCards } from "./data";
 export function HomeCats() {
   return (
     <section className="content-section cats-section" id="cats">
-      <SectionHeading eyebrow="Cats" title="Cat rooms, no endless hallway.">
-        The cat galleries have moved into their own rooms so the homepage can
-        breathe again.
-      </SectionHeading>
+      <div id="cats-heading">
+        <SectionHeading eyebrow="Cats" title="Cat rooms, no endless hallway.">
+          The cat galleries have moved into their own rooms so the homepage can
+          breathe again.
+        </SectionHeading>
+      </div>
       <div className="section-link-grid">
         {catCards.map((card) => (
           <a className="section-link-card" href={card.href} key={card.title}>

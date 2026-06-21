@@ -154,6 +154,16 @@ export function AdminDashboard() {
                   Open Context Refresh Export
                 </Link>
               </article>
+              <article className="admin-entry">
+                <div className="admin-entry-meta">
+                  <span>Preview</span>
+                </div>
+                <h2>Error Pages</h2>
+                <p>Open the custom 404 and 500 pages on demand so the strange copy is easy to review.</p>
+                <Link className="admin-action-link" href="/admin/error-previews">
+                  Open Error Previews
+                </Link>
+              </article>
             </div>
           </>
         )}

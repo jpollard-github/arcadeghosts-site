@@ -37,6 +37,9 @@ test("admin dashboard supports sign in and sign out", async ({ page }) => {
   await expect(
     page.getByRole("link", { name: "Open Tiny Thoughts" }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Open Error Previews" }),
+  ).toBeVisible();
 
   await page.getByRole("button", { name: "Log Out" }).click();
 
@@ -119,4 +122,20 @@ test("authenticated admin can create a context refresh export", async ({ page })
     page.getByLabel("Markdown + YAML front matter"),
   ).toBeVisible();
   await expect(page.getByRole("button", { name: "Export" })).toBeVisible();
+});
+
+test("authenticated admin can open error previews", async ({ page }) => {
+  await loginAsAdmin(page);
+
+  await page.goto("/admin/error-previews");
+
+  await expect(
+    page.getByRole("heading", { name: "Error Previews" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Open 404 Preview" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Open 500 Preview" }),
+  ).toBeVisible();
 });

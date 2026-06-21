@@ -63,3 +63,29 @@ test("movies and tv page renders the media grid", async ({ page }) => {
     page.getByRole("heading", { name: "Twin Peaks Season 1" }),
   ).toBeVisible();
 });
+
+test("custom 404 page renders surreal copy", async ({ page }) => {
+  await page.goto("/error-preview/not-found");
+
+  await expect(
+    page.getByRole("heading", {
+      name: "The page you are looking for is not what it seems.",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Return To The Lodge" }),
+  ).toBeVisible();
+});
+
+test("custom 500 page renders surreal copy", async ({ page }) => {
+  await page.goto("/error-preview/server-error");
+
+  await expect(
+    page.getByRole("heading", {
+      name: "There was a fish in the percolator.",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Try Again" }),
+  ).toBeVisible();
+});

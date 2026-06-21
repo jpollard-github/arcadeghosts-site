@@ -28,7 +28,9 @@ Interactive/public features:
 - guestbook with moderated submissions
 - Tiny Thoughts short-form posts
 - Signal Booth random prompt/oracle experience
+- faux `80s Dev Terminal` widget on the homepage hero
 - Spotify playlist embeds and curated listening insights
+- custom Twin Peaks-style 404 and 500 pages
 
 Admin areas:
 
@@ -38,6 +40,7 @@ Admin areas:
 - `/admin/now`
 - `/admin/projects`
 - `/admin/context-refresh`
+- `/admin/error-previews`
 
 ## Tech Stack
 
@@ -120,6 +123,7 @@ Available commands:
 - `npm run test:e2e:headed`
 - `npm run test:e2e:install`
 - `npm run build`
+- `npm run go`
 
 Current tests are lightweight and focused on:
 
@@ -127,7 +131,7 @@ Current tests are lightweight and focused on:
 - project normalization helpers
 - Tiny Thoughts normalization helpers
 - selected music formatting helpers
-- Playwright browser coverage for stable public pages and admin session-protected routes
+- Playwright browser coverage for stable public pages, custom error-page previews, homepage terminal behavior, and admin session-protected routes
 
 ## Recent Refactor State
 

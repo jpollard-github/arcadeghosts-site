@@ -4,6 +4,7 @@ import { HomeCats } from "./home/HomeCats";
 import { HomeFunAndGames } from "./home/HomeFunAndGames";
 import { HomeGuestbook } from "./home/HomeGuestbook";
 import { HomeHero } from "./home/HomeHero";
+import { HomeHashScroller } from "./home/HomeHashScroller";
 import { HomeIntroBand } from "./home/HomeIntroBand";
 import { HomeNow } from "./home/HomeNow";
 import { HomeProjects } from "./home/HomeProjects";
@@ -69,6 +70,7 @@ export default async function Home() {
 
   return (
     <main>
+      <HomeHashScroller />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -11,6 +11,12 @@ These notes mix auto-generated repo facts with human-maintained context.
 - Projects admin reorder/save was implemented without adding a drag-and-drop library. The current behavior relies on native desktop drag events and is not intended to be the final touch/mobile solution.
 - Projects admin mutations now use `PATCH /api/admin/projects` for single-project saves and order-only updates, while `DELETE /api/admin/projects` removes a single saved project.
 - The repo still treats checked-in `defaultProjects` as the empty-state fallback. Because of that, the first single-project mutation seeds those defaults into `site_projects` if the table is empty before applying the requested change.
+- The homepage now includes a faux `80s Dev Terminal` widget in the hero. Command behavior is intentionally data-driven through a shared command registry so future additions are mostly content changes rather than component rewrites.
+- Terminal command links open in a new tab instead of navigating inline. This preserves the visitor's place on the homepage while still acting like a playful navigation surface.
+- The homepage uses a small client-side hash-scroll helper on initial load so fresh-tab links like `/#about` and `/#cats` land more like the already-rendered top navigation links.
+- The site now has explicit custom `not-found`, route `error`, and `global-error` pages with Twin Peaks-style copy, plus `/admin/error-previews` for convenient manual review.
+- `/error-preview/server-error` must remain dynamic. It intentionally throws to preview the 500 page, and prerendering it would break `next build`.
+- `package.json` now includes a `go` script that runs lint, build, and then starts the production server locally.
 
 <!-- codex-session-kit:auto-start -->
 > Auto-generated snapshot. Refreshed 6/20/2026, 5:21:50 PM. This section is managed by Codex Session Kit.

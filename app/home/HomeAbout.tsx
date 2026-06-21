@@ -4,7 +4,7 @@ import { aboutCards, resonanceLinks } from "./data";
 export function HomeAbout() {
   return (
     <section className="content-section about" id="about">
-      <div className="about-copy">
+      <div className="about-copy" id="about-heading">
         <p className="eyebrow">About</p>
         <h2>Who I am and how I think.</h2>
         <p>

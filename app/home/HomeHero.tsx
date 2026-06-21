@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { HomeDevTerminal } from "./HomeDevTerminal";
 import { githubRepoUrl, navItems } from "./data";
 
 export function HomeHero() {
@@ -54,6 +55,7 @@ export function HomeHero() {
             See Projects
           </a>
         </div>
+        <HomeDevTerminal />
       </div>
     </section>
   );

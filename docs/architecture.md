@@ -34,6 +34,7 @@ The codebase leans toward simple colocated modules instead of heavy abstraction.
 - `app/admin/now/page.tsx`
 - `app/admin/projects/page.tsx`
 - `app/admin/context-refresh/page.tsx`
+- `app/admin/error-previews/page.tsx`
 
 Admin pages are protected by a shared session cookie and backed by `/api/admin/*` route handlers.
 
@@ -76,6 +77,19 @@ Supporting homepage constants/helpers:
 
 - `app/home/data.ts`
 - `app/home/project-helpers.ts`
+
+Homepage-specific interactive helpers:
+
+- `app/home/HomeDevTerminal.tsx`
+- `app/home/terminal-data.ts`
+- `app/home/HomeHashScroller.tsx`
+
+Important current homepage behavior:
+
+- the hero now includes an Apple //e-style faux terminal widget
+- terminal commands are data-driven and intentionally easy to extend
+- command links open in a new tab instead of navigating in place
+- a small homepage-only hash scroller re-applies cold-load `/#anchor` scroll on first render so fresh-tab anchor links land more like the in-page nav links
 
 ### Music page
 
@@ -203,6 +217,22 @@ Notable current projects-admin behavior:
 - `PATCH /api/admin/projects` is now used for single-project saves and order-only updates
 - `DELETE /api/admin/projects` removes a single saved project
 
+### Error routes
+
+The app now uses explicit App Router error surfaces:
+
+- `app/not-found.tsx`
+- `app/error.tsx`
+- `app/global-error.tsx`
+- shared display component: `app/ErrorState.tsx`
+
+Preview-only routes also exist for quick verification:
+
+- `/error-preview/not-found`
+- `/error-preview/server-error`
+
+The server-error preview route is intentionally `force-dynamic` so it throws at request time instead of failing `next build` prerendering.
+
 ## Storage And External Services
 
 ### Neon Postgres
@@ -267,7 +297,9 @@ Current focus:
 - project helper normalization
 - selected music formatting helpers
 - public route smoke coverage for `/`, `/music`, `/work-with-me`, `/arcade`, and `/movies-tv`
-- admin auth and protected-route coverage for `/admin`, `/admin/guestbook`, `/admin/projects`, `/admin/now`, and `/admin/context-refresh`
+- homepage terminal interaction coverage for `help`, `reset`, `hello`, and command-link rendering
+- custom 404/500 preview coverage through `/error-preview/not-found` and `/error-preview/server-error`
+- admin auth and protected-route coverage for `/admin`, `/admin/guestbook`, `/admin/projects`, `/admin/now`, `/admin/context-refresh`, and `/admin/error-previews`
 
 Important implementation details:
 

@@ -1,119 +1,91 @@
-# Jason's Awesome 80s Site
+# ArcadeGhosts
 
-A warm, weird, slightly spooky personal website built with Next.js App Router and deployed on Vercel.
+`arcadeghosts.org` is Jason Pollard's personal site and living portfolio.
 
-The site is a personal hub for projects, writing, music, arcade memories, movies and TV, cat photo rooms, a random Signal Booth, and a moderated guestbook.
+It is a Next.js App Router application deployed on Vercel, mixing:
 
-Maintainability roadmap:
+- public portfolio and writing pages
+- interactive experiments and playful website features
+- music, arcade, movie/TV, and cat collection pages
+- small single-user admin tools for keeping the site current
+- lightweight storage through Neon Postgres and Vercel Blob
 
-- `docs/refactor-roadmap.md` - phased refactor plan with copy-paste prompts for future cleanup work
+## What The Site Includes
 
-Working docs for future Codex sessions:
+Main public areas:
 
-- `docs/repo-summary.md` - high-level repo orientation, feature map, data model summary, and recent refactor state
-- `docs/architecture.md` - route/component/data/API architecture and the main patterns to preserve
-- `docs/current-work.md` - current stability snapshot, risk areas, and the best next improvement targets
+- `/`
+- `/work-with-me`
+- `/music`
+- `/arcade`
+- `/movies-tv`
+- `/cats/*`
+- `/twin-peaks-self`
+- `/writings/[slug]`
+
+Interactive/public features:
+
+- guestbook with moderated submissions
+- Tiny Thoughts short-form posts
+- Signal Booth random prompt/oracle experience
+- faux `80s Dev Terminal` widget in the homepage hero
+- custom Twin Peaks-style 404 and 500 pages
+
+Admin areas:
+
+- `/admin`
+- `/admin/guestbook`
+- `/admin/tiny-thoughts`
+- `/admin/now`
+- `/admin/projects`
+- `/admin/context-refresh`
+- `/admin/error-previews`
 
 ## Tech Stack
 
-- Next.js 16 App Router
+- Next.js 16
 - React 19
 - TypeScript
-- Neon Postgres through `@neondatabase/serverless`
-- Resend for guestbook approval notifications
-- Vercel for hosting and environment management
+- Neon Postgres via `@neondatabase/serverless`
+- Vercel Blob for admin image uploads
+- Resend for guestbook notifications
+- Vercel Analytics
+- Playwright for browser e2e coverage
 
-## Main Features
+## Repo Notes
 
-- Homepage with hero, about, projects, Signal Booth, Tiny Thoughts, section doorway cards, music, guestbook, a GitHub repo link, and a hidden coffee-cup admin link
-- Projects section with Between Two Lodges and the Codex Prompt Pack for VS Code repo
-- Signal Booth with 200 randomized prompts and generated image assets
-- Standalone collection pages:
-  - `/arcade`
-  - `/music`
-  - `/movies-tv`
-  - `/cats/beverly-and-lucinda`
-  - `/cats/thomas-jones-missy-cass`
-- Writing pages under `/writings/[slug]`
-- Guestbook with:
-  - required name and note
-  - 500 character message limit
-  - server-side validation, not just browser validation
-  - escaped public display fields
-  - public responses that do not expose submitted email addresses
-  - pending approval workflow
-  - shared password-protected admin dashboard at `/admin`
-  - password-protected admin review at `/admin/guestbook`
-  - automatic Resend notification when a note is submitted for approval
-  - optional clickable admin-dashboard link in notification emails via `ADMIN_LINK`
-  - database-backed rate limiting of 5 submissions per hour per IP hash
-- Tiny Thoughts with:
-  - short 50-200 word posts
-  - categories such as lesson, observation, funny, opinion, arcade, music, cat, Twin Peaks, and other
-  - automatic link rendering for `http` and `https` URLs
-  - structured attachments for Vercel Blob image uploads and external links with optional titles
-  - optional inspired-by category and inspired-by note
-  - emoji-friendly text input
-  - password-protected admin create/edit/view/delete at `/admin/tiny-thoughts`
-- Fixed site logo from `public/images/logo.png`
-- Favicon generated at `app/favicon.ico`
-
-## Project Map
-
-- `app/page.tsx` - homepage layout and homepage-only content
-- `app/music/page.tsx` - music collection page with Spotify embeds and summarized listening insights
-- `app/music-data.ts` - Spotify playlist embed metadata
-- `app/music-insights-data.ts` - public, summarized Spotify listening insights generated from the local export workflow
-- `app/site-data.ts` - shared arcade, movies/TV, and cat gallery data
-- `app/signal-booth-data.ts` - Signal Booth prompt/image data
-- `app/SignalBooth.tsx` - interactive random signal component
-- `app/Guestbook.tsx` - public guestbook form and approved entries
-- `app/AdminDashboard.tsx` - shared admin login/dashboard linking to admin tools
-- `app/TinyThoughts.tsx` - public Tiny Thoughts display
-- `app/AdminGuestbook.tsx` - admin approval interface
-- `app/AdminTinyThoughts.tsx` - admin Tiny Thoughts editor
-- `app/admin/page.tsx` - admin dashboard route
-- `app/api/guestbook/route.ts` - public guestbook API
-- `app/api/admin/guestbook/route.ts` - admin moderation API
-- `app/api/admin/session/route.ts` - admin login/session API
-- `app/api/tiny-thoughts/route.ts` - public Tiny Thoughts API
-- `app/api/admin/tiny-thoughts/route.ts` - admin Tiny Thoughts CRUD API
-- `app/api/admin/tiny-thoughts/upload/route.ts` - admin Vercel Blob image upload API
-- `app/lib/guestbook.ts` - Neon connection, schema bootstrap, guestbook serializers
-- `app/lib/guestbook-email.ts` - shared Resend guestbook notification helper
-- `app/lib/admin-auth.ts` - simple username/password admin session helper
-- `db/guestbook.sql` - reference SQL for guestbook tables
-- `app/globals.css` - visual system and responsive layout
-- `public/images/` - site images, generated Signal Booth art, cat galleries, arcade/media art, logo
-- `public/games/between-two-lodges/` - static browser game project
-- `public/writings/` - markdown source for writing pages
-
-## Using Codex Well In This Repo
-
-For future idea generation, development, debugging, or refactoring sessions, start with these docs:
+Useful internal docs:
 
 - `docs/repo-summary.md`
 - `docs/architecture.md`
 - `docs/current-work.md`
 - `docs/refactor-roadmap.md`
+- `docs/decisions.md`
 
-Suggested use:
+If you are using Codex or another AI coding assistant here, those docs should be treated as the primary source of truth before inspecting implementation files.
 
-- use `repo-summary.md` for quick orientation
-- use `architecture.md` before making structural changes
-- use `current-work.md` to understand what was recently stabilized and what still needs attention
-- use `refactor-roadmap.md` when asking for cleanup in safe phases
+## Important Areas
 
-These files are meant to give Codex enough context to:
-
-- brainstorm ideas without re-reading the entire repo
-- make code changes that fit the current structure
-- continue refactors without undoing recent cleanup
-- pick sensible next steps when you want maintenance or improvement work
+- `app/`
+  Routes, components, layouts, API handlers, and local helpers
+- `app/home/`
+  Homepage section components and terminal widget pieces
+- `app/music/`
+  Music page sections and route-local styles
+- `app/site-content/`
+  Shared arcade, media, and cat data
+- `app/tiny-thought-admin/`
+  Tiny Thoughts admin hook and UI pieces
+- `app/lib/`
+  Shared auth, DB, upload, Blob, and normalization helpers
+- `tests/`
+  Regression tests and Playwright coverage
+- `docs/`
+  Maintenance context for future sessions
 
 ## Environment Variables
 
-Create `.env.local` for local development. The same keys should exist in Vercel for deployed environments.
+Create `.env.local` for local development. Equivalent values should exist in Vercel for deployed environments.
 
 Database connection, one of:
 
@@ -128,7 +100,7 @@ STORAGE_DATABASE_URL_UNPOOLED=
 NEON_DATABASE_URL=
 ```
 
-Guestbook admin:
+Admin auth:
 
 ```bash
 ADMIN_USERNAME=
@@ -144,9 +116,7 @@ GUESTBOOK_EMAIL_TO=
 ADMIN_LINK=
 ```
 
-`ADMIN_LINK` is used inside guestbook notification emails as the clickable admin-dashboard URL. For local development it can point to `http://localhost:3000/admin`; in production it should point to the deployed `/admin` URL.
-
-Tiny Thoughts image uploads:
+Blob uploads:
 
 ```bash
 BLOB_READ_WRITE_TOKEN=
@@ -158,68 +128,6 @@ Optional rate-limit salt:
 GUESTBOOK_RATE_LIMIT_SECRET=
 ```
 
-If `GUESTBOOK_RATE_LIMIT_SECRET` is not set, the app falls back to other server-only secrets for IP hashing. Setting a dedicated secret is cleaner for production.
-
-## Guestbook Behavior
-
-Public visitors can submit a name, optional email, category, and note. Submissions are saved as `pending` and do not appear publicly until approved.
-
-When a note is submitted for approval, the public API saves it first, then attempts to send a Resend notification so Jason knows there is something to review. Notification emails include submitted details and, when `ADMIN_LINK` is set, a clickable link to the admin dashboard. If the notification fails, the saved pending entry remains available for review; approval can retry an unsent notification.
-
-The public guestbook API only returns approved entries and excludes email addresses. Admin-only routes can see submitted emails for moderation and Resend reply-to behavior.
-
-The guestbook database schema is bootstrapped automatically by `ensureGuestbookTable()` when the guestbook APIs run. The reference SQL lives in `db/guestbook.sql`.
-
-## Tiny Thoughts
-
-Tiny Thoughts are short posts intended for quick observations, lessons learned, funny experiences, and opinions. The public site displays them newest first.
-
-Admin starts at:
-
-```text
-http://localhost:3000/admin
-```
-
-Links can be embedded by typing full `http` or `https` URLs in the thought body. The admin form also supports structured attachments:
-
-```ts
-type Attachment =
-  | { type: "image"; url: string }
-  | { type: "link"; url: string; title?: string };
-```
-
-Image attachments are uploaded through the password-protected admin UI and stored in Vercel Blob. Link attachments remain external URLs with optional display titles. Tiny Thoughts can also include an inspired-by category such as article link, song, video, conversation, or other, plus a short inspired-by value. Emojis are stored as normal text.
-
-## Music Insights Data
-
-The `/music` page combines hand-curated Spotify playlist embeds with summarized listening-history data from the separate local repository at:
-
-```text
-~/spotify-export
-```
-
-The website does not read raw Spotify exports at runtime and does not ship the raw stream archive. The local export workflow is:
-
-```text
-Spotify extended streaming-history JSON
-  -> ~/spotify-export/raw/
-  -> npm run spotify:analyze
-  -> npm run lastfm:enrich
-  -> npm run music:report
-  -> summarized values copied into app/music-insights-data.ts
-```
-
-The important generated files in `~/spotify-export/output/` are:
-
-- `stream-events.ndjson` - normalized event archive used locally for deeper analysis
-- `yearly-trends.json` and `monthly-trends.json` - listening totals over time
-- `top-artists.json`, `top-songs.json`, `top-albums.json`, and `top-videos.json` - all-time rankings by listening time
-- `artist-genres.lastfm.json` - Last.fm genre tags matched to artists
-- `odd-findings.json` - repeat tracks, album fixation weeks, long artist lifespans, and audio/video ratio
-- `music-report/index.html` - local static prototype used as the review surface for deciding what belongs on the website
-
-`app/music-insights-data.ts` is intentionally a small public summary, not a database import. It includes high-level totals, the recent listening window, yearly/monthly signals, genre weather, era cards, musical DNA panels, mood-color summaries, all-time leaders, and fixation oddities. If the Spotify export is refreshed, regenerate the local report in `~/spotify-export`, review `output/music-report/index.html`, then update `app/music-insights-data.ts` with only the public-facing summary values.
-
 ## Run Locally
 
 Install dependencies:
@@ -228,22 +136,10 @@ Install dependencies:
 npm install
 ```
 
-Start development server:
+Start the dev server:
 
 ```bash
 npm run dev
-```
-
-Build production output:
-
-```bash
-npm run build
-```
-
-Run the production build:
-
-```bash
-npm run start
 ```
 
 Lint:
@@ -252,59 +148,90 @@ Lint:
 npm run lint
 ```
 
-Run the unit tests:
+Run unit/regression tests:
 
 ```bash
 npm test
 ```
 
-Install the Playwright browser runtime once:
+Install Playwright browser dependencies:
 
 ```bash
 npm run test:e2e:install
 ```
 
-Run the Playwright end-to-end tests:
+Run browser tests:
 
 ```bash
 npm run test:e2e
 ```
 
-Run the Playwright suite in headed mode:
+Build production output:
 
 ```bash
-npm run test:e2e:headed
+npm run build
 ```
 
-## Admin
+Run the production server locally:
 
-The admin dashboard lives at `/admin` and links to both Guestbook Review and Tiny Thoughts. It uses the shared `arcadeghosts_admin` session cookie set by `/api/admin/session`, and the individual admin pages still require a successful session before loading protected data.
-
-Local URL:
-
-```text
-http://localhost:3000/admin
+```bash
+npm run start
 ```
 
-Use `ADMIN_USERNAME` and `ADMIN_PASSWORD` to sign in.
+Run lint, then build, then start:
 
-The public homepage includes a small coffee-cup link to `/admin` at the end of the intro band line.
+```bash
+npm run go
+```
 
-## Deployment
+`npm run go` is useful when you want a quick production-style local run after the usual safety checks. It will keep running because `npm run start` launches the server.
 
-Deploy the project on Vercel with the default Next.js settings.
+## Testing Notes
 
-Before deploying, make sure the Vercel project has:
+Current browser coverage includes:
 
-- Neon database connection variables
-- `ADMIN_USERNAME`
-- `ADMIN_PASSWORD`
-- Resend variables if guestbook email notifications should work
-- `ADMIN_LINK` for the review link inside guestbook emails
-- Optional `GUESTBOOK_RATE_LIMIT_SECRET`
+- stable public pages
+- homepage terminal behavior
+- custom error-page preview routes
+- admin login and protected route access
 
-## Notes
+Important caveat:
 
-- `app/favicon.ico` was generated from `public/images/logo.png`.
-- The production server defaults to `http://localhost:3000`.
-- Guestbook test rows should be cleaned up after manual API testing.
+- the context refresh admin Playwright test performs a real export-creation mutation, so repeated local runs can create persistent `context_refresh_exports` rows if your local env points at a live database
+
+Playwright uses a local `next dev` server bound to `127.0.0.1:3000`.
+
+## Current Architectural Notes
+
+- Homepage composition is split under `app/home/`; extend those modules instead of collapsing logic back into `app/page.tsx`.
+- Music composition is split under `app/music/`.
+- Projects admin uses per-project save/delete plus persisted `display_order` for drag-and-drop ordering.
+- The homepage terminal is intentionally data-driven through `app/home/terminal-data.ts`.
+- The site now has explicit `not-found`, route `error`, and `global-error` surfaces, plus preview routes under `/error-preview/*`.
+
+## Guestbook And Tiny Thoughts
+
+Guestbook:
+
+- public submissions are saved as pending
+- approved entries only are returned publicly
+- submitted email addresses stay admin-only
+- Resend can notify on new submissions
+
+Tiny Thoughts:
+
+- short public posts with structured attachments
+- admin create/edit/delete UI
+- optional image uploads through Vercel Blob
+
+## Music Insights
+
+The `/music` page uses curated summary data checked into this repo, not raw Spotify export data at runtime.
+
+The summarized public data lives under:
+
+- `app/music-insights/summary.ts`
+- `app/music-insights/curated.ts`
+- `app/music-insights/index.ts`
+
+The raw export and analysis workflow lives outside this repo and is copied in as human-reviewed summary data.

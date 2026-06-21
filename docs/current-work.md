@@ -20,6 +20,9 @@ What is now in place:
 - README local setup updated with unit and Playwright test commands
 - `docs/pnpm-migration.md` added as a repo-specific note about switching from `npm` to `pnpm`
 - projects admin now defaults to collapsed cards, supports per-project save/delete, and allows desktop drag-and-drop reordering for saved collapsed cards
+- homepage hero now includes a faux `80s Dev Terminal` widget with data-driven commands
+- custom Twin Peaks-style 404/500 pages now exist, plus an admin preview page for opening them intentionally
+- `package.json` now includes a `go` script that runs lint, build, then start
 
 The app currently passes:
 
@@ -64,6 +67,28 @@ Tiny Thoughts now has:
 
 Upload and admin route behavior now shares helpers instead of duplicating validation logic.
 
+### Homepage Terminal
+
+The homepage terminal currently works like this:
+
+- it is rendered from `app/home/HomeDevTerminal.tsx`
+- command definitions live in `app/home/terminal-data.ts`
+- `help` is generated from the available command list
+- commands print short terminal-style responses plus a clickable link that opens in a new tab
+- `reset` restores the original `load profile` transcript
+
+Current supported commands include:
+
+- `help`
+- `reset`
+- `hello`
+- `projects`
+- `about`
+- `music`
+- `cats`
+- `arcade`
+- `contact`
+
 ## Known Patterns To Preserve
 
 - checked-in curated data is preferred over runtime external fetching for music insights
@@ -72,11 +97,13 @@ Upload and admin route behavior now shares helpers instead of duplicating valida
 - admin route auth/error patterns should go through `app/lib/admin-route.ts`
 - route-specific CSS should stay local when a feature gets large
 - for projects admin specifically, keep reorder persistence tied to `display_order` instead of inventing a separate client-only ordering model
+- for the homepage terminal, keep commands data-driven in `app/home/terminal-data.ts` instead of scattering command logic across the component
 
 ## Current Risk Areas
 
 These are the files or areas most likely to need attention next if they grow:
 
+- `app/home/HomeDevTerminal.tsx`
 - `app/AdminProjects.tsx`
 - `app/AdminNow.tsx`
 - `app/AdminContextRefresh.tsx`
@@ -100,6 +127,13 @@ Important implementation caveat:
 
 - single-project project mutations currently seed `defaultProjects` into the table if the projects table is empty, because public/admin reads still use the checked-in defaults as the empty-state fallback
 
+### Error Pages And Hash Scroll
+
+Two small but important UX behaviors were added:
+
+- the site now has custom `not-found`, route `error`, and `global-error` pages with Twin Peaks-style copy
+- the homepage now mounts `HomeHashScroller`, a small client helper that re-applies cold-load hash scrolling on first render so links like `/#about` and `/#cats` land more reliably when opened in a fresh tab
+
 ## Existing Test Coverage
 
 Current tests live in `tests/` and cover:
@@ -108,14 +142,22 @@ Current tests live in `tests/` and cover:
 - project normalization helpers
 - Tiny Thoughts normalization helpers
 - selected music formatting helpers
-- Playwright public route coverage for `/`, `/music`, `/work-with-me`, `/arcade`, and `/movies-tv`
-- Playwright admin coverage for login/logout plus `/admin/guestbook`, `/admin/projects`, `/admin/now`, and `/admin/context-refresh`
+- Playwright public route coverage for `/`, `/music`, `/work-with-me`, `/arcade`, `/movies-tv`, and the custom error preview routes
+- Playwright admin coverage for login/logout plus `/admin/guestbook`, `/admin/projects`, `/admin/now`, `/admin/context-refresh`, and `/admin/error-previews`
 
 Projects admin browser coverage currently verifies:
 
 - the page opens in its collapsed-by-default state
 - a project can be expanded
 - the per-project save button is present once expanded
+
+Homepage terminal browser coverage currently verifies:
+
+- the terminal renders in the hero
+- `help` shows the current command list
+- `hello` prints the expected response
+- terminal links render as new-tab links
+- reset returns the transcript to its initial state
 
 Run them with:
 
@@ -142,6 +184,13 @@ Start in:
 
 - `app/home/data.ts`
 - relevant `app/home/Home*.tsx`
+
+If updating the homepage terminal specifically, start in:
+
+- `app/home/HomeDevTerminal.tsx`
+- `app/home/terminal-data.ts`
+- `app/home/HomeHashScroller.tsx`
+- `app/globals.css`
 
 ### If updating music content or presentation
 
@@ -182,10 +231,11 @@ If updating projects admin interaction specifically, start in:
 If more cleanup happens later, the best next candidates are:
 
 1. Split `AdminProjects.tsx` into smaller hooks/components now that it owns expand/collapse, per-card save/delete, and drag state
-2. Split `AdminNow.tsx` if it continues to grow
-3. Add mutation-focused e2e coverage for project save/reorder flows, ideally with cleanup or isolated test data
-4. Add a few more tests around admin route normalization and payload validation
-5. Reduce `app/globals.css` further for other large feature areas
+2. Split `HomeDevTerminal.tsx` further if command behavior, transcript formatting, or anchor-link handling grows more complex
+3. Split `AdminNow.tsx` if it continues to grow
+4. Add mutation-focused e2e coverage for project save/reorder flows, ideally with cleanup or isolated test data
+5. Add a few more tests around admin route normalization and payload validation
+6. Reduce `app/globals.css` further for other large feature areas
 
 ## Short Re-entry Summary
 
@@ -195,6 +245,8 @@ If another session needs a 30-second orientation:
 - homepage and music refactors are already done
 - Tiny Thoughts admin/upload cleanup is already done
 - projects admin now uses collapsed cards, per-project persistence, and desktop drag-and-drop reorder for saved items
+- the homepage hero now includes a data-driven retro terminal widget
+- the site has custom 404/500 pages plus an admin preview surface for them
 - unit tests, e2e tests, build, and lint are green
 - future work should extend the split module patterns, not collapse them back into giant files
 
