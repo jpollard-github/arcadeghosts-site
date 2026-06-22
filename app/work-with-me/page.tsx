@@ -30,6 +30,20 @@ const credibilityPoints = [
 
 const examples = [
   {
+    eyebrow: "Mood and UX tooling",
+    title: "mood-switcher",
+    text: "A small utility focused on shifting interface mood and presentation, reflecting the kind of lightweight product thinking and implementation polish I enjoy.",
+    href: "https://github.com/jpollard-github/mood-switcher",
+    cta: "View Repo",
+  },
+  {
+    eyebrow: "AI workflow tooling",
+    title: "ai-session-kit",
+    text: "A repo support toolkit for better AI handoffs, project memory, and session continuity across coding workflows.",
+    href: "https://github.com/jpollard-github/ai-session-kit",
+    cta: "View Repo",
+  },
+  {
     eyebrow: "Developer tooling",
     title: "Codex Prompt Pack for VS Code",
     text: "A VS Code extension that turns selections, changed files, diffs, and repo metadata into compact AI-ready prompts.",
@@ -94,6 +108,59 @@ const notFitSignals = [
   'Anything where the main brief is just "add AI" without a real problem to solve',
 ];
 
+const projectSizes = [
+  {
+    title: "Technical strategy or advisory session",
+    range: "Starting at $200",
+    text: "A focused conversation around a software problem, architecture question, AI idea, or workflow bottleneck.",
+  },
+  {
+    title: "Small website improvements",
+    range: "$1,000-$2,000",
+    text: "Useful upgrades, cleanup work, and focused changes that make an existing site or product more effective.",
+  },
+  {
+    title: "Business automation projects",
+    range: "$1,000-$2,500",
+    text: "Workflow cleanup for spreadsheet-and-email problems that need a small tool, integration, or automation.",
+  },
+  {
+    title: "AI workflow and developer tooling",
+    range: "$2,000-$5,000",
+    text: "Practical AI-assisted workflows, repo-aware tooling, review helpers, and team accelerators that solve a real problem.",
+  },
+  {
+    title: "Internal tools and dashboards",
+    range: "$3,000-$6,000",
+    text: "Small internal systems with forms, reporting, admin flows, or task-specific dashboards that reduce friction for a team.",
+  },
+];
+
+const faqItems = [
+  {
+    question: "Do you work remotely?",
+    answer: "Yes. I work remotely with clients nationwide.",
+  },
+  {
+    question: "Do you work locally?",
+    answer:
+      "Yes. I am based in the North Carolina Triad and available locally around Greensboro, Winston-Salem, High Point, Kernersville, and nearby areas.",
+  },
+  {
+    question: "Do you do hourly work?",
+    answer: "Usually no. I prefer small fixed-price projects with a clear problem and a defined outcome.",
+  },
+  {
+    question: "What if I am not sure what I need?",
+    answer: "That is normal. Start by describing the problem, and I can help figure out whether it sounds like a fit.",
+  },
+  {
+    question: "Can you help with existing software?",
+    answer:
+      "Yes. A lot of my experience is in improving, modernizing, and untangling software that already exists.",
+  },
+];
+
 export const metadata: Metadata = {
   title: "Work With Me",
   description:
@@ -111,7 +178,7 @@ export const metadata: Metadata = {
 
 export default function WorkWithMePage() {
   return (
-    <main className="work-page">
+    <main className="work-page" id="top">
       <section className="work-hero">
         <div className="work-hero-copy">
           <p className="eyebrow">Work With Me</p>
@@ -125,6 +192,11 @@ export default function WorkWithMePage() {
             platform migrations, and the patient untangling of troublesome
             systems.
           </p>
+          <p>
+            Need a website improvement, business automation, AI workflow,
+            internal tool, or technical problem solved? I help businesses and
+            teams turn messy technical problems into practical solutions.
+          </p>
           <div className="hero-actions" aria-label="Work with me links">
             <a className="button primary" href="mailto:jason@arcadeghosts.org">
               Email Jason
@@ -134,9 +206,17 @@ export default function WorkWithMePage() {
             </Link>
           </div>
           <p className="work-hero-note">
-            Remote-friendly, based in North Carolina&apos;s Triad. If you want
-            to reach out, send the problem, not a polished spec.
+            Available remotely nationwide and locally throughout the North
+            Carolina Triad, including Greensboro, Winston-Salem, High Point,
+            Kernersville, and surrounding areas. If you want to reach out, send
+            the problem, not a polished spec.
           </p>
+          <div className="resonance-links" aria-label="Work with me sections">
+            <a href="#examples">Examples</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#good-fit">Good Fit</a>
+            <a href="#contact">Contact</a>
+          </div>
         </div>
       </section>
 
@@ -176,6 +256,47 @@ export default function WorkWithMePage() {
         </div>
       </section>
 
+      <section className="content-section" id="pricing">
+        <SectionHeading eyebrow="Typical Project Sizes" title="Enough pricing context to know whether this is in range.">
+          I usually work on fixed-price projects. Exact pricing depends on the
+          shape, constraints, and messiness of the problem, but these are
+          common starting points and typical ranges.
+        </SectionHeading>
+        <div className="work-offering-grid work-problem-grid">
+          {projectSizes.map((item) => (
+            <article className="work-offering-card" key={item.title}>
+              <p className="card-eyebrow">{item.range}</p>
+              <h4>{item.title}</h4>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </div>
+        <p className="work-hero-note">
+          If you&apos;re not sure where your project fits, email me the problem
+          and I&apos;ll tell you honestly whether it sounds like a fit. If the
+          work turns out to be larger, stranger, or more tangled than these
+          ranges, I&apos;ll say that up front.
+        </p>
+      </section>
+
+      <section className="content-section">
+        <SectionHeading eyebrow="Low-Risk Start" title="A small first step if you want clarity before a larger project.">
+          Some problems need a scoped build. Some just need a sharp technical
+          conversation. This option gives you a clean way to start.
+        </SectionHeading>
+        <article className="work-panel work-outcomes-panel">
+          <p className="card-eyebrow">90-Minute Technical Strategy Session • $200 fixed price</p>
+          <p>
+            Bring me your software problem, AI idea, architecture question,
+            workflow bottleneck, or aging codebase.
+          </p>
+          <p>
+            You&apos;ll leave with practical next steps, clearer options, and a
+            better sense of whether a larger project is worth doing.
+          </p>
+        </article>
+      </section>
+
       <section className="content-section">
         <SectionHeading eyebrow="Why Me" title="Useful experience, not just a list of technologies.">
           The most relevant part of my resume is not that I have touched a lot
@@ -210,7 +331,7 @@ export default function WorkWithMePage() {
         </div>
       </section>
 
-      <section className="content-section">
+      <section className="content-section" id="examples">
         <SectionHeading eyebrow="Examples" title="A few things that reflect how I build.">
           ArcadeGhosts works best as the proof. If you&apos;re here, you can
           already see the mix of software, writing, experiments, and practical
@@ -265,7 +386,7 @@ export default function WorkWithMePage() {
         </div>
       </section>
 
-      <section className="content-section">
+      <section className="content-section" id="good-fit">
         <SectionHeading eyebrow="Good Fit" title="The kinds of projects that usually make sense.">
           People buy solved problems, not a checklist of frameworks. These are
           the situations where I can usually help the fastest.
@@ -291,6 +412,22 @@ export default function WorkWithMePage() {
       </section>
 
       <section className="content-section work-contact">
+        <SectionHeading eyebrow="FAQ" title="A few quick answers that usually help people decide.">
+          Most hesitation comes from not knowing how I work, whether I help
+          locally, or whether the project needs to be perfectly defined before a
+          first email.
+        </SectionHeading>
+        <div className="work-fit-grid">
+          {faqItems.map((item) => (
+            <article className="work-panel" key={item.question}>
+              <h3>{item.question}</h3>
+              <p>{item.answer}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="content-section work-contact" id="contact">
         <SectionHeading eyebrow="Contact" title="If you have a problem worth discussing, reach out.">
           A short note is enough. Tell me what is broken, slow, confusing,
           repetitive, overdue, or quietly driving everyone nuts.
@@ -308,6 +445,10 @@ export default function WorkWithMePage() {
           </p>
         </div>
       </section>
+
+      <a className="back-up-top" href="#top">
+        Back to top
+      </a>
     </main>
   );
 }

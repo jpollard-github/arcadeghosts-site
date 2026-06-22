@@ -12,11 +12,13 @@
 - Fixed the projects admin save path so saving a project now updates the homepage-visible `lastUpdatedAt` date by default instead of only touching the row-level `updated_at` timestamp.
 - The fix lives in `app/api/admin/projects/route.ts` and `app/lib/projects.ts`, with regression coverage in `tests/projects.test.ts`.
 - Project save dates and timestamp-to-date normalization now resolve in `America/New_York` so the homepage/admin do not jump forward a day around UTC midnight.
+- Updated `/work-with-me` copy to add clearer first-visit positioning, fixed-price range guidance, a `90-Minute Technical Strategy Session`, more prominent North Carolina Triad language, and a short FAQ to reduce contact friction.
 - Manual repo cleanup happened outside this chat: `docs/architecture.md`, `docs/refactor-roadmap.md`, and `docs/repo-summary.md` were deleted from the working tree.
 
 ## Next Best Task
 - Do a quick browser validation pass for `/admin/social-quest-log` against a real local database, since this session only ran lint and unit tests.
 - Do a browser validation pass for `/admin/projects` and the homepage projects section to confirm the saved date now reflects a same-day edit in the real admin flow.
+- Do a quick browser/content pass on `/work-with-me` to confirm the new pricing ranges and FAQ feel balanced on desktop and mobile and still match the site voice.
 - If the feature grows, add lightweight charts or trend views using the saved count/confidence/date fields instead of expanding it into a CRM.
 - If the deleted docs are meant to stay gone, keep repo memory centered on the four-file handoff set instead of reintroducing duplicated long-form docs.
 
