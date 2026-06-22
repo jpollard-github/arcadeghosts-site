@@ -161,6 +161,46 @@ export function normalizeProjectDate(value: unknown) {
   return /^\d{4}-\d{2}-\d{2}$/.test(candidate) ? candidate : "";
 }
 
+export function formatStoredProjectDate(value: unknown) {
+  if (!value) {
+    return "";
+  }
+
+  if (typeof value === "string") {
+    const normalized = normalizeProjectDate(value);
+
+    if (normalized) {
+      return normalized;
+    }
+  }
+
+  const parsed = new Date(String(value));
+
+  return Number.isNaN(parsed.getTime()) ? "" : parsed.toISOString().slice(0, 10);
+}
+
+export function currentProjectDate(now = new Date()) {
+  return now.toISOString().slice(0, 10);
+}
+
+export function resolveProjectLastUpdatedAt({
+  incomingLastUpdatedAt,
+  existingLastUpdatedAt,
+  now = new Date(),
+}: {
+  incomingLastUpdatedAt: string;
+  existingLastUpdatedAt?: string | null;
+  now?: Date;
+}) {
+  const existing = formatStoredProjectDate(existingLastUpdatedAt);
+
+  if (incomingLastUpdatedAt && incomingLastUpdatedAt !== existing) {
+    return incomingLastUpdatedAt;
+  }
+
+  return currentProjectDate(now);
+}
+
 export function normalizeProjectPriority(value: unknown) {
   const numberValue =
     typeof value === "number" ? value : Number.parseInt(String(value ?? ""), 10);
@@ -185,9 +225,7 @@ export function toSiteProject(row: SiteProjectRow): SiteProject {
     nextAction: row.next_action?.trim() || "None",
     blockers: row.blockers ?? "",
     priority: normalizeProjectPriority(row.priority),
-    lastUpdatedAt: row.last_updated_at
-      ? new Date(row.last_updated_at).toISOString().slice(0, 10)
-      : "",
+    lastUpdatedAt: formatStoredProjectDate(row.last_updated_at),
     includeInContextRefresh: row.include_in_context_refresh ?? true,
   };
 }

@@ -14,6 +14,7 @@ import {
   normalizeProjectHref,
   normalizeProjectPriority,
   normalizeProjectText,
+  resolveProjectLastUpdatedAt,
   seedDefaultProjectsIfEmpty,
   toSiteProject,
   type SiteProject,
@@ -134,13 +135,23 @@ export async function PUT(request: Request) {
     await ensureProjectsTable();
     const sql = getGuestbookSql();
     const existingRows = await sql`
-      SELECT id
+      SELECT id, last_updated_at
       FROM site_projects
     `;
+    const existingDatesById = new Map(
+      (existingRows as { id: string; last_updated_at: string | null }[]).map((row) => [
+        row.id,
+        row.last_updated_at,
+      ]),
+    );
     const savedIds = new Set(projects.map((project) => project.id));
 
     for (let index = 0; index < projects.length; index += 1) {
       const project = projects[index];
+      const resolvedLastUpdatedAt = resolveProjectLastUpdatedAt({
+        incomingLastUpdatedAt: project.lastUpdatedAt,
+        existingLastUpdatedAt: existingDatesById.get(project.id),
+      });
 
       await sql`
         INSERT INTO site_projects (
@@ -171,7 +182,7 @@ export async function PUT(request: Request) {
           ${project.nextAction},
           ${project.blockers},
           ${project.priority},
-          ${project.lastUpdatedAt || null},
+          ${resolvedLastUpdatedAt || null},
           ${project.includeInContextRefresh},
           ${index}
         )
@@ -297,12 +308,16 @@ export async function PATCH(request: Request) {
     await seedDefaultProjectsIfEmpty();
     const sql = getGuestbookSql();
     const existingRows = await sql`
-      SELECT display_order
+      SELECT display_order, last_updated_at
       FROM site_projects
       WHERE id = ${project.id}
       LIMIT 1
     `;
-    const existingOrder = (existingRows as { display_order: number }[])[0]?.display_order;
+    const existingRow = (existingRows as {
+      display_order: number;
+      last_updated_at: string | null;
+    }[])[0];
+    const existingOrder = existingRow?.display_order;
     let displayOrder = existingOrder;
 
     if (displayOrder === undefined) {
@@ -312,6 +327,11 @@ export async function PATCH(request: Request) {
       `;
       displayOrder = Number((countRows as { count: number }[])[0]?.count ?? 0);
     }
+
+    const resolvedLastUpdatedAt = resolveProjectLastUpdatedAt({
+      incomingLastUpdatedAt: project.lastUpdatedAt,
+      existingLastUpdatedAt: existingRow?.last_updated_at,
+    });
 
     await sql`
       INSERT INTO site_projects (
@@ -342,7 +362,7 @@ export async function PATCH(request: Request) {
         ${project.nextAction},
         ${project.blockers},
         ${project.priority},
-        ${project.lastUpdatedAt || null},
+        ${resolvedLastUpdatedAt || null},
         ${project.includeInContextRefresh},
         ${displayOrder}
       )
