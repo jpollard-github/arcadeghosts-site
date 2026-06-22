@@ -439,6 +439,7 @@ export default function WorkWithMePage() {
               jason@arcadeghosts.org
             </a>
           </p>
+          <p>Typical response time: 1-2 business days.</p>
           <p>
             If it sounds like a fit, we can figure out scope, timeline, and
             whether a fixed-price project makes sense.
