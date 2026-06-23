@@ -4,6 +4,8 @@ import { SectionHeading } from "../SectionHeading";
 
 const projectInquiryFormUrl =
   "https://docs.google.com/forms/d/e/1FAIpQLSclzQiQF6LWKa2Uu0gGMpLJpULoUenKO3P1oNVVJsgrShgm6A/viewform?usp=header";
+const discoverySessionStripeUrl =
+  "https://buy.stripe.com/4gM00c6qa9ec7JL0Kk1ck00";
 
 const offerings = [
   {
@@ -234,6 +236,36 @@ export default function WorkWithMePage() {
           hours. They are hiring a thoughtful developer who can understand a
           messy problem, communicate clearly, and build something useful.
         </SectionHeading>
+        <article className="work-panel work-outcomes-panel">
+          <h3>Most projects start with a discovery session.</h3>
+          <p>
+            If you want help sorting out the real problem before committing to
+            a larger build, start with a focused 90-minute session for $200.
+          </p>
+          <div className="hero-actions" aria-label="Discovery session links">
+            <a
+              className="button primary"
+              href={discoverySessionStripeUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Book a Discovery Session
+            </a>
+            <a
+              className="button secondary"
+              href={projectInquiryFormUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Start a Project Inquiry
+            </a>
+          </div>
+          <p className="work-hero-note">
+            Payment confirms your discovery session. After payment, I&apos;ll
+            follow up to schedule the call and gather any details I need
+            beforehand.
+          </p>
+        </article>
         <div className="work-copy-grid">
           <article className="work-panel">
             <h3>What I help with</h3>
@@ -295,12 +327,33 @@ export default function WorkWithMePage() {
         <article className="work-panel work-outcomes-panel">
           <p className="card-eyebrow">90-Minute Technical Strategy Session • $200 fixed price</p>
           <p>
-            Bring me your software problem, AI idea, architecture question,
-            workflow bottleneck, or aging codebase.
+            For most projects, we start here. Bring me your software problem,
+            AI idea, architecture question, workflow bottleneck, or aging
+            codebase.
           </p>
           <p>
-            You&apos;ll leave with practical next steps, clearer options, and a
-            better sense of whether a larger project is worth doing.
+            We&apos;ll clarify what you&apos;re trying to accomplish, identify
+            risks, and decide whether a small fixed-scope project makes sense.
+          </p>
+          <p>
+            After the session, you&apos;ll receive a short written summary with
+            recommended next steps, clearer options, and a better sense of
+            whether a larger project is worth doing.
+          </p>
+          <div className="hero-actions" aria-label="Discovery booking links">
+            <a
+              className="button primary"
+              href={discoverySessionStripeUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Book a Discovery Session
+            </a>
+          </div>
+          <p className="work-hero-note">
+            Payment confirms your discovery session. After payment, I&apos;ll
+            follow up to schedule the call and gather any details I need
+            beforehand.
           </p>
         </article>
       </section>

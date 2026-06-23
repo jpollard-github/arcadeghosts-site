@@ -6,6 +6,7 @@
 - The four handoff docs in `docs/` are now the primary AI memory set; stale README and task references to deleted long-form docs should be updated rather than treated as canonical.
 - The homepage and admin project summary should treat `last_updated_at` as the user-facing project update date, and admin saves should refresh it automatically unless the editor explicitly sets a different date.
 - `/work-with-me` should present `Start a Project Inquiry` as the stronger CTA while still keeping direct email available as a secondary contact path.
+- `/work-with-me` should also support direct Stripe booking for the `$200` discovery session, but only in two deliberate places: an early “start here” invitation and the detailed discovery section.
 - Fixed-price inquiry support should stay lightweight and private: use the new admin-only `Side Hustle` page for reusable scoping prompts rather than building a more complex CRM-style intake system.
 
 ## Candidate Decisions To Confirm

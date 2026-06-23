@@ -14,6 +14,7 @@
 - Project save dates and timestamp-to-date normalization now resolve in `America/New_York` so the homepage/admin do not jump forward a day around UTC midnight.
 - Updated `/work-with-me` copy to add clearer first-visit positioning, fixed-price range guidance, a `90-Minute Technical Strategy Session`, more prominent North Carolina Triad language, and a short FAQ to reduce contact friction.
 - Updated `/work-with-me` CTAs so `Start a Project Inquiry` opens a Google Form as the primary inquiry path while still keeping `Email Jason` available as a secondary contact option.
+- Added Stripe booking links for the `$200` discovery session on `/work-with-me`, including one early “start here” CTA and one fuller booking CTA in the discovery section, with copy clarifying that payment confirms the session and scheduling happens afterward.
 - Added a new admin-only `Side Hustle` page at `/admin/side-hustle` with a copyable `ChatGPT Scope Document Prompt` for turning project inquiry notes into a fixed-price scope draft.
 - Manual repo cleanup happened outside this chat: `docs/architecture.md`, `docs/refactor-roadmap.md`, and `docs/repo-summary.md` were deleted from the working tree.
 
