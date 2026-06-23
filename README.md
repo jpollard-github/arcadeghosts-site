@@ -39,6 +39,7 @@ Admin areas:
 - `/admin/now`
 - `/admin/projects`
 - `/admin/social-quest-log`
+- `/admin/side-hustle`
 - `/admin/context-refresh`
 - `/admin/error-previews`
 

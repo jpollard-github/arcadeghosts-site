@@ -156,6 +156,16 @@ export function AdminDashboard() {
               </article>
               <article className="admin-entry">
                 <div className="admin-entry-meta">
+                  <span>Scope</span>
+                </div>
+                <h2>Side Hustle</h2>
+                <p>Open the fixed-price inquiry helper and copy the ChatGPT scope document prompt.</p>
+                <Link className="admin-action-link" href="/admin/side-hustle">
+                  Open Side Hustle
+                </Link>
+              </article>
+              <article className="admin-entry">
+                <div className="admin-entry-meta">
                   <span>Export</span>
                 </div>
                 <h2>Context Refresh Export</h2>

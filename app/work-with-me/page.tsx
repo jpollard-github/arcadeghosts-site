@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionHeading } from "../SectionHeading";
 
+const projectInquiryFormUrl =
+  "https://docs.google.com/forms/d/e/1FAIpQLSclzQiQF6LWKa2Uu0gGMpLJpULoUenKO3P1oNVVJsgrShgm6A/viewform?usp=header";
+
 const offerings = [
   {
     title: "Web applications",
@@ -198,12 +201,17 @@ export default function WorkWithMePage() {
             teams turn messy technical problems into practical solutions.
           </p>
           <div className="hero-actions" aria-label="Work with me links">
-            <a className="button primary" href="mailto:jason@arcadeghosts.org">
+            <a
+              className="button primary"
+              href={projectInquiryFormUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Start a Project Inquiry
+            </a>
+            <a className="button secondary" href="mailto:jason@arcadeghosts.org">
               Email Jason
             </a>
-            <Link className="button secondary" href="/#projects">
-              See Projects
-            </Link>
           </div>
           <p className="work-hero-note">
             Available remotely nationwide and locally throughout the North
@@ -433,8 +441,21 @@ export default function WorkWithMePage() {
           repetitive, overdue, or quietly driving everyone nuts.
         </SectionHeading>
         <div className="work-contact-panel">
+          <div className="hero-actions" aria-label="Contact options">
+            <a
+              className="button primary"
+              href={projectInquiryFormUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Start a Project Inquiry
+            </a>
+            <a className="button secondary" href="mailto:jason@arcadeghosts.org">
+              Email Jason
+            </a>
+          </div>
           <p>
-            Email:{" "}
+            Prefer email?{" "}
             <a className="work-inline-link" href="mailto:jason@arcadeghosts.org">
               jason@arcadeghosts.org
             </a>

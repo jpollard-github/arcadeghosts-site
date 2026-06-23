@@ -13,15 +13,19 @@
 - The fix lives in `app/api/admin/projects/route.ts` and `app/lib/projects.ts`, with regression coverage in `tests/projects.test.ts`.
 - Project save dates and timestamp-to-date normalization now resolve in `America/New_York` so the homepage/admin do not jump forward a day around UTC midnight.
 - Updated `/work-with-me` copy to add clearer first-visit positioning, fixed-price range guidance, a `90-Minute Technical Strategy Session`, more prominent North Carolina Triad language, and a short FAQ to reduce contact friction.
+- Updated `/work-with-me` CTAs so `Start a Project Inquiry` opens a Google Form as the primary inquiry path while still keeping `Email Jason` available as a secondary contact option.
+- Added a new admin-only `Side Hustle` page at `/admin/side-hustle` with a copyable `ChatGPT Scope Document Prompt` for turning project inquiry notes into a fixed-price scope draft.
 - Manual repo cleanup happened outside this chat: `docs/architecture.md`, `docs/refactor-roadmap.md`, and `docs/repo-summary.md` were deleted from the working tree.
 
 ## Next Best Task
 - Do a quick browser validation pass for `/admin/social-quest-log` against a real local database, since this session only ran lint and unit tests.
 - Do a browser validation pass for `/admin/projects` and the homepage projects section to confirm the saved date now reflects a same-day edit in the real admin flow.
-- Do a quick browser/content pass on `/work-with-me` to confirm the new pricing ranges and FAQ feel balanced on desktop and mobile and still match the site voice.
+- Do a quick browser/content pass on `/work-with-me` to confirm the new inquiry CTA hierarchy feels right on desktop and mobile and still matches the site voice.
+- Open `/admin/side-hustle` in the browser and verify the copy button, textarea sizing, and link back to `/work-with-me`.
 - If the feature grows, add lightweight charts or trend views using the saved count/confidence/date fields instead of expanding it into a CRM.
 - If the deleted docs are meant to stay gone, keep repo memory centered on the four-file handoff set instead of reintroducing duplicated long-form docs.
 
 ## Risks Or Watchouts
 - Keep the page paginated/searchable instead of growing into a long unbounded list.
 - Preserve the growth framing: notes should stay about patterns and experiments, not identities or dossiers.
+- Keep both contact paths on `/work-with-me`: the form should feel like a clearer intake process, not a hard wall that blocks people who would rather email.
