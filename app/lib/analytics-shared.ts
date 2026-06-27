@@ -43,5 +43,5 @@ export function normalizeAnalyticsProperties(
     })
     .filter((entry): entry is readonly [string, AnalyticsValue] => Boolean(entry));
 
-  return entries.length ? Object.fromEntries(entries) : undefined;
+  return entries.length ? Object.fromEntries(entries.slice(0, 2)) : undefined;
 }

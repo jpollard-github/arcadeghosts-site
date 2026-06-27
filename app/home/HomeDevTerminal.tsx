@@ -83,7 +83,6 @@ export function HomeDevTerminal() {
       trackEvent("Terminal Command Run", {
         command: normalizedCommand,
         outcome: "known",
-        hasLink: Boolean(match.href),
       });
       setHistory((currentHistory) => [
         ...currentHistory,
@@ -157,8 +156,8 @@ export function HomeDevTerminal() {
                     rel="noreferrer"
                     trackingEvent="Terminal Link Clicked"
                     trackingProperties={{
-                      destination: entry.href,
                       command: entry.command,
+                      surface: "hero-terminal",
                     }}
                   >
                     {entry.linkLabel}

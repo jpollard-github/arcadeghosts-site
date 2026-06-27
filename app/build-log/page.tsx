@@ -61,7 +61,6 @@ export default function BuildLogPage() {
                   trackingEvent="Build Log Link Clicked"
                   trackingProperties={{
                     entryId: entry.id,
-                    destination: entry.href,
                     source: "build-log-page",
                   }}
                 >

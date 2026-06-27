@@ -713,6 +713,19 @@
   padding: 1rem;
 }
 
+.admin-checklist {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0 0 1rem;
+  padding-left: 1.2rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.admin-checklist li::marker {
+  color: var(--amber);
+}
+
 .admin-entry-meta,
 .admin-entry-actions {
   display: flex;

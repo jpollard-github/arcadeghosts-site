@@ -19,7 +19,6 @@ export function HomeStartHere() {
             trackingProperties={{
               title: card.title,
               destination: card.href,
-              variant: card.variant,
             }}
           >
             <div className="start-here-card-topline">

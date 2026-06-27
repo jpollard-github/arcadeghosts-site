@@ -126,10 +126,7 @@ export function HomeProjects({ projects }: { projects: SiteProject[] }) {
                 trackingEvent="Project Link Clicked"
                 trackingProperties={{
                   projectId: project.id,
-                  title: project.title,
-                  destination: project.href,
                   status: project.status,
-                  type: project.type,
                 }}
               >
                 {projectCta(project.href)}

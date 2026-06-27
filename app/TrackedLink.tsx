@@ -32,10 +32,7 @@ export function TrackedLink({
   title,
 }: TrackedLinkProps) {
   const handleClick = () => {
-    trackEvent(trackingEvent, {
-      href,
-      ...trackingProperties,
-    });
+    trackEvent(trackingEvent, trackingProperties);
   };
 
   if (isInternalHref(href)) {

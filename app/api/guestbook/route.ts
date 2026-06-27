@@ -200,8 +200,6 @@ export async function POST(request: Request) {
     await trackServerEvent("Guestbook Entry Submitted", {
       category,
       hasEmail: Boolean(email),
-      notifyOwner,
-      emailSent,
     });
 
     return Response.json({

@@ -41,7 +41,6 @@ export function HomeWriting() {
             key={writing.slug}
             trackingEvent="Writing Link Clicked"
             trackingProperties={{
-              destination: `/writings/${writing.slug}`,
               source: "homepage-writing-preview",
               slug: writing.slug,
             }}

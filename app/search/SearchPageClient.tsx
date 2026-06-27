@@ -27,7 +27,6 @@ export function SearchPageClient({ entries }: { entries: SearchEntry[] }) {
 
     lastTrackedQuery.current = normalizedQuery;
     trackEvent("Search Performed", {
-      queryLength: normalizedQuery.length,
       termCount: normalizedQuery.split(/\s+/).filter(Boolean).length,
       resultCount: results.length,
     });
@@ -85,7 +84,6 @@ export function SearchPageClient({ entries }: { entries: SearchEntry[] }) {
                 trackingProperties={{
                   resultId: entry.id,
                   resultType: entry.type,
-                  destination: entry.href,
                 }}
               >
                 {entry.cta}

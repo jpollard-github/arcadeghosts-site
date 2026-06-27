@@ -214,6 +214,16 @@ export function AdminDashboard() {
                   Open Error Previews
                 </Link>
               </article>
+              <article className="admin-entry">
+                <div className="admin-entry-meta">
+                  <span>Monitor</span>
+                </div>
+                <h2>Vercel Control Room</h2>
+                <p>Open analytics, Pro-plan follow-through notes, AI Gateway docs, and Vercel review links.</p>
+                <Link className="admin-action-link" href="/admin/vercel">
+                  Open Vercel Control Room
+                </Link>
+              </article>
             </div>
           </>
         )}

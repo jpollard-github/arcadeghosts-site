@@ -24,8 +24,20 @@ test("normalizeAnalyticsProperties keeps only flat analytics-safe values", () =>
     {
       source: "homepage",
       count: 3,
-      enabled: true,
-      nullable: null,
+    },
+  );
+});
+
+test("normalizeAnalyticsProperties keeps at most two properties", () => {
+  assert.deepEqual(
+    normalizeAnalyticsProperties({
+      source: "homepage",
+      destination: "/build-log",
+      extra: "ignored",
+    }),
+    {
+      source: "homepage",
+      destination: "/build-log",
     },
   );
 });
