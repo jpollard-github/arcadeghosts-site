@@ -8,6 +8,18 @@ Key docs:
 
 - Vercel AI SDK: `https://vercel.com/docs/ai-sdk`
 - Vercel AI Gateway: `https://vercel.com/docs/ai-gateway`
+- First practical implementation plan: [AI-TODO-FIRST.md](/Users/jasonp/repos/personal/docs/AI-TODO-FIRST.md)
+
+## Current Recommendation
+
+Before coding AI, use [AI-TODO-FIRST.md](/Users/jasonp/repos/personal/docs/AI-TODO-FIRST.md) as the focused first-pass plan.
+
+This file remains the broader backlog for:
+
+- model investigation
+- future public AI ideas
+- editorial assistants
+- persona-review follow-up work
 
 ## 1. First AI Feature: Persona Testing Summaries
 

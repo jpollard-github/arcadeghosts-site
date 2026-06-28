@@ -33,6 +33,10 @@ export function getCombinedPersonaJourneyOutputDir() {
   return resolve(getPersonaResultsRoot(), "overall-personas-and-journeys");
 }
 
+export function getPersonaTestsResultsTodoPath() {
+  return resolve(process.cwd(), "docs", "PERSONA-TESTS-RESULTS-TODO.md");
+}
+
 export function shouldCapturePersonaScreenshots() {
   return process.env.PERSONA_CAPTURE_SCREENSHOTS === "1";
 }
@@ -109,6 +113,12 @@ export type JourneySummaryRecord = {
   expectedRoutes: string[];
   missingExpectedRoutes: string[];
   expectedRouteWarnings: string[];
+  expectedRouteMisses: Array<{
+    surfaceId: string;
+    label: string;
+    route: string;
+    reason: string;
+  }>;
   skippedRouteReasons: Array<{
     surfaceId: string;
     label: string;
@@ -116,10 +126,14 @@ export type JourneySummaryRecord = {
     reason: string;
   }>;
   searchQueries: string[];
+  searchRationale: string[];
   bounceRisk: "low" | "medium" | "high";
   bounceReasons: string[];
   nearBounceRoute?: string;
+  journeyOutcome: "success" | "partial" | "failed";
+  outcomeReasons: string[];
   success: boolean;
+  successBoolean: boolean;
   matchedSuccessConditionLabels: string[];
   trustSignalHits: Array<{
     surfaceId: string;
@@ -133,8 +147,17 @@ export type JourneySummaryRecord = {
     route: string;
     reason: string;
   }>;
+  routeCatalogWarnings: string[];
+  adminRouteLeaks: string[];
   exitState: "leave" | "bookmark" | "contact" | "subscribe" | "return-later" | "continue-exploring";
   journeyNotes: string[];
+  catalogCoverage: {
+    totalJourneyEligibleRoutes: number;
+    selectedJourneyEligibleRoutes: number;
+    coverageRatio: number;
+    journeyEligibleRoutes: string[];
+    selectedRoutes: string[];
+  };
 };
 
 export type PersonaJourneyAggregateSummary = {
@@ -144,12 +167,83 @@ export type PersonaJourneyAggregateSummary = {
   bounceRiskCounts: Record<"low" | "medium" | "high", number>;
   scenarioCounts: Record<string, number>;
   archetypeCounts: Record<string, number>;
+  journeyOutcomesByScenario: Record<string, Record<"success" | "partial" | "failed", number>>;
+  exitStateCounts: Record<string, number>;
+  successCountByScenario: Record<string, number>;
+  searchUsageByArchetype: Record<string, number>;
+  commonSkippedReasons: Record<string, number>;
+  goalEvidenceCounts: Record<string, number>;
+  nearBounceRouteCounts: Record<string, number>;
+  missingExpectedRouteCounts: Record<string, number>;
+  expectedRouteMissCounts: Record<string, number>;
+  trustSignalOutcomeCounts: Record<string, number>;
+  routeCatalogWarnings: Record<string, number>;
+  routesReferencedButMissingFromCatalog: string[];
+  routesNeverSelected: string[];
+  adminRouteLeaks: string[];
+  catalogCoverage: {
+    totalJourneyEligibleRoutes: number;
+    routesSelectedAtLeastOnce: number;
+    coverageRatio: number;
+  };
+  recommendedNextSiteImprovements: string[];
+  productRecommendations?: ProductRecommendation[];
   journeySummaries: Array<
     JourneySummaryRecord & {
       reportPath: string;
       summaryPath: string;
     }
   >;
+};
+
+type AggregatePersonaSummary = Pick<
+  PersonaReportSummary,
+  | "persona"
+  | "personaSlug"
+  | "personaDescription"
+  | "personaProfileMarkdown"
+  | "confidenceThreshold"
+  | "defaultArchetype"
+  | "defaultScenario"
+  | "defaultContext"
+> & {
+  averages?: PersonaReportSummary["averages"];
+  topHighTodos?: string[];
+  reportPath?: string;
+  summaryPath?: string;
+};
+
+type ProductBacklogArea =
+  | "Homepage"
+  | "About"
+  | "Projects"
+  | "Build Log"
+  | "Music"
+  | "Writings"
+  | "Tiny Thoughts"
+  | "Cats"
+  | "Twin Peaks"
+  | "Search"
+  | "Navigation"
+  | "Cross-linking"
+  | "Overall UX";
+
+type RecommendationPriority = "High Priority" | "Medium Priority" | "Low Priority";
+type RecommendationConfidence = "High Confidence" | "Medium Confidence" | "Low Confidence";
+
+type ProductRecommendation = {
+  id: string;
+  area: ProductBacklogArea;
+  priority: RecommendationPriority;
+  confidence: RecommendationConfidence;
+  evidenceCount: number;
+  personaCount: number;
+  scenarioCount: number;
+  affectedPersonas: string[];
+  affectedScenarios: string[];
+  suggestedImprovement: string;
+  expectedBenefit: string;
+  rationale: string;
 };
 
 export async function inspectSurface(
@@ -412,6 +506,12 @@ export function writeOverallPersonaReport(summaries: PersonaReportSummary[]) {
     );
 
   const recurringTodos = aggregateRecurringTodos(summaries);
+  const auditProductRecommendations = buildProductRecommendations({
+    auditSummaries: summaries,
+    journeySummaries: [],
+    recurringTodos,
+    surfaceStats,
+  });
   const topFitPersonas = [...summaries]
     .sort((left, right) => right.averages.weightedInterest - left.averages.weightedInterest)
     .slice(0, 5)
@@ -440,17 +540,9 @@ Across all personas, the site reads as distinctive, personal, and interesting, b
 
 ${renderBullets(topFitPersonas)}
 
-## Recurring High-Priority TODOs
+## Site Recommendations
 
-${renderRankedTodos(recurringTodos.high)}
-
-## Recurring Medium-Priority TODOs
-
-${renderRankedTodos(recurringTodos.medium)}
-
-## Recurring Low-Priority TODOs
-
-${renderRankedTodos(recurringTodos.low)}
+${renderProductRecommendations(auditProductRecommendations.slice(0, 6))}
 
 ## Cross-Persona Friction Surfaces
 
@@ -490,6 +582,7 @@ ${renderBullets(summary.todos.high.slice(0, 3))}
     averageUsability,
     recurringTodos,
     surfaceStats,
+    productRecommendations: auditProductRecommendations,
     personaSummaries: summaries.map((summary) => ({
       persona: summary.persona,
       personaSlug: summary.personaSlug,
@@ -548,6 +641,7 @@ export function writeOverallJourneyReport(summaries: JourneySummaryRecord[]) {
   const scenarioCounts = countBy(summaries.map((summary) => summary.scenarioLabel));
   const archetypeCounts = countBy(summaries.map((summary) => summary.archetype));
   const exitStateCounts = countBy(summaries.map((summary) => summary.exitState));
+  const journeyOutcomesByScenario = aggregateJourneyOutcomesByScenario(summaries);
   const commonSkippedReasons = countBy(
     summaries.flatMap((summary) => summary.skippedRouteReasons.map((entry) => entry.reason)),
   );
@@ -569,7 +663,62 @@ export function writeOverallJourneyReport(summaries: JourneySummaryRecord[]) {
   const missingExpectedRouteCounts = countBy(
     summaries.flatMap((summary) => summary.missingExpectedRoutes),
   );
+  const expectedRouteMissCounts = countBy(
+    summaries.flatMap((summary) => summary.expectedRouteMisses.map((entry) => entry.route)),
+  );
+  const routeCatalogWarnings = countBy(
+    summaries.flatMap((summary) => summary.routeCatalogWarnings),
+  );
+  const routesReferencedButMissingFromCatalog = Array.from(
+    new Set(
+      summaries.flatMap((summary) =>
+        summary.routeCatalogWarnings
+          .filter((warning) => warning.includes("missing from the route catalog"))
+          .map((warning) => warning.match(/`([^`]+)`/)?.[1] ?? warning),
+      ),
+    ),
+  ).sort();
+  const adminRouteLeaks = Array.from(
+    new Set(summaries.flatMap((summary) => summary.adminRouteLeaks)),
+  ).sort();
+  const journeyEligibleRoutes = Array.from(
+    new Set(summaries.flatMap((summary) => summary.catalogCoverage.journeyEligibleRoutes)),
+  ).sort();
+  const selectedRoutes = Array.from(
+    new Set(summaries.flatMap((summary) => summary.catalogCoverage.selectedRoutes)),
+  ).sort();
+  const routesNeverSelected = journeyEligibleRoutes.filter((route) => !selectedRoutes.includes(route));
+  const catalogCoverage = {
+    totalJourneyEligibleRoutes: journeyEligibleRoutes.length,
+    routesSelectedAtLeastOnce: selectedRoutes.length,
+    coverageRatio: journeyEligibleRoutes.length === 0
+      ? 0
+      : Number((selectedRoutes.length / journeyEligibleRoutes.length).toFixed(3)),
+  };
   const successfulJourneys = summaries.filter((summary) => summary.success).length;
+  const partialOrFailedJourneys = summaries.filter((summary) => summary.journeyOutcome !== "success");
+  const recommendedNextSiteImprovements = buildRecommendedJourneyImprovements({
+    summaries,
+    nearBounceRouteCounts,
+    missingExpectedRouteCounts,
+    expectedRouteMissCounts,
+    commonSkippedReasons,
+    searchUsageByArchetype,
+    successfulJourneys,
+    totalJourneys: summaries.length,
+    routeCatalogWarnings,
+    routesNeverSelected,
+  });
+  const productRecommendations = buildProductRecommendations({
+    auditSummaries: readJsonIfExists(resolve(getOverallAuditOutputDir(), "summary.json"))?.personaSummaries ?? [],
+    journeySummaries: summaries,
+    recurringTodos: readJsonIfExists(resolve(getOverallAuditOutputDir(), "summary.json"))?.recurringTodos ?? {
+      high: [],
+      medium: [],
+      low: [],
+    },
+    surfaceStats: readJsonIfExists(resolve(getOverallAuditOutputDir(), "summary.json"))?.surfaceStats ?? [],
+  });
 
   const combinedSummary: PersonaJourneyAggregateSummary = {
     generatedAt: new Date().toISOString(),
@@ -578,6 +727,23 @@ export function writeOverallJourneyReport(summaries: JourneySummaryRecord[]) {
     bounceRiskCounts,
     scenarioCounts,
     archetypeCounts,
+    journeyOutcomesByScenario,
+    exitStateCounts,
+    successCountByScenario,
+    searchUsageByArchetype,
+    commonSkippedReasons,
+    goalEvidenceCounts,
+    nearBounceRouteCounts,
+    missingExpectedRouteCounts,
+    expectedRouteMissCounts,
+    trustSignalOutcomeCounts,
+    routeCatalogWarnings,
+    routesReferencedButMissingFromCatalog,
+    routesNeverSelected,
+    adminRouteLeaks,
+    catalogCoverage,
+    recommendedNextSiteImprovements,
+    productRecommendations,
     journeySummaries: aggregateSummaries,
   };
 
@@ -590,6 +756,7 @@ Generated: ${combinedSummary.generatedAt}
 - Journeys reviewed: \`${combinedSummary.journeysReviewed}\`
 - Average visited route count: \`${combinedSummary.averageVisitedRouteCount.toFixed(1)}\`
 - Successful journeys: \`${successfulJourneys}/${combinedSummary.journeysReviewed}\`
+- Partial / failed journeys: \`${partialOrFailedJourneys.length}/${combinedSummary.journeysReviewed}\`
 - Bounce risk counts:
   - low: \`${combinedSummary.bounceRiskCounts.low}\`
   - medium: \`${combinedSummary.bounceRiskCounts.medium}\`
@@ -615,6 +782,26 @@ ${renderBullets(Object.entries(exitStateCounts).map(([label, count]) => `Exit \`
 
 ${renderBullets(
     rankCountEntries(successCountByScenario).map(([label, count]) => `\`${label}\`: ${count} successful journey${count === 1 ? "" : "s"}`),
+  )}
+
+## Journey Outcomes By Scenario
+
+${renderBullets(
+    Object.entries(journeyOutcomesByScenario).map(
+      ([label, counts]) =>
+        `\`${label}\`: success ${counts.success}, partial ${counts.partial}, failed ${counts.failed}`,
+    ),
+  )}
+
+## Partial / Failed Journeys
+
+${renderBullets(
+    partialOrFailedJourneys.length
+      ? partialOrFailedJourneys.map(
+          (summary) =>
+            `\`${summary.persona}\` / \`${summary.scenarioLabel}\` -> \`${summary.journeyOutcome}\` (${summary.outcomeReasons.slice(0, 2).join(" ") || "No reasons recorded."})`,
+        )
+      : ["No representative journeys were partial or failed in this run."],
   )}
 
 ## Search Usage Count By Archetype
@@ -645,11 +832,48 @@ ${renderBullets(
     rankCountEntries(missingExpectedRouteCounts).slice(0, 8).map(([route, count]) => `\`${route}\` (${count})`),
   )}
 
+## Expected-Route Misses That Affected Outcome
+
+${renderBullets(
+    rankCountEntries(expectedRouteMissCounts).slice(0, 8).map(([route, count]) => `\`${route}\` (${count})`),
+  )}
+
 ## Trust Signals That Most Often Changed Direction
 
 ${renderBullets(
     rankCountEntries(trustSignalOutcomeCounts).slice(0, 6).map(([route, count]) => `\`${route}\` (${count})`),
   )}
+
+## Route Catalog Validation
+
+${renderBullets([
+    `Catalog coverage across representative journeys: ${catalogCoverage.routesSelectedAtLeastOnce}/${catalogCoverage.totalJourneyEligibleRoutes} eligible routes (${(catalogCoverage.coverageRatio * 100).toFixed(1)}%).`,
+    ...rankCountEntries(routeCatalogWarnings).slice(0, 6).map(([warning, count]) => `${warning} (${count})`),
+  ])}
+
+## Routes Referenced But Missing From Catalog
+
+${renderBullets(
+    routesReferencedButMissingFromCatalog.length
+      ? routesReferencedButMissingFromCatalog.map((routeId) => `\`${routeId}\``)
+      : ["None."],
+  )}
+
+## Routes In Catalog Never Selected By Representative Journeys
+
+${renderBullets(
+    routesNeverSelected.length
+      ? routesNeverSelected.map((route) => `\`${route}\``)
+      : ["Every journey-eligible catalog route was selected at least once."],
+  )}
+
+## Recommended Next Site Improvements
+
+${renderBullets(recommendedNextSiteImprovements)}
+
+## Product-Ready Recommendations
+
+${renderProductRecommendations(productRecommendations.slice(0, 6))}
 
 ## Journey Snapshots
 
@@ -665,13 +889,16 @@ ${aggregateSummaries
 - Context influences: ${summary.contextInfluences.slice(0, 2).join(" ")}
 - Target / max pages: \`${summary.targetPageCount} / ${summary.maxPageCount}\`
 - Bounce risk: \`${summary.bounceRisk}\`
+- Journey outcome: \`${summary.journeyOutcome}\`
 - Success: \`${summary.success ? "yes" : "no"}\`
 - Exit state: \`${summary.exitState}\`
 - Near-bounce route: ${summary.nearBounceRoute ? `\`${summary.nearBounceRoute}\`` : "None"}
+- Outcome reasons: ${summary.outcomeReasons.slice(0, 2).join(" ") || "None"}
 - Why routes were skipped: ${summary.skippedRouteReasons.slice(0, 2).map((entry) => `\`${entry.route}\` (${entry.reason})`).join("; ") || "None"}
 - Trust signals that mattered: ${summary.trustSignalHits.slice(0, 2).map((entry) => `\`${entry.route}\``).join(", ") || "None"}
 - Goal satisfaction pages: ${summary.goalSatisfactionEvidence.slice(0, 2).map((entry) => `\`${entry.route}\``).join(", ") || "None"}
 - Expected but missing routes: ${summary.missingExpectedRoutes.slice(0, 3).map((route) => `\`${route}\``).join(", ") || "None"}
+- Route catalog warnings: ${summary.routeCatalogWarnings.slice(0, 2).join(" ") || "None"}
 - Expected-route warnings: ${summary.expectedRouteWarnings.join(" ") || "None"}
 - Visited routes: ${summary.visitedRoutes.map((route) => `\`${route}\``).join(", ")}
 - Search queries: ${summary.searchQueries.length ? summary.searchQueries.map((query) => `\`${query}\``).join(", ") : "None"}
@@ -731,6 +958,17 @@ Generated: ${combined.generatedAt}
   writeFileSync(resolve(outputDir, "summary.json"), JSON.stringify(combined, null, 2));
   writeFileSync(resolve(outputDir, "combined-bundle.json"), JSON.stringify(combined, null, 2));
   writeFileSync(resolve(outputDir, "chatgpt-prompts.md"), buildCombinedChatGptPrompts());
+
+  if (resolvedAuditSummary && resolvedJourneySummary) {
+    writePersonaTestsResultsTodoDoc({
+      auditSummary: resolvedAuditSummary as {
+        recurringTodos?: unknown;
+        surfaceStats?: unknown[];
+        personaSummaries?: PersonaReportSummary[];
+      },
+      journeySummary: resolvedJourneySummary,
+    });
+  }
 }
 
 function buildNotes(
@@ -1165,6 +1403,7 @@ function buildJourneyCsv(summaries: JourneySummaryRecord[]) {
       "target_pages",
       "max_pages",
       "bounce_risk",
+      "journey_outcome",
       "success",
       "exit_state",
       "visited_routes",
@@ -1180,6 +1419,7 @@ function buildJourneyCsv(summaries: JourneySummaryRecord[]) {
       String(summary.targetPageCount),
       String(summary.maxPageCount),
       summary.bounceRisk,
+      summary.journeyOutcome,
       summary.success ? "yes" : "no",
       summary.exitState,
       summary.visitedRoutes.join(" | "),
@@ -1251,6 +1491,491 @@ Please do all of the following:
 `;
 }
 
+function buildRecommendedJourneyImprovements(args: {
+  summaries: JourneySummaryRecord[];
+  nearBounceRouteCounts: Record<string, number>;
+  missingExpectedRouteCounts: Record<string, number>;
+  expectedRouteMissCounts: Record<string, number>;
+  commonSkippedReasons: Record<string, number>;
+  searchUsageByArchetype: Record<string, number>;
+  successfulJourneys: number;
+  totalJourneys: number;
+  routeCatalogWarnings: Record<string, number>;
+  routesNeverSelected: string[];
+}) {
+  const improvements: string[] = [];
+  const topPartialOrFailed = args.summaries.find((summary) => summary.journeyOutcome !== "success");
+  const topNearBounce = rankCountEntries(args.nearBounceRouteCounts)[0];
+  const topMissingExpected = rankCountEntries(args.missingExpectedRouteCounts)[0];
+  const topOutcomeMiss = rankCountEntries(args.expectedRouteMissCounts)[0];
+  const topSkippedReason = rankCountEntries(args.commonSkippedReasons)[0];
+  const topSearchArchetype = rankCountEntries(args.searchUsageByArchetype)[0];
+  const topCatalogWarning = rankCountEntries(args.routeCatalogWarnings)[0];
+
+  if (topPartialOrFailed) {
+    improvements.push(
+      `Fix \`${topPartialOrFailed.persona}\` / \`${topPartialOrFailed.scenarioLabel}\` first, because it currently resolves as \`${topPartialOrFailed.journeyOutcome}\`.`,
+    );
+  }
+
+  if (topNearBounce) {
+    improvements.push(
+      `Reduce friction around \`${topNearBounce[0]}\`, which most often carried near-bounce pressure in representative journeys.`,
+    );
+  }
+
+  if (topOutcomeMiss) {
+    improvements.push(
+      `Strengthen \`${topOutcomeMiss[0]}\`, which most often affected journey outcomes rather than only appearing as a soft warning.`,
+    );
+  }
+
+  if (topMissingExpected) {
+    improvements.push(
+      `Strengthen the path toward \`${topMissingExpected[0]}\`, which was the most commonly expected-but-missed route anchor.`,
+    );
+  }
+
+  if (topSkippedReason) {
+    improvements.push(
+      `Review whether "${topSkippedReason[0]}" reflects a real site issue or an overly aggressive planner heuristic.`,
+    );
+  }
+
+  if (topSearchArchetype) {
+    improvements.push(
+      `Watch search-heavy behavior for \`${topSearchArchetype[0]}\` so journeys do not collapse into the same route shape too often.`,
+    );
+  }
+
+  if (topCatalogWarning) {
+    improvements.push(
+      `Clean up route-catalog drift beginning with: ${topCatalogWarning[0]}.`,
+    );
+  }
+
+  if (args.routesNeverSelected.length > 0) {
+    improvements.push(
+      `Review whether currently unselected eligible routes like \`${args.routesNeverSelected[0]}\` belong in the representative suite or should be deprioritized intentionally.`,
+    );
+  }
+
+  if (args.successfulJourneys < args.totalJourneys) {
+    improvements.push(
+      "Investigate unsuccessful representative journeys and validate whether their expected-route warnings point to real orientation gaps.",
+    );
+  }
+
+  if (improvements.length === 0) {
+    improvements.push("Representative journeys are healthy right now; focus next on finer route realism rather than framework expansion.");
+  }
+
+  return improvements;
+}
+
+function renderProductRecommendations(items: ProductRecommendation[]) {
+  if (items.length === 0) {
+    return "- None strong enough yet.";
+  }
+
+  return items
+    .map((item) => {
+      const personas = summarizeNames(item.affectedPersonas, 4);
+      const scenarios = summarizeNames(item.affectedScenarios, 3);
+
+      return `- ${item.priority} · ${item.confidence} · Evidence count: \`${item.evidenceCount}\`
+  Suggested improvement: ${item.suggestedImprovement}
+  Expected benefit: ${item.expectedBenefit}
+  Affected visitors: ${personas}; scenarios: ${scenarios}
+  Why this is here: ${item.rationale}`;
+    })
+    .join("\n");
+}
+
+function writePersonaTestsResultsTodoDoc(args: {
+  auditSummary: {
+    recurringTodos?: unknown;
+    surfaceStats?: unknown[];
+    personaSummaries?: AggregatePersonaSummary[];
+  };
+  journeySummary: PersonaJourneyAggregateSummary;
+}) {
+  const { auditSummary, journeySummary } = args;
+  const recommendations = buildProductRecommendations({
+    auditSummaries: auditSummary.personaSummaries ?? [],
+    journeySummaries: journeySummary.journeySummaries ?? [],
+    recurringTodos: normalizeRecurringTodos(auditSummary.recurringTodos),
+    surfaceStats: normalizeSurfaceStats(auditSummary.surfaceStats),
+  });
+  const sections: ProductBacklogArea[] = [
+    "Homepage",
+    "About",
+    "Projects",
+    "Build Log",
+    "Music",
+    "Writings",
+    "Tiny Thoughts",
+    "Cats",
+    "Twin Peaks",
+    "Search",
+    "Navigation",
+    "Cross-linking",
+    "Overall UX",
+  ];
+
+  const body = sections
+    .map((area) => {
+      const items = recommendations.filter((item) => item.area === area);
+
+      if (items.length === 0) {
+        return `## ${area}\n\n- [ ] No recurring action item is strong enough here yet.`;
+      }
+
+      return `## ${area}\n\n${items
+        .map((item) => {
+          const personas = summarizeNames(item.affectedPersonas, 4);
+          const scenarios = summarizeNames(item.affectedScenarios, 3);
+
+          return `- [ ] ${item.priority} · ${item.confidence} · Evidence count: \`${item.evidenceCount}\`
+  Affected visitors: ${personas}; scenarios: ${scenarios}
+  Suggested improvement: ${item.suggestedImprovement}
+  Expected benefit: ${item.expectedBenefit}`;
+        })
+        .join("\n\n")}`;
+    })
+    .join("\n\n");
+
+  const doc = `# PERSONA-TESTS-RESULTS-TODO.md
+
+Generated: ${new Date().toISOString()}
+
+This is the canonical handoff from persona testing into ArcadeGhosts website work.
+
+The goal is not to preserve every raw audit note. The goal is to turn repeated evidence into a practical product backlog that can be implemented, re-tested, and measured over time.
+
+${body}
+`;
+
+  writeFileSync(getPersonaTestsResultsTodoPath(), doc);
+}
+
+function buildProductRecommendations(args: {
+  auditSummaries: AggregatePersonaSummary[];
+  journeySummaries: JourneySummaryRecord[];
+  recurringTodos: {
+    high: Array<{ text: string; count: number }>;
+    medium: Array<{ text: string; count: number }>;
+    low: Array<{ text: string; count: number }>;
+  };
+  surfaceStats: Array<{
+    label: string;
+    averageInterest: number;
+    averageUsability: number;
+    highOverwhelmCount: number;
+    mediumOverwhelmCount: number;
+    primaryPriorityCount: number;
+    secondaryPriorityCount: number;
+    samplePaths: string[];
+  }>;
+}) {
+  const { auditSummaries, journeySummaries, recurringTodos, surfaceStats } = args;
+  const recommendations: ProductRecommendation[] = [];
+  const homepageStats = surfaceStats.find((surface) => surface.samplePaths.includes("/"));
+  const moviesStats = surfaceStats.find((surface) => surface.samplePaths.includes("/movies-tv"));
+  const missingAboutJourneys = journeySummaries.filter(
+    (summary) =>
+      summary.missingExpectedRoutes.includes("/about")
+      && (summary.scenarioLabel === "Looking For A Reason To Trust" || summary.journeyOutcome !== "success"),
+  );
+  const professionalPartials = journeySummaries.filter(
+    (summary) =>
+      summary.journeyOutcome !== "success"
+      && ["potential-client", "hiring-manager"].includes(summary.personaSlug),
+  );
+  const searchHeavyJourneys = journeySummaries.filter((summary) => summary.searchQueries.length > 0);
+  const emotionalJourneysMissingWarmth = journeySummaries.filter(
+    (summary) =>
+      ["Romantic", "Reader", "Wanderer"].some((label) => summary.archetype.includes(label))
+      && !summary.visitedRoutes.some((route) =>
+        ["/about", "/writings", "/tiny-thoughts", "/music", "/cats/beverly-and-lucinda", "/twin-peaks-self"].includes(route),
+      ),
+  );
+  const buildLogTrustMisses = journeySummaries.filter(
+    (summary) =>
+      ["Looking For A Reason To Trust", "Looking For Something Specific"].includes(summary.scenarioLabel)
+      && ["potential-client", "hiring-manager", "skeptic", "builder"].includes(summary.personaSlug)
+      && summary.missingExpectedRoutes.includes("/build-log"),
+  );
+  const warmTextureTodo = recurringTodos.medium.find((item) => item.text.includes("Thread more warm real-life texture"));
+  const startHereTodo = recurringTodos.medium.find((item) => item.text.includes('lightweight persona summary banner'));
+
+  if (homepageStats || startHereTodo || warmTextureTodo) {
+    const personas = new Set<string>();
+    const scenarios = new Set<string>();
+
+    for (const summary of journeySummaries.filter((summary) => summary.visitedRoutes.includes("/"))) {
+      personas.add(summary.persona);
+      scenarios.add(summary.scenarioLabel);
+    }
+
+    const evidenceCount =
+      (homepageStats?.highOverwhelmCount ?? 0)
+      + (journeyCountForRoute(journeySummaries, "/"))
+      + (startHereTodo?.count ?? 0)
+      + (warmTextureTodo?.count ?? 0);
+
+    recommendations.push(makeRecommendation({
+      id: "homepage-first-visit-frame",
+      area: "Homepage",
+      priority: "High Priority",
+      evidenceCount,
+      personaCount: personas.size || auditSummaries.length,
+      scenarioCount: scenarios.size,
+      affectedPersonas: Array.from(personas),
+      affectedScenarios: Array.from(scenarios),
+      suggestedImprovement:
+        "Give the homepage a calmer first screen: one short site summary, two or three clear starting paths, and one warm personal hook before the denser room grid.",
+      expectedBenefit:
+        "Reduces first-visit fatigue, improves orientation, and helps both personal and professional visitors choose a path faster.",
+      rationale:
+        "Multiple visitors independently point to homepage density, weak first-step orientation, and a need for a clearer emotional entry point.",
+    }));
+  }
+
+  if (missingAboutJourneys.length > 0) {
+    recommendations.push(makeRecommendation({
+      id: "about-trust-path",
+      area: "About",
+      priority: "High Priority",
+      evidenceCount: missingAboutJourneys.length + professionalPartials.length,
+      personaCount: new Set(missingAboutJourneys.map((summary) => summary.persona)).size,
+      scenarioCount: new Set(missingAboutJourneys.map((summary) => summary.scenarioLabel)).size,
+      affectedPersonas: Array.from(new Set(missingAboutJourneys.map((summary) => summary.persona))),
+      affectedScenarios: Array.from(new Set(missingAboutJourneys.map((summary) => summary.scenarioLabel))),
+      suggestedImprovement:
+        "Make the About page easier to reach from the homepage, Work With Me, and Build Log, and frame it as the human trust anchor rather than a secondary biography page.",
+      expectedBenefit:
+        "Improves credibility for trust-seeking visitors and makes professional journeys feel more complete before they decide whether to continue.",
+      rationale:
+        "The same trust-oriented journeys keep forming only partial confidence when they never reach About.",
+    }));
+  }
+
+  if (buildLogTrustMisses.length > 0) {
+    recommendations.push(makeRecommendation({
+      id: "build-log-trust-proof",
+      area: "Build Log",
+      priority: "Medium Priority",
+      evidenceCount: buildLogTrustMisses.length,
+      personaCount: new Set(buildLogTrustMisses.map((summary) => summary.persona)).size,
+      scenarioCount: new Set(buildLogTrustMisses.map((summary) => summary.scenarioLabel)).size,
+      affectedPersonas: Array.from(new Set(buildLogTrustMisses.map((summary) => summary.persona))),
+      affectedScenarios: Array.from(new Set(buildLogTrustMisses.map((summary) => summary.scenarioLabel))),
+      suggestedImprovement:
+        "Make Build Log easier to discover from professional trust paths and clarify near the top why it matters as evidence of real iteration.",
+      expectedBenefit:
+        "Helps proof-seeking visitors reach a concrete credibility signal sooner without forcing everything through Search.",
+      rationale:
+        "Professional and trust-oriented journeys repeatedly expect Build Log to help confirm credibility, but that proof path is still too easy to miss.",
+    }));
+  }
+
+  if (professionalPartials.length > 0) {
+    recommendations.push(makeRecommendation({
+      id: "professional-trust-crosslinks",
+      area: "Cross-linking",
+      priority: "High Priority",
+      evidenceCount: professionalPartials.length * 2,
+      personaCount: new Set(professionalPartials.map((summary) => summary.persona)).size,
+      scenarioCount: new Set(professionalPartials.map((summary) => summary.scenarioLabel)).size,
+      affectedPersonas: Array.from(new Set(professionalPartials.map((summary) => summary.persona))),
+      affectedScenarios: Array.from(new Set(professionalPartials.map((summary) => summary.scenarioLabel))),
+      suggestedImprovement:
+        "Treat About, Work With Me, and Build Log as one trust cluster with visible cross-links so proof, personality, and next steps reinforce each other.",
+      expectedBenefit:
+        "Makes client and hiring-manager journeys feel more coherent and lowers the odds of a technically impressive but emotionally incomplete visit.",
+      rationale:
+        "Professional trust journeys are no longer failing silently; they are explicitly landing as partial when the trust cluster is incomplete.",
+    }));
+  }
+
+  if (moviesStats && moviesStats.highOverwhelmCount >= 8) {
+    recommendations.push(makeRecommendation({
+      id: "movies-tv-first-screen",
+      area: "Overall UX",
+      priority: "Medium Priority",
+      evidenceCount: moviesStats.highOverwhelmCount,
+      personaCount: Math.min(auditSummaries.length, moviesStats.highOverwhelmCount),
+      scenarioCount: 0,
+      affectedPersonas: auditSummaries.map((summary) => summary.persona),
+      affectedScenarios: [],
+      suggestedImprovement:
+        "Reframe the Movies & TV page so its top section explains why the room exists before dropping visitors into dense content.",
+      expectedBenefit:
+        "Prevents a non-core room from feeling as busy as the homepage and makes the site feel more intentionally paced overall.",
+      rationale:
+        "This room repeatedly shows up as high-density without offering clear first-visit payoff for most audiences.",
+    }));
+  }
+
+  if (searchHeavyJourneys.length >= 3) {
+    recommendations.push(makeRecommendation({
+      id: "search-support-not-crutch",
+      area: "Search",
+      priority: "Medium Priority",
+      evidenceCount: searchHeavyJourneys.length,
+      personaCount: new Set(searchHeavyJourneys.map((summary) => summary.persona)).size,
+      scenarioCount: new Set(searchHeavyJourneys.map((summary) => summary.scenarioLabel)).size,
+      affectedPersonas: Array.from(new Set(searchHeavyJourneys.map((summary) => summary.persona))),
+      affectedScenarios: Array.from(new Set(searchHeavyJourneys.map((summary) => summary.scenarioLabel))),
+      suggestedImprovement:
+        "Keep Search strong for direct-finding visitors, but pair it with clearer suggested routes on the homepage and professional pages so it is not the only fast path.",
+      expectedBenefit:
+        "Preserves efficiency for task-focused visitors while reducing over-reliance on search as a substitute for navigation.",
+      rationale:
+        "Search is useful, but recurring journeys show it stepping in where clearer route framing should probably do some of the work.",
+    }));
+  }
+
+  const twinPeaksMisses = journeySummaries.filter((summary) =>
+    summary.missingExpectedRoutes.includes("/games/between-two-lodges")
+    || summary.missingExpectedRoutes.includes("/twin-peaks-self"),
+  );
+
+  if (twinPeaksMisses.length > 0) {
+    recommendations.push(makeRecommendation({
+      id: "twin-peaks-crosslinking",
+      area: "Twin Peaks",
+      priority: "Low Priority",
+      evidenceCount: twinPeaksMisses.length,
+      personaCount: new Set(twinPeaksMisses.map((summary) => summary.persona)).size,
+      scenarioCount: new Set(twinPeaksMisses.map((summary) => summary.scenarioLabel)).size,
+      affectedPersonas: Array.from(new Set(twinPeaksMisses.map((summary) => summary.persona))),
+      affectedScenarios: Array.from(new Set(twinPeaksMisses.map((summary) => summary.scenarioLabel))),
+      suggestedImprovement:
+        "Add clearer links between Twin Peaks Self and Between Two Lodges so mood-led visitors can discover the whole Twin Peaks corner more easily.",
+      expectedBenefit:
+        "Improves payoff for niche visitors without raising first-visit complexity for everyone else.",
+      rationale:
+        "The Twin Peaks slice is interesting once found, but representative journeys do not naturally reach all of it yet.",
+    }));
+  }
+
+  if (emotionalJourneysMissingWarmth.length > 0) {
+    recommendations.push(makeRecommendation({
+      id: "warmth-route-orientation",
+      area: "Navigation",
+      priority: "Medium Priority",
+      evidenceCount: emotionalJourneysMissingWarmth.length,
+      personaCount: new Set(emotionalJourneysMissingWarmth.map((summary) => summary.persona)).size,
+      scenarioCount: new Set(emotionalJourneysMissingWarmth.map((summary) => summary.scenarioLabel)).size,
+      affectedPersonas: Array.from(new Set(emotionalJourneysMissingWarmth.map((summary) => summary.persona))),
+      affectedScenarios: Array.from(new Set(emotionalJourneysMissingWarmth.map((summary) => summary.scenarioLabel))),
+      suggestedImprovement:
+        "Strengthen links from the homepage and About into warmer personality rooms like Writings, Tiny Thoughts, Cats, Music, and Twin Peaks Self.",
+      expectedBenefit:
+        "Makes emotionally led journeys feel intentionally guided instead of requiring visitors to infer where the human texture lives.",
+      rationale:
+        "Several personality-first journeys still succeed only partially when they do not naturally encounter the warmer rooms they were implicitly looking for.",
+    }));
+  }
+
+  return recommendations
+    .sort(compareRecommendations)
+    .slice(0, 12);
+}
+
+function makeRecommendation(args: Omit<ProductRecommendation, "confidence">) {
+  return {
+    ...args,
+    confidence: computeRecommendationConfidence(args.evidenceCount, args.personaCount, args.scenarioCount),
+  };
+}
+
+function computeRecommendationConfidence(
+  evidenceCount: number,
+  personaCount: number,
+  scenarioCount: number,
+): RecommendationConfidence {
+  const score = evidenceCount + personaCount * 2 + scenarioCount;
+
+  if (score >= 18) {
+    return "High Confidence";
+  }
+
+  if (score >= 8) {
+    return "Medium Confidence";
+  }
+
+  return "Low Confidence";
+}
+
+function compareRecommendations(left: ProductRecommendation, right: ProductRecommendation) {
+  const priorityWeight = (priority: RecommendationPriority) =>
+    priority === "High Priority" ? 3 : priority === "Medium Priority" ? 2 : 1;
+  const confidenceWeight = (confidence: RecommendationConfidence) =>
+    confidence === "High Confidence" ? 3 : confidence === "Medium Confidence" ? 2 : 1;
+
+  return (
+    priorityWeight(right.priority) - priorityWeight(left.priority)
+    || confidenceWeight(right.confidence) - confidenceWeight(left.confidence)
+    || right.evidenceCount - left.evidenceCount
+    || left.area.localeCompare(right.area)
+  );
+}
+
+function journeyCountForRoute(summaries: JourneySummaryRecord[], route: string) {
+  return summaries.filter((summary) => summary.nearBounceRoute === route || summary.visitedRoutes.includes(route)).length;
+}
+
+function summarizeNames(items: string[], limit: number) {
+  const unique = Array.from(new Set(items.filter(Boolean)));
+
+  if (unique.length === 0) {
+    return "No specific visitors captured yet";
+  }
+
+  if (unique.length <= limit) {
+    return unique.map((item) => `\`${item}\``).join(", ");
+  }
+
+  const shown = unique.slice(0, limit).map((item) => `\`${item}\``).join(", ");
+  return `${shown}, and ${unique.length - limit} more`;
+}
+
+function normalizeRecurringTodos(input: unknown) {
+  const fallback = { high: [], medium: [], low: [] } as {
+    high: Array<{ text: string; count: number }>;
+    medium: Array<{ text: string; count: number }>;
+    low: Array<{ text: string; count: number }>;
+  };
+
+  if (!input || typeof input !== "object") {
+    return fallback;
+  }
+
+  const record = input as Record<string, unknown>;
+
+  return {
+    high: Array.isArray(record.high) ? record.high as Array<{ text: string; count: number }> : [],
+    medium: Array.isArray(record.medium) ? record.medium as Array<{ text: string; count: number }> : [],
+    low: Array.isArray(record.low) ? record.low as Array<{ text: string; count: number }> : [],
+  };
+}
+
+function normalizeSurfaceStats(input: unknown) {
+  return Array.isArray(input) ? input as Array<{
+    label: string;
+    averageInterest: number;
+    averageUsability: number;
+    highOverwhelmCount: number;
+    mediumOverwhelmCount: number;
+    primaryPriorityCount: number;
+    secondaryPriorityCount: number;
+    samplePaths: string[];
+  }> : [];
+}
+
 function readJsonIfExists(filePath: string) {
   if (!existsSync(filePath)) {
     return null;
@@ -1263,6 +1988,17 @@ export function readCombinedPersonasAndJourneysSummary() {
  return readJsonIfExists(
     resolve(getCombinedPersonaJourneyOutputDir(), "summary.json"),
   );
+}
+
+function aggregateJourneyOutcomesByScenario(summaries: JourneySummaryRecord[]) {
+  const counts: Record<string, Record<"success" | "partial" | "failed", number>> = {};
+
+  for (const summary of summaries) {
+    counts[summary.scenarioLabel] ??= { success: 0, partial: 0, failed: 0 };
+    counts[summary.scenarioLabel][summary.journeyOutcome] += 1;
+  }
+
+  return counts;
 }
 
 function countBy(values: string[]) {

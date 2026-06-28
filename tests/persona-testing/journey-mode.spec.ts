@@ -47,7 +47,22 @@ test.describe("persona journey mode", () => {
       expect(result.summary.archetypeInfluences.length).toBeGreaterThan(0);
       expect(result.summary.trustSignalHits.length + result.summary.goalSatisfactionEvidence.length).toBeGreaterThan(0);
       expect(result.summary.expectedRoutes.length).toBeGreaterThan(0);
+      expect(["success", "partial", "failed"]).toContain(result.summary.journeyOutcome);
+      expect(result.summary.routeCatalogWarnings).toHaveLength(0);
+      expect(result.summary.adminRouteLeaks).toHaveLength(0);
       expect(journey.expectedExit).toContain(result.summary.exitState);
+
+      if (["potential-client", "hiring-manager"].includes(journey.personaSlug)) {
+        expect(
+          result.summary.visitedRoutes.some((route) =>
+            ["/work-with-me", "/build-log", "/about", "/updates"].includes(route),
+          ),
+        ).toBe(true);
+      }
+
+      if (["ideal-partner", "lonely-internet-person", "twin-peaks-fan"].includes(journey.personaSlug)) {
+        expect(result.summary.searchQueries.length).toBe(0);
+      }
     });
   }
 

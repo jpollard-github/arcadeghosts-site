@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { cpSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { tmpdir } from "node:os";
 import test from "node:test";
@@ -24,6 +24,8 @@ function cleanupAggregateOutputs() {
   for (const folderName of aggregateFolderNames) {
     rmSync(resolve(personasRoot, folderName), { recursive: true, force: true });
   }
+
+  rmSync(resolve(process.cwd(), "docs", "PERSONA-TESTS-RESULTS-TODO.md"), { force: true });
 }
 
 function withPreservedAggregateOutputs(run: () => void) {
@@ -88,6 +90,14 @@ test("combined packet keeps a legacy audit summary when journeys rerun", () => {
         expectedRouteWarnings: [
           "Journey missed expected routes: /about.",
         ],
+        expectedRouteMisses: [
+          {
+            surfaceId: "about",
+            label: "About",
+            route: "/about",
+            reason: "Expected route was not visited during this journey.",
+          },
+        ],
         skippedRoutes: ["/admin", "/cats/beverly-and-lucinda"],
         skippedRouteReasons: [
           {
@@ -98,10 +108,16 @@ test("combined packet keeps a legacy audit summary when journeys rerun", () => {
           },
         ],
         searchQueries: ["automation", "pricing"],
+        searchRationale: [
+          "Professional evaluation makes search more plausible when the visitor is trying to reduce uncertainty.",
+        ],
         bounceRisk: "medium",
         bounceReasons: ["First-visit trust burden raises the cost of any confusing or weakly oriented early page."],
         nearBounceRoute: "/",
+        journeyOutcome: "partial",
+        outcomeReasons: ["Trust-focused journey succeeded weakly without visiting `/about`."],
         success: true,
+        successBoolean: true,
         matchedSuccessConditionLabels: ["Build log plus work-with-me visited"],
         trustSignalHits: [
           {
@@ -119,8 +135,17 @@ test("combined packet keeps a legacy audit summary when journeys rerun", () => {
             reason: "Helped satisfy the scenario goal \"Build confidence\" via success condition \"Build log plus work-with-me visited\".",
           },
         ],
+        routeCatalogWarnings: [],
+        adminRouteLeaks: [],
         exitState: "bookmark",
         journeyNotes: ["Journey Mode v1 kept the visit short and practical."],
+        catalogCoverage: {
+          totalJourneyEligibleRoutes: 10,
+          selectedJourneyEligibleRoutes: 4,
+          coverageRatio: 0.4,
+          journeyEligibleRoutes: ["/", "/about", "/work-with-me", "/search", "/updates", "/build-log"],
+          selectedRoutes: ["/", "/work-with-me", "/search", "/build-log"],
+        },
       },
     ];
 
@@ -164,12 +189,24 @@ test("combined packet includes journey summary when audit reruns later", () => {
         expectedRouteWarnings: [
           "Journey missed expected routes: /build-log.",
         ],
+        expectedRouteMisses: [
+          {
+            surfaceId: "build-log",
+            label: "Build Log",
+            route: "/build-log",
+            reason: "Expected route was not visited during this journey.",
+          },
+        ],
         skippedRoutes: ["/admin"],
         skippedRouteReasons: [],
         searchQueries: [],
+        searchRationale: [],
         bounceRisk: "low",
         bounceReasons: ["Deep-browse or return-oriented intent gives the visitor more patience than a cold first visit."],
+        journeyOutcome: "success",
+        outcomeReasons: ["The journey satisfied the scenario goal and kept the expected trust or orientation anchors intact."],
         success: true,
+        successBoolean: true,
         matchedSuccessConditionLabels: ["Updates plus one living room"],
         trustSignalHits: [
           {
@@ -187,8 +224,17 @@ test("combined packet includes journey summary when audit reruns later", () => {
             reason: "Helped satisfy the scenario goal \"Assess freshness\" via success condition \"Updates plus one living room\".",
           },
         ],
+        routeCatalogWarnings: [],
+        adminRouteLeaks: [],
         exitState: "return-later",
         journeyNotes: ["Search was not part of this journey."],
+        catalogCoverage: {
+          totalJourneyEligibleRoutes: 10,
+          selectedJourneyEligibleRoutes: 3,
+          coverageRatio: 0.3,
+          journeyEligibleRoutes: ["/updates", "/writings", "/tiny-thoughts", "/build-log"],
+          selectedRoutes: ["/updates", "/writings", "/tiny-thoughts"],
+        },
       },
     ];
 
@@ -236,5 +282,30 @@ test("combined packet includes journey summary when audit reruns later", () => {
     assert.equal(combined.audit?.personasReviewed, 1);
     assert.equal(combined.journeys?.journeysReviewed, 1);
     assert.ok(existsSync(resolve(personasRoot, "overall-audit", "summary.json")));
+    assert.ok(existsSync(resolve(process.cwd(), "docs", "PERSONA-TESTS-RESULTS-TODO.md")));
+
+    const todoDoc = readFileSync(resolve(process.cwd(), "docs", "PERSONA-TESTS-RESULTS-TODO.md"), "utf8");
+    assert.match(todoDoc, /# PERSONA-TESTS-RESULTS-TODO\.md/);
+    assert.match(todoDoc, /## Homepage/);
+    assert.match(todoDoc, /## Overall UX/);
+
+    const auditSummary = JSON.parse(
+      readFileSync(resolve(personasRoot, "overall-audit", "summary.json"), "utf8"),
+    ) as {
+      productRecommendations?: Array<{ area: string; confidence: string }>;
+    };
+    const journeySummary = JSON.parse(
+      readFileSync(resolve(personasRoot, "overall-journeys", "summary.json"), "utf8"),
+    ) as {
+      productRecommendations?: Array<{ area: string; confidence: string }>;
+    };
+
+    assert.ok(Array.isArray(auditSummary.productRecommendations));
+    assert.ok(Array.isArray(journeySummary.productRecommendations));
+    assert.ok(
+      journeySummary.productRecommendations?.every((item) =>
+        ["High Confidence", "Medium Confidence", "Low Confidence"].includes(item.confidence),
+      ),
+    );
   });
 });

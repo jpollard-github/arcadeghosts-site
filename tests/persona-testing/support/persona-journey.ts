@@ -6,9 +6,10 @@ import type { PersonaProfile } from "./persona-profile";
 import { getPersonaJourneyOutputDir } from "./persona-report";
 import type { JourneyExitState, JourneyScenarioDefinition, JourneyScenarioId } from "./persona-scenarios";
 import { getJourneyScenarioDefinition } from "./persona-scenarios";
-import type { SiteSurface } from "./site-surfaces";
+import { getStaticPersonaRouteCatalog, type SiteSurface } from "./site-surfaces";
 
 export type JourneyBounceRisk = "low" | "medium" | "high";
+export type JourneyOutcome = "success" | "partial" | "failed";
 
 export type PersonaJourneyPlan = {
   scenarioId: JourneyScenarioId;
@@ -26,17 +27,24 @@ export type PersonaJourneyPlan = {
   expectedRouteSurfaceIds: string[];
   missingExpectedRouteSurfaceIds: string[];
   expectedRouteWarnings: string[];
+  expectedRouteMisses: JourneyRouteReason[];
   skippedRouteReasons: JourneyRouteReason[];
   searchQueries: string[];
+  searchRationale: string[];
   bounceRisk: JourneyBounceRisk;
   bounceReasons: string[];
   nearBounceRoute?: string;
+  journeyOutcome: JourneyOutcome;
+  outcomeReasons: string[];
   success: boolean;
   matchedSuccessConditionLabels: string[];
   trustSignalHits: JourneyRouteReason[];
   goalSatisfactionEvidence: JourneyRouteReason[];
+  routeCatalogWarnings: string[];
+  adminRouteLeaks: string[];
   exitState: JourneyExitState;
   journeyNotes: string[];
+  catalogCoverage: JourneyCatalogCoverage;
 };
 
 type JourneyConfidenceThreshold = "low" | "medium" | "high";
@@ -83,17 +91,25 @@ export type PersonaJourneySummary = {
   expectedRoutes: string[];
   missingExpectedRoutes: string[];
   expectedRouteWarnings: string[];
+  expectedRouteMisses: JourneyRouteReason[];
   skippedRouteReasons: JourneyRouteReason[];
   searchQueries: string[];
+  searchRationale: string[];
   bounceRisk: JourneyBounceRisk;
   bounceReasons: string[];
   nearBounceRoute?: string;
+  journeyOutcome: JourneyOutcome;
+  outcomeReasons: string[];
   success: boolean;
+  successBoolean: boolean;
   matchedSuccessConditionLabels: string[];
   trustSignalHits: JourneyRouteReason[];
   goalSatisfactionEvidence: JourneyRouteReason[];
+  routeCatalogWarnings: string[];
+  adminRouteLeaks: string[];
   exitState: JourneyExitState;
   journeyNotes: string[];
+  catalogCoverage: JourneyCatalogCoverage;
 };
 
 export type JourneyRouteReason = {
@@ -101,6 +117,14 @@ export type JourneyRouteReason = {
   label: string;
   route: string;
   reason: string;
+};
+
+export type JourneyCatalogCoverage = {
+  totalJourneyEligibleRoutes: number;
+  selectedJourneyEligibleRoutes: number;
+  coverageRatio: number;
+  journeyEligibleRoutes: string[];
+  selectedRoutes: string[];
 };
 
 type ArchetypeScenarioModifiers = {
@@ -121,6 +145,22 @@ type JourneyContextModifiers = {
   preferredSurfaceIds: string[];
   deEmphasizedSurfaceIds: string[];
   influenceNotes: string[];
+};
+
+type SearchDecision = {
+  use: boolean;
+  placement: "early" | "mid";
+  reasons: string[];
+};
+
+type JourneySuccessEvaluation = {
+  success: boolean;
+  matchedSuccessConditionLabels: string[];
+};
+
+type JourneyOutcomeEvaluation = {
+  journeyOutcome: JourneyOutcome;
+  outcomeReasons: string[];
 };
 
 export async function runPersonaJourney(args: {
@@ -189,6 +229,14 @@ export function planPersonaJourney(args: {
   const archetypeModifiers = getArchetypeScenarioModifiers(archetype);
   const contextModifiers = getJourneyContextModifiers(context);
   const scenarioInfluences = describeScenarioInfluences(scenario);
+  const searchDecision = decideSearchUse(
+    definition,
+    scenario,
+    archetype,
+    confidence,
+    archetypeModifiers,
+    contextModifiers,
+  );
   const targetPageCount = computeJourneyTargetPageCount(
     scenario,
     archetype,
@@ -222,17 +270,6 @@ export function planPersonaJourney(args: {
     selected.add(startSurface.id);
   }
 
-  maybeIncludeSearchSurface({
-    visitedSurfaceIds,
-    selected,
-    eligibleSurfaces,
-    scenario,
-    archetype,
-    confidence,
-    archetypeModifiers,
-    contextModifiers,
-  });
-
   for (const entry of rankedSurfaces) {
     if (visitedSurfaceIds.length >= targetPageCount) {
       break;
@@ -244,6 +281,15 @@ export function planPersonaJourney(args: {
 
     visitedSurfaceIds.push(entry.surface.id);
     selected.add(entry.surface.id);
+
+    maybeIncludeSearchSurface({
+      visitedSurfaceIds,
+      selected,
+      eligibleSurfaces,
+      searchDecision,
+      phase: "during-ranking",
+      targetPageCount,
+    });
   }
 
   includeArchetypeDetours({
@@ -254,6 +300,15 @@ export function planPersonaJourney(args: {
     archetypeModifiers,
   });
 
+  maybeIncludeSearchSurface({
+    visitedSurfaceIds,
+    selected,
+    eligibleSurfaces,
+    searchDecision,
+    phase: "after-ranking",
+    targetPageCount,
+  });
+
   const trustSignalCount = countJourneyTrustSignals(visitedSurfaceIds);
   const actionSurfaceId = maybeIncludeActionSurface({
     visitedSurfaceIds,
@@ -262,6 +317,7 @@ export function planPersonaJourney(args: {
     scenario,
     confidence,
     trustSignalCount,
+    eligibleSurfaces,
   });
   const successEvaluation = evaluateJourneySuccess(visitedSurfaceIds, scenario);
   const skippedSurfaceIds = eligibleSurfaces
@@ -273,6 +329,11 @@ export function planPersonaJourney(args: {
     (surfaceId) => !visitedSurfaceIds.includes(surfaceId),
   );
   const expectedRouteWarnings = buildExpectedRouteWarnings(expectedRouteSurfaceIds, missingExpectedRouteSurfaceIds);
+  const expectedRouteMisses = buildExpectedRouteMisses(
+    missingExpectedRouteSurfaceIds,
+    publicSurfaces,
+    "Expected route was not visited during this journey.",
+  );
   const trustSignalHits = buildTrustSignalHits(visitedSurfaceIds, publicSurfaces, scenario);
   const goalSatisfactionEvidence = buildGoalSatisfactionEvidence(
     visitedSurfaceIds,
@@ -280,6 +341,25 @@ export function planPersonaJourney(args: {
     scenario,
     successEvaluation.matchedSuccessConditionLabels,
   );
+  const routeCatalogValidation = validateJourneyRouteCatalog({
+    publicSurfaces,
+    visitedSurfaceIds,
+    expectedRouteSurfaceIds,
+    definition,
+    scenario,
+  });
+  const outcomeEvaluation = evaluateJourneyOutcome({
+    definition,
+    scenario,
+    archetype,
+    visitedSurfaceIds,
+    expectedRouteSurfaceIds,
+    missingExpectedRouteSurfaceIds,
+    successEvaluation,
+    trustSignalHits,
+    routeCatalogWarnings: routeCatalogValidation.routeCatalogWarnings,
+    adminRouteLeaks: routeCatalogValidation.adminRouteLeaks,
+  });
   const skippedRouteReasons = buildSkippedRouteReasons(
     skippedSurfaceIds,
     publicSurfaces,
@@ -298,11 +378,15 @@ export function planPersonaJourney(args: {
     visitedSurfaceIds,
     searchQueries,
     trustSignalCount,
+    outcomeEvaluation.journeyOutcome,
+    missingExpectedRouteSurfaceIds,
+    routeCatalogValidation.routeCatalogWarnings,
   );
   const resolvedExitState = decideJourneyExitState({
     scenario,
     bounceRisk: bounceAnalysis.risk,
     success: successEvaluation.success,
+    journeyOutcome: outcomeEvaluation.journeyOutcome,
     visitedSurfaceIds,
   });
   const journeyNotes = buildJourneyNotes({
@@ -318,15 +402,21 @@ export function planPersonaJourney(args: {
     expectedRouteSurfaceIds,
     missingExpectedRouteSurfaceIds,
     expectedRouteWarnings,
+    expectedRouteMisses,
     searchQueries,
+    searchRationale: searchDecision.use ? searchDecision.reasons : [],
     bounceRisk: bounceAnalysis.risk,
     confidence,
     actionSurfaceId,
     trustSignalCount,
+    journeyOutcome: outcomeEvaluation.journeyOutcome,
+    outcomeReasons: outcomeEvaluation.outcomeReasons,
     success: successEvaluation.success,
     matchedSuccessConditionLabels: successEvaluation.matchedSuccessConditionLabels,
     trustSignalHits,
     goalSatisfactionEvidence,
+    routeCatalogWarnings: routeCatalogValidation.routeCatalogWarnings,
+    adminRouteLeaks: routeCatalogValidation.adminRouteLeaks,
     skippedRouteReasons,
     bounceReasons: bounceAnalysis.reasons,
     nearBounceRoute: bounceAnalysis.nearBounceRoute,
@@ -349,22 +439,29 @@ export function planPersonaJourney(args: {
     expectedRouteSurfaceIds,
     missingExpectedRouteSurfaceIds,
     expectedRouteWarnings,
+    expectedRouteMisses,
     skippedRouteReasons,
     searchQueries,
+    searchRationale: searchDecision.use ? searchDecision.reasons : [],
     bounceRisk: bounceAnalysis.risk,
     bounceReasons: bounceAnalysis.reasons,
     nearBounceRoute: bounceAnalysis.nearBounceRoute,
+    journeyOutcome: outcomeEvaluation.journeyOutcome,
+    outcomeReasons: outcomeEvaluation.outcomeReasons,
     success: successEvaluation.success,
     matchedSuccessConditionLabels: successEvaluation.matchedSuccessConditionLabels,
     trustSignalHits,
     goalSatisfactionEvidence,
+    routeCatalogWarnings: routeCatalogValidation.routeCatalogWarnings,
+    adminRouteLeaks: routeCatalogValidation.adminRouteLeaks,
     exitState: resolvedExitState,
     journeyNotes,
+    catalogCoverage: buildJourneyCatalogCoverage(publicSurfaces, visitedSurfaceIds),
   };
 }
 
 function isJourneyEligibleSurface(surface: SiteSurface) {
-  return surface.area === "public" && !surface.id.startsWith("error-preview");
+  return surface.area === "public" && (surface.journeyEligible ?? !surface.id.startsWith("error-preview"));
 }
 
 function scoreSurfaceForJourney(
@@ -454,6 +551,12 @@ function scoreSurfaceForJourney(
 
   if (normalizedArchetype.includes("romantic")) {
     score += boostIf(surface.id, ["about", "cats-beverly", "cats-thomas", "writings", "music", "tiny-thoughts"], 25);
+    score -= boostIf(surface.id, ["search", "work-with-me", "build-log"], 20);
+  }
+
+  if (["potential-client", "hiring-manager"].includes(definition.slug) && scenario.trustFocused) {
+    score += boostIf(surface.id, ["about", "work-with-me", "build-log", "updates"], 26);
+    score -= boostIf(surface.id, ["search"], 10);
   }
 
   if (scenario.id === "looking-for-trust") {
@@ -578,15 +681,26 @@ function maybeIncludeSearchSurface(args: {
   visitedSurfaceIds: string[];
   selected: Set<string>;
   eligibleSurfaces: SiteSurface[];
-  scenario: JourneyScenarioDefinition;
-  archetype: string;
-  confidence: JourneyConfidenceSettings;
-  archetypeModifiers: ArchetypeScenarioModifiers;
-  contextModifiers: JourneyContextModifiers;
+  searchDecision: SearchDecision;
+  phase: "during-ranking" | "after-ranking";
+  targetPageCount: number;
 }) {
-  const { visitedSurfaceIds, selected, eligibleSurfaces, scenario, archetype, confidence, archetypeModifiers, contextModifiers } = args;
+  const { visitedSurfaceIds, selected, eligibleSurfaces, searchDecision, phase, targetPageCount } = args;
 
-  if (!shouldUseSearchInJourney(scenario, archetype, confidence, archetypeModifiers, contextModifiers)) {
+  if (!searchDecision.use) {
+    return;
+  }
+
+  const shouldInsertNow =
+    (searchDecision.placement === "early" && phase === "during-ranking" && visitedSurfaceIds.length >= 2) ||
+    (searchDecision.placement === "mid" && phase === "during-ranking" && visitedSurfaceIds.length >= 3) ||
+    phase === "after-ranking";
+
+  if (!shouldInsertNow) {
+    return;
+  }
+
+  if (visitedSurfaceIds.length >= targetPageCount) {
     return;
   }
 
@@ -600,18 +714,21 @@ function maybeIncludeSearchSurface(args: {
   selected.add(searchSurface.id);
 }
 
-function shouldUseSearchInJourney(
+function decideSearchUse(
+  definition: PersonaDefinition,
   scenario: JourneyScenarioDefinition,
   archetype: string,
   confidence: JourneyConfidenceSettings,
   archetypeModifiers: ArchetypeScenarioModifiers,
   contextModifiers: JourneyContextModifiers,
-) {
+) : SearchDecision {
   const normalizedArchetype = archetype.toLowerCase();
   let score = confidence.searchBias + archetypeModifiers.searchBias + contextModifiers.searchBias;
+  const reasons: string[] = [];
 
   if (scenario.prefersSearch) {
-    score += 2;
+    score += 3;
+    reasons.push("Scenario is task-oriented, so Search supports a direct task-completion path.");
   }
 
   if (scenario.trustFocused || scenario.lowAttention) {
@@ -620,6 +737,7 @@ function shouldUseSearchInJourney(
 
   if (normalizedArchetype.includes("hunter") || normalizedArchetype.includes("builder")) {
     score += 2;
+    reasons.push("Hunter / Builder behavior makes direct finding more believable than broad wandering.");
   }
 
   if (normalizedArchetype.includes("scanner")) {
@@ -627,18 +745,42 @@ function shouldUseSearchInJourney(
   }
 
   if (normalizedArchetype.includes("wanderer")) {
-    score -= 2;
+    score -= 3;
   }
 
   if (normalizedArchetype.includes("reader") || normalizedArchetype.includes("romantic")) {
-    score -= 1;
+    score -= 3;
   }
 
   if (scenario.returnFocused) {
     score -= 1;
   }
 
-  return score >= 2;
+  if (
+    ["ideal-partner", "lonely-internet-person", "thoughtful-introvert", "twin-peaks-fan"].includes(definition.slug)
+  ) {
+    score -= 2;
+  }
+
+  if (["potential-client", "hiring-manager"].includes(definition.slug)) {
+    score += 2;
+    reasons.push("Professional evaluation makes Search more plausible when the visitor is trying to reduce uncertainty.");
+  }
+
+  const use = score >= 3;
+
+  if (!use) {
+    return { use: false, placement: "mid", reasons: [] };
+  }
+
+  const placement =
+    scenario.id === "looking-for-something-specific" || scenario.lowAttention ? "early" : "mid";
+
+  if (placement === "mid") {
+    reasons.push("Search waits until at least one warmer or proof-oriented room lands first, so the route feels less mechanical.");
+  }
+
+  return { use, placement, reasons };
 }
 
 function getArchetypeScenarioModifiers(archetype: string): ArchetypeScenarioModifiers {
@@ -690,7 +832,9 @@ function getArchetypeScenarioModifiers(archetype: string): ArchetypeScenarioModi
 
   if (normalizedArchetype.includes("romantic")) {
     modifiers.pageDelta += 1;
-    modifiers.preferredSurfaceIds.push("about", "cats-beverly", "cats-thomas", "music", "tiny-thoughts");
+    modifiers.searchBias -= 2;
+    modifiers.preferredSurfaceIds.push("about", "cats-beverly", "cats-thomas", "music", "tiny-thoughts", "writings");
+    modifiers.deEmphasizedSurfaceIds.push("search", "work-with-me", "build-log");
     modifiers.influenceNotes.push("Romantic behavior prioritizes warmth, atmosphere, and human texture.");
   }
 
@@ -741,7 +885,7 @@ function getJourneyContextModifiers(context: string): JourneyContextModifiers {
 
   if (/(calm|quiet|low appetite for chaos|warm|human|connection)/.test(normalized)) {
     modifiers.preferredSurfaceIds.push("about", "writings", "cats-beverly", "cats-thomas", "tiny-thoughts");
-    modifiers.deEmphasizedSurfaceIds.push("search");
+    modifiers.deEmphasizedSurfaceIds.push("search", "work-with-me");
     modifiers.influenceNotes.push("Calm or connection-seeking context leans toward gentler, more human rooms.");
   }
 
@@ -860,7 +1004,7 @@ function getExpectedRouteSurfaceIds(
   }
 
   if (normalizedArchetype.includes("romantic")) {
-    ["about", "cats-beverly", "cats-thomas", "writings", "tiny-thoughts", "music", "twin-peaks-self"].forEach(
+    ["about", "writings", "tiny-thoughts", "music", "cats-beverly", "twin-peaks-self"].forEach(
       (surfaceId) => expected.add(surfaceId),
     );
   }
@@ -874,7 +1018,7 @@ function getExpectedRouteSurfaceIds(
   }
 
   if (definition.preferredSurfaceIds?.length) {
-    for (const surfaceId of definition.preferredSurfaceIds.slice(0, 3)) {
+    for (const surfaceId of definition.preferredSurfaceIds.slice(0, 2)) {
       expected.add(surfaceId);
     }
   }
@@ -896,13 +1040,33 @@ function buildExpectedRouteWarnings(
     ];
   }
 
-  if (missingExpectedRouteSurfaceIds.length >= Math.max(3, Math.ceil(expectedRouteSurfaceIds.length * 0.6))) {
+  if (
+    expectedRouteSurfaceIds.length >= 4 &&
+    missingExpectedRouteSurfaceIds.length >= Math.max(3, Math.ceil(expectedRouteSurfaceIds.length * 0.7))
+  ) {
     return [
       `Expected-route warning: many likely route anchors were missed (${missingExpectedRouteSurfaceIds.join(", ")}).`,
     ];
   }
 
   return [];
+}
+
+function buildExpectedRouteMisses(
+  missingExpectedRouteSurfaceIds: string[],
+  publicSurfaces: SiteSurface[],
+  reason: string,
+) {
+  return missingExpectedRouteSurfaceIds.map((surfaceId) => {
+    const surface = publicSurfaces.find((entry) => entry.id === surfaceId);
+
+    return {
+      surfaceId,
+      label: surface?.label ?? surfaceId,
+      route: surface?.path ?? surfaceId,
+      reason,
+    };
+  });
 }
 
 function buildTrustSignalHits(
@@ -968,6 +1132,142 @@ function evaluateJourneySuccess(visitedSurfaceIds: string[], scenario: JourneySc
   };
 }
 
+function evaluateJourneyOutcome(args: {
+  definition: PersonaDefinition;
+  scenario: JourneyScenarioDefinition;
+  archetype: string;
+  visitedSurfaceIds: string[];
+  expectedRouteSurfaceIds: string[];
+  missingExpectedRouteSurfaceIds: string[];
+  successEvaluation: JourneySuccessEvaluation;
+  trustSignalHits: JourneyRouteReason[];
+  routeCatalogWarnings: string[];
+  adminRouteLeaks: string[];
+}): JourneyOutcomeEvaluation {
+  const {
+    definition,
+    scenario,
+    archetype,
+    visitedSurfaceIds,
+    expectedRouteSurfaceIds,
+    missingExpectedRouteSurfaceIds,
+    successEvaluation,
+    trustSignalHits,
+    routeCatalogWarnings,
+    adminRouteLeaks,
+  } = args;
+  const reasons: string[] = [];
+  const normalizedArchetype = archetype.toLowerCase();
+  const proofRouteIds = ["about", "work-with-me", "build-log", "updates", "writings"];
+  const warmthRouteIds = ["about", "writings", "tiny-thoughts", "music", "cats-beverly", "cats-thomas", "twin-peaks-self"];
+  const professionalRouteIds = ["work-with-me", "build-log", "about", "updates", "search"];
+  let outcome: JourneyOutcome = successEvaluation.success ? "success" : "failed";
+
+  if (adminRouteLeaks.length > 0) {
+    outcome = "failed";
+    reasons.push("Public journey leaked an admin route, which is treated as a failure.");
+  }
+
+  if (!successEvaluation.success) {
+    outcome = "failed";
+    reasons.push("The journey missed every scenario success condition.");
+  }
+
+  if (scenario.returnFocused && !visitedSurfaceIds.includes("updates")) {
+    outcome = "failed";
+    reasons.push("Return-oriented journey missed `/updates`, so it failed the freshness goal.");
+  }
+
+  if (
+    scenario.trustFocused &&
+    !visitedSurfaceIds.includes("about") &&
+    !visitedSurfaceIds.some((surfaceId) => ["build-log", "work-with-me", "writings", "updates"].includes(surfaceId))
+  ) {
+    outcome = "failed";
+    reasons.push("Trust-focused journey missed both About and all proof rooms.");
+  }
+
+  if (
+    (normalizedArchetype.includes("romantic") || normalizedArchetype.includes("reader") || normalizedArchetype.includes("wanderer")) &&
+    !visitedSurfaceIds.some((surfaceId) => warmthRouteIds.includes(surfaceId))
+  ) {
+    outcome = "failed";
+    reasons.push("Warmth/personality journey never reached a warmth or reflective room.");
+  }
+
+  if (
+    (normalizedArchetype.includes("builder") ||
+      normalizedArchetype.includes("hunter") ||
+      ["potential-client", "hiring-manager", "builder", "skeptic", "fellow-programmer"].includes(definition.slug)) &&
+    !visitedSurfaceIds.some((surfaceId) => proofRouteIds.includes(surfaceId))
+  ) {
+    outcome = "failed";
+    reasons.push("Proof-seeking journey never reached a proof or trust-building room.");
+  }
+
+  if (outcome !== "failed") {
+    const missedAllExpected = expectedRouteSurfaceIds.length > 0
+      && missingExpectedRouteSurfaceIds.length === expectedRouteSurfaceIds.length;
+    const missedMostExpected = expectedRouteSurfaceIds.length >= 3
+      && missingExpectedRouteSurfaceIds.length >= Math.ceil(expectedRouteSurfaceIds.length * 0.6);
+    const trustSignalsThin = trustSignalHits.length === 0;
+    const missingWarmth = !visitedSurfaceIds.some((surfaceId) => warmthRouteIds.includes(surfaceId));
+    const missingProfessional = !visitedSurfaceIds.some((surfaceId) => professionalRouteIds.includes(surfaceId));
+
+    if (missedAllExpected) {
+      outcome = "failed";
+      reasons.push("The journey missed every expected route anchor.");
+    } else if (missedMostExpected) {
+      outcome = "partial";
+      reasons.push("The journey hit a success condition but missed most expected route anchors.");
+    }
+
+    if (scenario.trustFocused && trustSignalsThin) {
+      outcome = outcome === "failed" ? "failed" : "partial";
+      reasons.push("Trust-focused journey did not record enough trust-signal hits.");
+    }
+
+    if (scenario.trustFocused && missingExpectedRouteSurfaceIds.includes("about")) {
+      outcome = outcome === "failed" ? "failed" : "partial";
+      reasons.push("Trust-focused journey succeeded weakly without visiting `/about`.");
+    }
+
+    if (scenario.id === "looking-for-something-specific" && !visitedSurfaceIds.includes("search")) {
+      outcome = outcome === "failed" ? "failed" : "partial";
+      reasons.push("Task-focused journey completed without the clearest direct-finding room.");
+    }
+
+    if (
+      (normalizedArchetype.includes("romantic") || normalizedArchetype.includes("reader") || normalizedArchetype.includes("wanderer")) &&
+      missingWarmth
+    ) {
+      outcome = outcome === "failed" ? "failed" : "partial";
+      reasons.push("Personality-first journey lacked enough warmth or reflective texture.");
+    }
+
+    if (
+      (normalizedArchetype.includes("builder") || ["potential-client", "hiring-manager"].includes(definition.slug)) &&
+      missingProfessional
+    ) {
+      outcome = outcome === "failed" ? "failed" : "partial";
+      reasons.push("Professional journey lacked enough proof-oriented rooms.");
+    }
+  }
+
+  if (routeCatalogWarnings.length > 0) {
+    reasons.push(`Route catalog warnings: ${routeCatalogWarnings.join(" ")}`);
+    if (outcome === "success") {
+      outcome = "partial";
+    }
+  }
+
+  if (reasons.length === 0 && successEvaluation.success) {
+    reasons.push("The journey satisfied the scenario goal and kept the expected trust or orientation anchors intact.");
+  }
+
+  return { journeyOutcome: outcome, outcomeReasons: reasons };
+}
+
 function buildGoalSatisfactionEvidence(
   visitedSurfaceIds: string[],
   publicSurfaces: SiteSurface[],
@@ -998,16 +1298,121 @@ function buildGoalSatisfactionEvidence(
   return Array.from(evidence.values());
 }
 
+function validateJourneyRouteCatalog(args: {
+  publicSurfaces: SiteSurface[];
+  visitedSurfaceIds: string[];
+  expectedRouteSurfaceIds: string[];
+  definition: PersonaDefinition;
+  scenario: JourneyScenarioDefinition;
+}) {
+  const { publicSurfaces, visitedSurfaceIds, expectedRouteSurfaceIds, definition, scenario } = args;
+  const staticCatalogIndex = new Map(getStaticPersonaRouteCatalog().map((entry) => [entry.id, entry]));
+  const runCatalogIndex = new Map(publicSurfaces.map((surface) => [surface.id, surface]));
+  const routeCatalogWarnings = new Set<string>();
+  const adminRouteLeaks = new Set<string>();
+
+  const referencedSurfaceIds = new Set<string>([
+    scenario.defaultStartSurfaceId,
+    ...expectedRouteSurfaceIds,
+    ...visitedSurfaceIds,
+    ...(scenario.successConditions.flatMap((condition) => [...(condition.allOf ?? []), ...(condition.anyOf ?? [])])),
+    ...trustSignalSurfaceIds,
+  ]);
+
+  for (const surfaceId of referencedSurfaceIds) {
+    const staticEntry = staticCatalogIndex.get(surfaceId);
+    const runEntry = runCatalogIndex.get(surfaceId);
+
+    if (!staticEntry && !runEntry) {
+      routeCatalogWarnings.add(`Referenced route id \`${surfaceId}\` is missing from the route catalog.`);
+      continue;
+    }
+
+    const resolvedEntry = runEntry ?? staticEntry;
+
+    if (!resolvedEntry) {
+      continue;
+    }
+
+    if (resolvedEntry.area === "admin" && visitedSurfaceIds.includes(surfaceId)) {
+      adminRouteLeaks.add(resolvedEntry.path);
+    }
+
+    if (resolvedEntry.area === "admin" && expectedRouteSurfaceIds.includes(surfaceId)) {
+      routeCatalogWarnings.add(`Expected route \`${surfaceId}\` points at an admin surface and should not guide a public journey.`);
+    }
+
+    if ((resolvedEntry.journeyEligible ?? resolvedEntry.area === "public") === false && visitedSurfaceIds.includes(surfaceId)) {
+      routeCatalogWarnings.add(`Visited route \`${surfaceId}\` is not marked journey-eligible.`);
+    }
+  }
+
+  const unavailableExpectedRoutes = expectedRouteSurfaceIds.filter((surfaceId) => !runCatalogIndex.has(surfaceId));
+
+  for (const surfaceId of unavailableExpectedRoutes) {
+    routeCatalogWarnings.add(`Expected route \`${surfaceId}\` is not available in the current public route set.`);
+  }
+
+  for (const leak of adminRouteLeaks) {
+    routeCatalogWarnings.add(`Admin route leak detected in public journey: \`${leak}\`.`);
+  }
+
+  return {
+    routeCatalogWarnings: Array.from(routeCatalogWarnings),
+    adminRouteLeaks: Array.from(adminRouteLeaks),
+  };
+}
+
+function buildJourneyCatalogCoverage(publicSurfaces: SiteSurface[], visitedSurfaceIds: string[]): JourneyCatalogCoverage {
+  const eligibleRoutes = publicSurfaces
+    .filter((surface) => isJourneyEligibleSurface(surface))
+    .map((surface) => surface.path);
+  const selectedRoutes = publicSurfaces
+    .filter((surface) => visitedSurfaceIds.includes(surface.id))
+    .map((surface) => surface.path);
+  const uniqueEligibleRoutes = Array.from(new Set(eligibleRoutes));
+  const uniqueSelectedRoutes = Array.from(new Set(selectedRoutes));
+
+  return {
+    totalJourneyEligibleRoutes: uniqueEligibleRoutes.length,
+    selectedJourneyEligibleRoutes: uniqueSelectedRoutes.length,
+    coverageRatio: uniqueEligibleRoutes.length === 0
+      ? 0
+      : Number((uniqueSelectedRoutes.length / uniqueEligibleRoutes.length).toFixed(3)),
+    journeyEligibleRoutes: uniqueEligibleRoutes,
+    selectedRoutes: uniqueSelectedRoutes,
+  };
+}
+
 function decideJourneyExitState(args: {
   scenario: JourneyScenarioDefinition;
   bounceRisk: JourneyBounceRisk;
   success: boolean;
+  journeyOutcome: JourneyOutcome;
   visitedSurfaceIds: string[];
 }) {
-  const { scenario, bounceRisk, success, visitedSurfaceIds } = args;
+  const { scenario, bounceRisk, success, journeyOutcome, visitedSurfaceIds } = args;
 
-  if (!success) {
+  if (journeyOutcome === "failed" || !success) {
     return bounceRisk === "high" || scenario.lowAttention ? "leave" : scenario.fallbackExitState;
+  }
+
+  if (journeyOutcome === "partial") {
+    if (scenario.successExitState === "contact") {
+      return visitedSurfaceIds.includes("work-with-me") ? "continue-exploring" : "leave";
+    }
+
+    if (scenario.trustFocused) {
+      return visitedSurfaceIds.some((surfaceId) => ["about", "build-log", "work-with-me", "writings", "updates"].includes(surfaceId))
+        ? "continue-exploring"
+        : "leave";
+    }
+
+    if (scenario.returnFocused) {
+      return visitedSurfaceIds.includes("updates") ? "return-later" : "leave";
+    }
+
+    return bounceRisk === "high" ? "leave" : scenario.fallbackExitState;
   }
 
   if (scenario.successExitState === "contact" && !visitedSurfaceIds.includes("work-with-me")) {
@@ -1028,11 +1433,15 @@ function maybeIncludeActionSurface(args: {
   scenario: JourneyScenarioDefinition;
   confidence: JourneyConfidenceSettings;
   trustSignalCount: number;
+  eligibleSurfaces: SiteSurface[];
 }) {
-  const { visitedSurfaceIds, selected, targetPageCount, scenario, confidence, trustSignalCount } = args;
+  const { visitedSurfaceIds, selected, targetPageCount, scenario, confidence, trustSignalCount, eligibleSurfaces } = args;
   const actionSurfaceId = getActionSurfaceIdForScenario(scenario);
+  const actionSurfaceExists = actionSurfaceId
+    ? eligibleSurfaces.some((surface) => surface.id === actionSurfaceId)
+    : false;
 
-  if (!actionSurfaceId || selected.has(actionSurfaceId)) {
+  if (!actionSurfaceId || !actionSurfaceExists || selected.has(actionSurfaceId)) {
     return null;
   }
 
@@ -1162,6 +1571,9 @@ function computeJourneyBounceAnalysis(
   visitedSurfaceIds: string[],
   searchQueries: string[],
   trustSignalCount: number,
+  journeyOutcome: JourneyOutcome,
+  missingExpectedRouteSurfaceIds: string[],
+  routeCatalogWarnings: string[],
 ): { risk: JourneyBounceRisk; reasons: string[]; nearBounceRoute?: string } {
   let score = confidence.orientationPenalty;
   const normalizedArchetype = archetype.toLowerCase();
@@ -1239,6 +1651,28 @@ function computeJourneyBounceAnalysis(
   if (visitedSurfaceIds.length >= 6 && confidence.threshold === "low") {
     score -= 1;
     reasons.push("The journey had enough depth for a forgiving persona to settle in.");
+  }
+
+  if (missingExpectedRouteSurfaceIds.length > 0) {
+    score += Math.min(2, missingExpectedRouteSurfaceIds.length);
+    reasons.push(
+      `Missing expected routes increased bounce pressure: ${missingExpectedRouteSurfaceIds.join(", ")}.`,
+    );
+  }
+
+  if (journeyOutcome === "partial") {
+    score += 1;
+    reasons.push("Partial outcome means the route worked only weakly, so bounce risk rises.");
+  }
+
+  if (journeyOutcome === "failed") {
+    score += 2;
+    reasons.push("Failed outcome indicates the scenario goal was not met, which sharply raises bounce risk.");
+  }
+
+  if (routeCatalogWarnings.length > 0) {
+    score += 1;
+    reasons.push("Route-catalog validation warnings suggest planner drift or route mismatch.");
   }
 
   const nearBounceRoute = inferNearBounceRoute(visitedSurfaceIds, scenario, normalizedArchetype);
@@ -1353,15 +1787,21 @@ function buildJourneyNotes(args: {
   expectedRouteSurfaceIds: string[];
   missingExpectedRouteSurfaceIds: string[];
   expectedRouteWarnings: string[];
+  expectedRouteMisses: JourneyRouteReason[];
   searchQueries: string[];
+  searchRationale: string[];
   bounceRisk: JourneyBounceRisk;
   confidence: JourneyConfidenceSettings;
   actionSurfaceId: string | null;
   trustSignalCount: number;
+  journeyOutcome: JourneyOutcome;
+  outcomeReasons: string[];
   success: boolean;
   matchedSuccessConditionLabels: string[];
   trustSignalHits: JourneyRouteReason[];
   goalSatisfactionEvidence: JourneyRouteReason[];
+  routeCatalogWarnings: string[];
+  adminRouteLeaks: string[];
   skippedRouteReasons: JourneyRouteReason[];
   bounceReasons: string[];
   nearBounceRoute?: string;
@@ -1380,15 +1820,21 @@ function buildJourneyNotes(args: {
     expectedRouteSurfaceIds,
     missingExpectedRouteSurfaceIds,
     expectedRouteWarnings,
+    expectedRouteMisses,
     searchQueries,
+    searchRationale,
     bounceRisk,
     confidence,
     actionSurfaceId,
     trustSignalCount,
+    journeyOutcome,
+    outcomeReasons,
     success,
     matchedSuccessConditionLabels,
     trustSignalHits,
     goalSatisfactionEvidence,
+    routeCatalogWarnings,
+    adminRouteLeaks,
     skippedRouteReasons,
     bounceReasons,
     nearBounceRoute,
@@ -1409,6 +1855,9 @@ function buildJourneyNotes(args: {
 
   if (searchQueries.length > 0) {
     notes.push(`Search was included with likely queries: ${searchQueries.map((query) => `"${query}"`).join(", ")}.`);
+    if (searchRationale.length > 0) {
+      notes.push(`Search rationale: ${searchRationale.join(" ")}`);
+    }
   } else {
     notes.push("Search was not part of this journey.");
   }
@@ -1425,6 +1874,12 @@ function buildJourneyNotes(args: {
     notes.push(`Action surface reached: ${actionSurfaceId}.`);
   } else {
     notes.push("Action surface was not reached in this journey.");
+  }
+
+  notes.push(`Journey outcome: ${journeyOutcome}.`);
+
+  if (outcomeReasons.length > 0) {
+    notes.push(`Outcome reasoning: ${outcomeReasons.join(" ")}`);
   }
 
   notes.push(
@@ -1459,6 +1914,23 @@ function buildJourneyNotes(args: {
     notes.push(
       `Expected but missing routes: ${missingExpectedRouteSurfaceIds.join(", ")} (from expected set ${expectedRouteSurfaceIds.join(", ")}).`,
     );
+  }
+
+  if (expectedRouteMisses.length > 0) {
+    notes.push(
+      `Expected-route misses that mattered: ${expectedRouteMisses
+        .slice(0, 3)
+        .map((entry) => `${entry.route} (${entry.reason})`)
+        .join("; ")}.`,
+    );
+  }
+
+  if (routeCatalogWarnings.length > 0) {
+    notes.push(`Route catalog warnings: ${routeCatalogWarnings.join(" ")}`);
+  }
+
+  if (adminRouteLeaks.length > 0) {
+    notes.push(`Admin route leaks: ${adminRouteLeaks.join(", ")}.`);
   }
 
   const topSkippedReasons = skippedRouteReasons.slice(0, 3);
@@ -1513,6 +1985,7 @@ Generated: ${new Date().toISOString()}
 - Context: ${plan.context}
 - Target / max pages: \`${plan.targetPageCount} / ${plan.maxPageCount}\`
 - Bounce risk: \`${plan.bounceRisk}\`
+- Journey outcome: \`${plan.journeyOutcome}\`
 - Success: \`${plan.success ? "yes" : "no"}\`
 - Exit state: \`${plan.exitState}\`
 
@@ -1552,6 +2025,13 @@ ${renderJourneyBullets(
       : ["No page clearly satisfied the scenario goal."],
   )}
 
+## Outcome Validation
+
+${renderJourneyBullets([
+    ...plan.outcomeReasons.map((reason) => `Outcome reason: ${reason}`),
+    ...plan.expectedRouteMisses.map((miss) => `Expected-route miss: \`${miss.route}\` - ${miss.reason}`),
+  ])}
+
 ## Success Conditions Met
 
 ${renderJourneyBullets(
@@ -1575,7 +2055,12 @@ ${renderJourneyBullets(
 ## Search Queries
 
 ${renderJourneyBullets(
-    plan.searchQueries.length ? plan.searchQueries.map((query) => `Query: \`${query}\``) : ["No search queries used."],
+    plan.searchQueries.length
+      ? [
+          ...plan.searchQueries.map((query) => `Query: \`${query}\``),
+          ...plan.searchRationale.map((reason) => `Why search appeared: ${reason}`),
+        ]
+      : ["No search queries used."],
   )}
 
 ## Bounce Analysis
@@ -1583,6 +2068,14 @@ ${renderJourneyBullets(
 ${renderJourneyBullets([
     ...(plan.nearBounceRoute ? [`Near-bounce route: \`${plan.nearBounceRoute}\``] : []),
     ...plan.bounceReasons,
+  ])}
+
+## Route Catalog Validation
+
+${renderJourneyBullets([
+    ...plan.routeCatalogWarnings.map((warning) => `Warning: ${warning}`),
+    ...(plan.adminRouteLeaks.length ? plan.adminRouteLeaks.map((route) => `Admin route leak: \`${route}\``) : []),
+    `Catalog coverage: ${plan.catalogCoverage.selectedJourneyEligibleRoutes}/${plan.catalogCoverage.totalJourneyEligibleRoutes} eligible routes selected (${(plan.catalogCoverage.coverageRatio * 100).toFixed(1)}%).`,
   ])}
 
 ## Journey Notes
@@ -1617,17 +2110,25 @@ ${renderJourneyBullets(plan.journeyNotes)}
       return surface?.path ?? surfaceId;
     }),
     expectedRouteWarnings: plan.expectedRouteWarnings,
+    expectedRouteMisses: plan.expectedRouteMisses,
     skippedRouteReasons: plan.skippedRouteReasons,
     searchQueries: plan.searchQueries,
+    searchRationale: plan.searchRationale,
     bounceRisk: plan.bounceRisk,
     bounceReasons: plan.bounceReasons,
     nearBounceRoute: plan.nearBounceRoute,
+    journeyOutcome: plan.journeyOutcome,
+    outcomeReasons: plan.outcomeReasons,
     success: plan.success,
+    successBoolean: plan.success,
     matchedSuccessConditionLabels: plan.matchedSuccessConditionLabels,
     trustSignalHits: plan.trustSignalHits,
     goalSatisfactionEvidence: plan.goalSatisfactionEvidence,
+    routeCatalogWarnings: plan.routeCatalogWarnings,
+    adminRouteLeaks: plan.adminRouteLeaks,
     exitState: plan.exitState,
     journeyNotes: plan.journeyNotes,
+    catalogCoverage: plan.catalogCoverage,
   };
 
   writeFileSync(reportPath, report);

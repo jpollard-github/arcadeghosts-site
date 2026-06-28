@@ -41,11 +41,19 @@ test("hunter-like trust journey stays short and excludes admin/error pages", () 
   assert.ok(plan.visitedSurfaceIds.includes("work-with-me"));
   assert.ok(plan.bounceRisk === "medium" || plan.bounceRisk === "high");
   assert.equal(plan.success, true);
-  assert.ok(plan.exitState === "bookmark" || plan.exitState === "contact" || plan.exitState === "continue-exploring");
+  assert.equal(plan.journeyOutcome, "partial");
+  assert.ok(plan.outcomeReasons.some((reason) => reason.includes("/about")));
+  assert.ok(
+    plan.exitState === "bookmark"
+      || plan.exitState === "contact"
+      || plan.exitState === "continue-exploring"
+      || plan.exitState === "leave",
+  );
   assert.ok(plan.skippedRouteReasons.length > 0);
   assert.ok(plan.trustSignalHits.length > 0);
   assert.ok(plan.goalSatisfactionEvidence.length > 0);
   assert.ok(plan.bounceReasons.length > 0);
+  assert.equal(plan.routeCatalogWarnings.length, 0);
 });
 
 test("return-focused journey can start from updates and use search only when selected", () => {
@@ -65,6 +73,7 @@ test("return-focused journey can start from updates and use search only when sel
   assert.ok(plan.visitedSurfaceIds.length <= 6);
   assert.ok(plan.searchQueries.length === 0 || plan.visitedSurfaceIds.includes("search"));
   assert.equal(plan.success, true);
+  assert.equal(plan.journeyOutcome, "success");
   assert.equal(plan.exitState, "return-later");
   assert.ok(plan.goalSatisfactionEvidence.some((entry) => entry.route === "/updates"));
 });
@@ -114,6 +123,8 @@ test("confidence threshold changes page count, search use, and bounce tolerance"
   assert.ok(lowPlan.bounceRisk === "low" || lowPlan.bounceRisk === "medium");
   assert.ok(highPlan.bounceRisk === "medium" || highPlan.bounceRisk === "high");
   assert.ok(lowPlan.targetPageCount > highPlan.targetPageCount);
+  assert.ok(["success", "partial"].includes(lowPlan.journeyOutcome));
+  assert.ok(["success", "partial"].includes(highPlan.journeyOutcome));
 });
 
 test("high-confidence trust journey reaches proof before action", () => {
@@ -136,6 +147,29 @@ test("high-confidence trust journey reaches proof before action", () => {
   assert.ok(trustPagesBeforeAction >= 2);
   assert.ok(workWithMeIndex === -1 || workWithMeIndex > 0);
   assert.ok(plan.bounceRisk === "medium" || plan.bounceRisk === "high");
+  assert.ok(["success", "partial"].includes(plan.journeyOutcome));
+});
+
+test("romantic first-visit journeys avoid search unless the context strongly supports it", () => {
+  const definition = personaDefinitions.find((persona) => persona.slug === "ideal-partner");
+  assert.ok(definition);
+
+  const profile = parsePersonaMarkdown(`# Ideal Partner`);
+  const plan = planPersonaJourney({
+    definition,
+    profile,
+    publicSurfaces,
+    scenario: getJourneyScenarioDefinition("first-visit"),
+  });
+
+  assert.equal(plan.searchQueries.length, 0);
+  assert.ok(plan.visitedSurfaceIds.includes("about"));
+  assert.ok(
+    plan.visitedSurfaceIds.some((surfaceId) =>
+      ["writings", "tiny-thoughts", "cats-beverly", "music"].includes(surfaceId),
+    ),
+  );
+  assert.ok(["success", "partial"].includes(plan.journeyOutcome));
 });
 
 test("context changes route choice and reportable influences", () => {
@@ -165,4 +199,22 @@ test("context changes route choice and reportable influences", () => {
   assert.ok(relaxedPlan.contextInfluences.some((note) => note.includes("evening-style")));
   assert.ok(rushedPlan.targetPageCount <= relaxedPlan.targetPageCount);
   assert.notDeepEqual(rushedPlan.visitedSurfaceIds, relaxedPlan.visitedSurfaceIds);
+});
+
+test("return-focused journey fails when freshness route is missing", () => {
+  const definition = personaDefinitions.find((persona) => persona.slug === "rss-subscriber");
+  assert.ok(definition);
+
+  const profile = parsePersonaMarkdown(`# RSS Subscriber`);
+  const surfacesWithoutUpdates = publicSurfaces.filter((surface) => surface.id !== "updates");
+  const plan = planPersonaJourney({
+    definition,
+    profile,
+    publicSurfaces: surfacesWithoutUpdates,
+    scenario: getJourneyScenarioDefinition("deciding-whether-to-return"),
+  });
+
+  assert.equal(plan.success, false);
+  assert.equal(plan.journeyOutcome, "failed");
+  assert.ok(plan.routeCatalogWarnings.some((warning) => warning.includes("updates")));
 });

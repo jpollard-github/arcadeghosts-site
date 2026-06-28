@@ -2,7 +2,7 @@
 
 Persona testing sits beside normal regression tests.
 
-Use it when you want a simulated kind of visitor to walk the site, inspect public and admin surfaces, and produce a structured feedback report instead of only pass/fail assertions.
+Use it when you want a simulated kind of visitor to walk the site, inspect public or admin surfaces as appropriate, and produce a structured feedback report instead of only pass/fail assertions.
 
 ## Why This Exists
 
@@ -159,7 +159,11 @@ Persona reports are written to the durable `persona-results/` folder:
 - `persona-results/personas/overall-audit/report.md`
 - `persona-results/personas/overall-audit/summary.json`
 
-Screenshots for each visited surface are also stored in that folder.
+Screenshots are off by default. Turn them on only for visual review passes with:
+
+```bash
+PERSONA_CAPTURE_SCREENSHOTS=1 npm run test:users
+```
 
 Journey reports are written to:
 
@@ -217,7 +221,13 @@ Journey Mode v1 is intentionally small:
 
 It is useful, but still early.
 
-The next architectural step is to make journey behavior more expressive through stronger archetype modules, context handling, and richer scenario coverage while keeping the full audit intact.
+The framework is now mature enough that the next priority is website improvement, not framework expansion.
+
+The main handoff document for that loop is:
+
+- `docs/PERSONA-TESTS-RESULTS-TODO.md`
+
+Use that file as the product backlog created from recurring audit and journey evidence, then re-run persona tests after site changes to see whether the findings improve.
 
 Both modes are now driven by:
 
