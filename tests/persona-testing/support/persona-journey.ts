@@ -1319,7 +1319,7 @@ function validateJourneyRouteCatalog(args: {
     ...trustSignalSurfaceIds,
   ]);
 
-  for (const surfaceId of referencedSurfaceIds) {
+  for (const surfaceId of Array.from(referencedSurfaceIds)) {
     const staticEntry = staticCatalogIndex.get(surfaceId);
     const runEntry = runCatalogIndex.get(surfaceId);
 
@@ -1353,7 +1353,7 @@ function validateJourneyRouteCatalog(args: {
     routeCatalogWarnings.add(`Expected route \`${surfaceId}\` is not available in the current public route set.`);
   }
 
-  for (const leak of adminRouteLeaks) {
+  for (const leak of Array.from(adminRouteLeaks)) {
     routeCatalogWarnings.add(`Admin route leak detected in public journey: \`${leak}\`.`);
   }
 
