@@ -13,6 +13,23 @@ export type BuildLogEntry = {
 
 export const buildLogEntries: BuildLogEntry[] = [
   {
+    id: "persona-journey-mode-v1",
+    date: "2026-06-28",
+    title: "Turned persona testing into a real journey system",
+    summary:
+      "Refactored the persona suite around reusable personas, archetypes, scenarios, and deterministic journey reports instead of one broad crawl interpreted the same way every time.",
+    category: "Research",
+    details: [
+      "Moved persona profiles into a cleaner shared structure and added first-class archetypes like Wanderer, Builder, and Romantic.",
+      "Added a representative fast journey suite so trust-seeking, return-oriented, technical, and personality-first visitors now take meaningfully different paths.",
+      "Separated durable persona output from transient Playwright artifacts so longer reviews and ChatGPT handoff packets stop getting wiped.",
+    ],
+    impact:
+      "Makes audience testing feel closer to real visits and turns the reports into something useful for design, structure, and editorial decisions instead of only route coverage.",
+    href: "/build-log",
+    linkLabel: "See the public work log",
+  },
+  {
     id: "image-optimization-pass",
     date: "2026-06-27",
     title: "Compressed image-heavy rooms and homepage art",
