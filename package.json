@@ -12,6 +12,7 @@
     "go": "npm run lint && npm run build && npm run start",
     "lint": "eslint .",
     "zip:chatgpt": "node --import tsx tools/zip-chatgpt-repo.ts",
+    "zip:chatgpt:repo": "node --import tsx tools/zip-chatgpt-repo.ts",
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "node --import tsx --test tests/unit/*.test.ts",
     "test:e2e": "playwright test",

@@ -1,14 +1,13 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { promises as fs } from "node:fs";
-import os from "node:os";
 import path from "node:path";
 
 const execFileAsync = promisify(execFile);
 
 const repoRoot = process.cwd();
-const outputName = "personal-chatgpt-share.zip";
-const outputPath = path.join(os.homedir(), outputName);
+const defaultOutputDir = path.join(repoRoot, "chatgpt-zip-packets");
+const defaultOutputName = "arcadeghosts-chatgpt-repo-review.zip";
 
 const excludes = [
   "node_modules/*",
@@ -22,6 +21,7 @@ const excludes = [
   "out/*",
   "dist/*",
   ".vercel/*",
+  "resume/*",
   "chatgpt-zip-packets/*",
   ".env*",
   "*.log",
@@ -38,8 +38,11 @@ const excludes = [
   "*.ico",
   "*.mp4",
   "*.mov",
+  "*.webm",
   "*.mp3",
   "*.wav",
+  "*.ogg",
+  "*.flac",
   "*.woff",
   "*.woff2",
   "*.ttf",
@@ -48,8 +51,35 @@ const excludes = [
 
 // TODO: Consider switching this archive script to `git ls-files` later so packet
 // generation stays aligned with tracked source files and cleaner exclusion rules.
+// TODO: Consider lightweight named profiles such as `repo-review` and `standard-review`
+// so future archive requests can be handled with a short npm command.
 
-async function removeExistingArchive() {
+function parseArgs(argv: string[]) {
+  let outputName = defaultOutputName;
+  let outputDir = defaultOutputDir;
+
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+
+    if (arg === "--name" && argv[index + 1]) {
+      outputName = argv[index + 1];
+      index += 1;
+      continue;
+    }
+
+    if (arg === "--output-dir" && argv[index + 1]) {
+      outputDir = path.resolve(repoRoot, argv[index + 1]);
+      index += 1;
+    }
+  }
+
+  return {
+    outputDir,
+    outputName: path.basename(outputName),
+  };
+}
+
+async function removeExistingArchive(outputPath: string) {
   try {
     await fs.unlink(outputPath);
   } catch (error) {
@@ -61,7 +91,11 @@ async function removeExistingArchive() {
 }
 
 async function main() {
-  await removeExistingArchive();
+  const { outputDir, outputName } = parseArgs(process.argv.slice(2));
+  const outputPath = path.join(outputDir, outputName);
+
+  await fs.mkdir(outputDir, { recursive: true });
+  await removeExistingArchive(outputPath);
 
   const args = ["-rq", outputPath, ".", "-x", ...excludes];
   const { stdout, stderr } = await execFileAsync("zip", args, {
