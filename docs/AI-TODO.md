@@ -33,7 +33,7 @@ Goal:
   - copy suggestions
   - screenshot-aware notes
   - checkbox TODOs
-- [ ] Decide whether persona AI output should be saved into `test-results/personas/...`, a database table, or both.
+- [ ] Decide whether persona AI output should be saved into `persona-results/personas/...`, a database table, or both.
 - [ ] Create an AI review pass whose main job is to separate:
   - persona-specific findings
   - broad structural site issues
