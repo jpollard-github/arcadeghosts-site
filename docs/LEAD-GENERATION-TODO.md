@@ -53,6 +53,10 @@ Automate the repetitive parts, not the real relationship-building.
 
 The first goal is conversations, not automation.
 
+Status:
+
+- `Done`: Lead Source Tracker Google Sheet created
+
 ## First 25 Prospect Batch
 
 Practical starter mix:
@@ -78,11 +82,10 @@ The goal is not to find perfect prospects. The goal is to start learning which c
 
 ## Current Focus
 
-1. Create a Google Sheet lead tracker.
-2. Build the first 25 qualified prospects, not 100 rushed ones.
-3. Send 2-3 personalized outreach messages each week.
-4. Follow up politely and consistently.
-5. Keep `Work With Me`, Build Log, and public proof fresh enough to support outreach.
+1. Build the first 25 qualified prospects, not 100 rushed ones.
+2. Send 2-3 personalized outreach messages each week.
+3. Follow up politely and consistently.
+4. Keep `Work With Me`, Build Log, and public proof fresh enough to support outreach.
 
 ## Target Market
 
@@ -152,6 +155,10 @@ Good outreach should sound like:
 Recommendation:
 
 Use Google Sheets, not a custom CRM yet.
+
+Current status:
+
+- `Done`: `Lead Source Tracker` Google Sheet created
 
 Suggested sheet:
 
@@ -753,7 +760,7 @@ Once there are 30-50 leads, the useful channels should become much clearer.
 
 Immediate or low-risk:
 
-- Use Google Sheets for lead tracking.
+- `Done`: Use Google Sheets for lead tracking.
 - Add UTM-tagged links to outreach messages.
 - Add Vercel Analytics events for Work With Me clicks, intake clicks, Stripe clicks, and contact clicks.
 - Use templates for email and LinkedIn outreach.
