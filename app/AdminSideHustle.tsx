@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { businessPaths } from "./lib/business-config";
 
 const scopePrompt = `You are helping create a fixed-price project scope.
 
@@ -113,7 +114,7 @@ export function AdminSideHustle() {
                   <button type="button" onClick={handleCopyPrompt}>
                     Copy Prompt
                   </button>
-                  <Link className="admin-action-link" href="/work-with-me">
+                  <Link className="admin-action-link" href={businessPaths.workWithMe}>
                     Open Work With Me Page
                   </Link>
                 </div>

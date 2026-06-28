@@ -4,6 +4,7 @@ import {
   thomasJonesMissyCassPhotos,
   visualMedia,
 } from "../site-data";
+import { businessLinks, businessPaths } from "../lib/business-config";
 
 export const navItems = [
   { label: "Start Here", href: "#start-here" },
@@ -13,13 +14,13 @@ export const navItems = [
   { label: "Search", href: "/search" },
   { label: "Fun & Games", href: "#fun-and-games" },
   { label: "About", href: "#about" },
-  { label: "Work With Me", href: "/work-with-me" },
+  { label: "Work With Me", href: businessPaths.workWithMe },
   { label: "Music", href: "/music" },
   { label: "Cats", href: "#cats" },
   { label: "Guestbook", href: "#guestbook" },
 ];
 
-export const githubRepoUrl = "https://github.com/jpollard-github/personal";
+export const githubRepoUrl = businessLinks.github;
 
 export const surpriseMeLinks = [
   { href: "/writings/it-aint-over-till-its-over" },
@@ -63,7 +64,7 @@ export const startHereCards = [
     title: "I’m thinking about working with you",
     text: "If you are evaluating whether I can help, start with the practical path: what I do, how I work, and where to find proof of active building without digging through Search.",
     audience: "You want the trust path and next step.",
-    href: "/work-with-me",
+    href: businessPaths.workWithMe,
     cta: "See The Work Path",
   },
   {
@@ -128,7 +129,7 @@ export const aboutCards = [
     eyebrow: "Side Projects",
     title: "Work With Me",
     text: "I occasionally take on small fixed-price projects involving web apps, automation, AI workflows, developer tooling, and practical problem solving.",
-    href: "/work-with-me",
+    href: businessPaths.workWithMe,
     cta: "Inquire",
   },
 ];

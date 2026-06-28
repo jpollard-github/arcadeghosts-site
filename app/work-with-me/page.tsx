@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionHeading } from "../SectionHeading";
-
-const projectInquiryFormUrl =
-  "https://docs.google.com/forms/d/e/1FAIpQLSclzQiQF6LWKa2Uu0gGMpLJpULoUenKO3P1oNVVJsgrShgm6A/viewform?usp=header";
-const discoverySessionStripeUrl =
-  "https://buy.stripe.com/4gM00c6qa9ec7JL0Kk1ck00";
+import { businessContact, businessLinks } from "../lib/business-config";
 
 const offerings = [
   {
@@ -233,13 +229,13 @@ export default function WorkWithMePage() {
           <div className="hero-actions" aria-label="Work with me links">
             <a
               className="button primary"
-              href={projectInquiryFormUrl}
+              href={businessLinks.projectInquiry}
               target="_blank"
               rel="noreferrer"
             >
               Start a Project Inquiry
             </a>
-            <a className="button secondary" href="mailto:jason@arcadeghosts.org">
+            <a className="button secondary" href={businessContact.emailHref}>
               Email Jason
             </a>
           </div>
@@ -283,7 +279,7 @@ export default function WorkWithMePage() {
           <div className="hero-actions" aria-label="Discovery session links">
             <a
               className="button primary"
-              href={discoverySessionStripeUrl}
+              href={businessLinks.discoverySession}
               target="_blank"
               rel="noreferrer"
             >
@@ -291,7 +287,7 @@ export default function WorkWithMePage() {
             </a>
             <a
               className="button secondary"
-              href={projectInquiryFormUrl}
+              href={businessLinks.projectInquiry}
               target="_blank"
               rel="noreferrer"
             >
@@ -381,7 +377,7 @@ export default function WorkWithMePage() {
           <div className="hero-actions" aria-label="Discovery booking links">
             <a
               className="button primary"
-              href={discoverySessionStripeUrl}
+              href={businessLinks.discoverySession}
               target="_blank"
               rel="noreferrer"
             >
@@ -535,20 +531,20 @@ export default function WorkWithMePage() {
           <div className="hero-actions" aria-label="Contact options">
             <a
               className="button primary"
-              href={projectInquiryFormUrl}
+              href={businessLinks.projectInquiry}
               target="_blank"
               rel="noreferrer"
             >
               Start a Project Inquiry
             </a>
-            <a className="button secondary" href="mailto:jason@arcadeghosts.org">
+            <a className="button secondary" href={businessContact.emailHref}>
               Email Jason
             </a>
           </div>
           <p>
             Prefer email?{" "}
-            <a className="work-inline-link" href="mailto:jason@arcadeghosts.org">
-              jason@arcadeghosts.org
+            <a className="work-inline-link" href={businessContact.emailHref}>
+              {businessContact.emailAddress}
             </a>
           </p>
           <p>Typical response time: 1-2 business days.</p>

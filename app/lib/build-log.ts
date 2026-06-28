@@ -13,6 +13,23 @@ export type BuildLogEntry = {
 
 export const buildLogEntries: BuildLogEntry[] = [
   {
+    id: "business-funnel-closeout-pass",
+    date: "2026-06-28",
+    title: "Formalized the consulting funnel and cleaned up business operations",
+    summary:
+      "Pulled the site's consulting and outreach work into a clearer shape so future client conversations, collateral, and follow-up paths all point to the same public entry points.",
+    category: "Operations",
+    details: [
+      "Added a shared business config so Work With Me, the inquiry form, discovery-session payment, contact email, and related business links stop living as scattered hardcoded values.",
+      "Documented the consulting funnel, lead-generation workflow, tracker template, and manual next steps so outreach can stay human and lightweight without turning the repo into a CRM.",
+      "Tightened the docs hub and surrounding business docs so content, lead generation, real visitor learning, Brand Kit support, and later analytics all have a clearer order of operations.",
+    ],
+    impact:
+      "Makes it easier to do real outreach, easier to keep business links consistent, and easier to treat the site as a living publishing system with a calm consulting path attached.",
+    href: "/work-with-me",
+    linkLabel: "See the public consulting entry point",
+  },
+  {
     id: "content-ops-clarity-pass",
     date: "2026-06-28",
     title: "Clarified content operations and separated reading from site work",

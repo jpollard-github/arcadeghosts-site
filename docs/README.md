@@ -2,28 +2,49 @@
 
 This index is here to help future Jason open the right document first.
 
+The current phase of ArcadeGhosts is publishing, outreach, and learning from real visitors.
+
 ## Current Priority Order
 
 1. `docs/CONTENT-TODO.md` — publish and improve ArcadeGhosts content
-2. `docs/PERSONA-TESTS-RESULTS-TODO.md` — website and product improvements from persona testing
-3. `docs/VERCEL-PRO-OPERATIONS-TODO.md` — weekly analytics, spend, and operations rhythm
-4. Brand Kit repo TODO — separate repo, do not mix it into this site repo
-5. `docs/AI-TODO-FIRST.md` — deferred until deterministic and content workflows are stable
-6. `docs/PERSONA-TODO.md` — framework roadmap, dormant unless real use exposes a limitation
+2. `docs/LEAD-GENERATION-TODO.md` — business growth and first-conversation experiments
+3. `docs/PERSONA-TESTS-RESULTS-TODO.md` — website and product improvements from real use and persona testing
+4. Brand Kit repo TODO — separate repo, used to support client-facing collateral
+5. `docs/AI-TODO-FIRST.md` — deferred until deterministic, content, and outreach workflows are stable
+6. `docs/VERCEL-PRO-OPERATIONS-TODO.md` — weekly analytics, spend, and operations rhythm
+7. `docs/PERSONA-TODO.md` — framework roadmap, dormant unless real use exposes a limitation
 
 Daily work should usually start with `CONTENT-TODO.md`, then check `PERSONA-TESTS-RESULTS-TODO.md`.
+
+`LEAD-GENERATION-TODO.md` is the primary document for business growth, separate from content publishing.
+
+`CONTENT-TODO.md` is for publishing and improving the site.
+`LEAD-GENERATION-TODO.md` is for finding first clients.
+Brand Kit stays in a separate repo for collateral generation.
+`VERCEL-PRO-OPERATIONS-TODO.md` is for analytics and usage review.
 
 Framework and AI docs are reference or future docs, not today’s default work queue.
 
 ## Current Priorities
 
 1. Publish content from `CONTENT-TODO.md`
-2. Improve existing rooms and pages with meaningful content
-3. Keep Build Log active
-4. Run persona tests after meaningful website changes
-5. Review Vercel Analytics weekly
-6. Begin AI implementation only after real analytics are available
-7. Framework work only if real usage reveals a limitation
+2. Run lead generation manually from `LEAD-GENERATION-TODO.md`
+3. Learn from real visitors through manual outreach, replies, and analytics
+4. Use Brand Kit as support for collateral, not as the main workstream
+5. Begin AI implementation only after real analytics and manual workflows are stable
+6. Framework work only if real usage reveals a limitation
+
+If the current goal is getting a first client, start with:
+
+1. `docs/LEAD-GENERATION-TODO.md`
+2. `docs/BUSINESS-FUNNEL.md`
+3. `docs/lead-generation-tracker-template.md`
+4. Brand Kit client collateral only as support
+
+If the current goal is growing the site, start with:
+
+1. `docs/CONTENT-TODO.md`
+2. `docs/PERSONA-TESTS-RESULTS-TODO.md`
 
 ## Project Phases
 
@@ -50,6 +71,7 @@ Analytics-driven improvement
 
 - Publish Build Log updates
 - Publish Tiny Thoughts
+- Review `docs/LEAD-GENERATION-TODO.md`
 - Review `docs/VERCEL-PRO-OPERATIONS-TODO.md`
 - Check Vercel Analytics and Speed Insights
 
@@ -60,6 +82,15 @@ Analytics-driven improvement
 - `docs/AI-TODO-FIRST.md`
 
 The framework should become quieter over time while publishing becomes the primary activity.
+
+## Next Manual Actions
+
+- Create the Google Sheet lead tracker.
+- Add the first 10-25 prospects.
+- Reorder corrected business cards.
+- Proof the Brand Kit email signature when ready.
+- Publish one Build Log entry or Tiny Thought.
+- Set up or review Vercel Analytics and Speed Insights.
 
 ## Website Work
 
@@ -193,6 +224,57 @@ When not to use it:
 
 - As a reason to add AI right now.
 
+## Business / Growth
+
+### `LEAD-GENERATION-TODO.md`
+
+Purpose:
+
+- Business growth operating document for finding the next client and improving first-conversation flow.
+
+When to use it:
+
+- When tracking outreach experiments, lead sources, and conversion ideas.
+- When reviewing business-growth tasks separate from content publishing.
+
+When not to use it:
+
+- As the main content backlog.
+- As the persona-framework roadmap.
+
+Brand Kit can support this work with collateral, but it lives in a separate repo.
+
+### `BUSINESS-FUNNEL.md`
+
+Purpose:
+
+- Define how prospects should move from first interest to paid work.
+
+When to use it:
+
+- When deciding which CTA belongs where.
+- When clarifying whether a link should point to `Work With Me`, the intake form, or the discovery payment flow.
+
+When not to use it:
+
+- As the outreach backlog.
+- As a CRM spec.
+
+### `lead-generation-tracker-template.md`
+
+Purpose:
+
+- Lightweight Google Sheet column guide for tracking prospects and follow-up.
+
+When to use it:
+
+- When creating or cleaning up the lead tracker sheet.
+
+When not to use it:
+
+- As a CRM feature spec.
+- As the main outreach strategy document.
+
 ## Operations
 
 ### `VERCEL-PRO-OPERATIONS-TODO.md`
@@ -216,6 +298,7 @@ Active working documents:
 
 - `PERSONA-TESTS-RESULTS-TODO.md`
 - `CONTENT-TODO.md`
+- `LEAD-GENERATION-TODO.md`
 
 Reference documents:
 

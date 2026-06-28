@@ -1,3 +1,5 @@
+import { businessContact } from "../lib/business-config";
+
 export type TerminalCommandDefinition = {
   command: string;
   description: string;
@@ -78,7 +80,7 @@ export const terminalCommands: TerminalCommandDefinition[] = [
       "Best contact route found.",
       "Email works better than smoke, static, or messages hidden in the trees.",
     ],
-    href: "mailto:jason@arcadeghosts.org",
+    href: businessContact.emailHref,
     linkLabel: "Email Jason in a new tab",
   },
 ] as const;

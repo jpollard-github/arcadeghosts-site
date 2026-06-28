@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { aboutCards, resonanceLinks } from "../home/data";
+import { businessPaths } from "../lib/business-config";
 
 const aboutTrustCards = [
   {
@@ -14,7 +15,7 @@ const aboutTrustCards = [
     eyebrow: "Next Step",
     title: "Work With Me",
     text: "If you are wondering whether I can help with a software problem, this is the practical path from personality into scope, proof, and contact.",
-    href: "/work-with-me",
+    href: businessPaths.workWithMe,
     cta: "See The Work Path",
   },
   {
@@ -142,7 +143,7 @@ export default function AboutPage() {
           <h3>If you want the practical trail first:</h3>
           <p>
             <Link href="/build-log">Build Log</Link> is the proof-of-active-work
-            path. <Link href="/work-with-me">Work With Me</Link> is the
+            path. <Link href={businessPaths.workWithMe}>Work With Me</Link> is the
             practical next step if you think I might be able to help. This
             page is the human context that connects those two.
           </p>
@@ -184,7 +185,7 @@ export default function AboutPage() {
             ArcadeGhosts is ultimately an experiment in whether a collection of
             interests, stories, projects, music, photos, and ideas can attract
             the right conversations. If something here feels familiar, reach
-            out. <Link href="/work-with-me">I occasionally take on small side projects too.</Link>
+            out. <Link href={businessPaths.workWithMe}>I occasionally take on small side projects too.</Link>
           </p>
 
           <h3>If you want the warmer rooms first:</h3>

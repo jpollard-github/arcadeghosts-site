@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { aboutCards } from "./data";
+import { businessPaths } from "../lib/business-config";
 
 function AboutCardLink({
   href,
@@ -73,7 +74,7 @@ export function HomeAbout() {
           ArcadeGhosts is ultimately an experiment in whether a collection of
           interests, stories, projects, music, photos, and ideas can attract
           the right conversations. If something here feels familiar, reach out.{" "}
-          <Link href="/work-with-me">I occasionally take on small side projects too.</Link>
+          <Link href={businessPaths.workWithMe}>I occasionally take on small side projects too.</Link>
         </p>
 
         <p className="about-preview-link">

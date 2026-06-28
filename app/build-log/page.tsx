@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { TrackedLink } from "../TrackedLink";
 import { getPublicBuildLogEntries } from "../lib/build-log";
+import { businessPaths } from "../lib/business-config";
 
 const buildLogContextCards = [
   {
@@ -15,7 +16,7 @@ const buildLogContextCards = [
     eyebrow: "Next Step",
     title: "Work With Me",
     text: "If the work log makes you think, \"I need that kind of help,\" this is the practical path into scope, fit, and contact.",
-    href: "/work-with-me",
+    href: businessPaths.workWithMe,
     cta: "See How I Work",
   },
   {
