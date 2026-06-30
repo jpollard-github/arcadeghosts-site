@@ -99,6 +99,20 @@ type RouteStatusEntry = {
 
 const maxSafeFullPageCaptureHeight = 15000;
 
+type ScreenshotValidationResult =
+  | {
+      status: "invalid";
+      sizeBytes: number;
+      error: string;
+      captureNote?: string;
+    }
+  | {
+      status: "generated";
+      sizeBytes: number;
+      error?: undefined;
+      captureNote?: string;
+    };
+
 type MobileReviewIndexEntry = {
   route: string;
   viewportScreenshotPath?: string;
@@ -921,11 +935,10 @@ async function captureScreenshotWithRetry(input: {
   page: import("@playwright/test").Page;
   variant: ScreenshotVariant;
 }) {
-  let lastValidation = {
+  let lastValidation: ScreenshotValidationResult = {
     status: "invalid" as const,
     sizeBytes: 0,
     error: "Screenshot file was not written.",
-    captureNote: undefined as string | undefined,
   };
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -1013,7 +1026,7 @@ async function captureTallPageFallback(input: {
   };
 }
 
-async function validateScreenshotFile(filePath: string) {
+async function validateScreenshotFile(filePath: string): Promise<ScreenshotValidationResult> {
   if (!(await pathExists(filePath))) {
     return {
       status: "invalid" as const,
