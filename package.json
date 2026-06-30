@@ -17,6 +17,7 @@
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "node --import tsx --test tests/unit/*.test.ts",
     "test:e2e": "playwright test",
+    "test:mobile-safety": "playwright test tests/e2e/mobile-safety.spec.ts",
     "test:personas": "playwright test -c playwright.personas.config.ts tests/persona-testing/all-personas.spec.ts",
     "test:personas:fast": "PERSONA_INCLUDE_ADMIN=0 playwright test -c playwright.personas.config.ts tests/persona-testing/all-personas.spec.ts",
     "test:journeys": "playwright test -c playwright.personas.config.ts tests/persona-testing/journey-mode.spec.ts",

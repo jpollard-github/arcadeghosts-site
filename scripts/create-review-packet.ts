@@ -24,6 +24,8 @@ const defaultRoutes = [
   "/tiny-thoughts",
 ];
 
+const mobileScreenshotWidths = [375, 390, 430] as const;
+
 type CheckStatus = "pass" | "fail" | "unknown" | "skipped";
 
 type CommandResult = {
@@ -73,7 +75,7 @@ type ProgressHandle = {
   stop: (detail?: string) => void;
 };
 
-type ScreenshotMode = "mobile" | "desktop";
+type ScreenshotMode = "mobile-375" | "mobile" | "mobile-430" | "tablet" | "desktop";
 type ScreenshotVariant = "full-page" | "viewport";
 type ScreenshotStatus = "generated" | "failed" | "invalid";
 
@@ -117,10 +119,22 @@ type MobileReviewIndexEntry = {
   route: string;
   viewportScreenshotPath?: string;
   fullPageScreenshotPath?: string;
+  viewportScreenshot375Path?: string;
+  viewportScreenshot430Path?: string;
+  tabletViewportScreenshotPath?: string;
+  desktopViewportScreenshotPath?: string;
   viewportStatus: ScreenshotStatus | "missing";
   fullPageStatus: ScreenshotStatus | "missing";
+  viewportStatus375: ScreenshotStatus | "missing";
+  viewportStatus430: ScreenshotStatus | "missing";
+  tabletViewportStatus: ScreenshotStatus | "missing";
+  desktopViewportStatus: ScreenshotStatus | "missing";
   viewportSizeBytes: number;
   fullPageSizeBytes: number;
+  viewportSizeBytes375: number;
+  viewportSizeBytes430: number;
+  tabletViewportSizeBytes: number;
+  desktopViewportSizeBytes: number;
   httpStatus?: number;
   recommendedPriority: "critical" | "high" | "medium" | "low";
 };
@@ -161,6 +175,8 @@ const sourceEntries = [
 const docsEntries = [
   "docs/README.md",
   "docs/TODO.md",
+  "docs/CHANGE-CHECKLIST.md",
+  "docs/MOBILE-GUIDELINES.md",
   "docs/MOBILE-TODO.md",
   "docs/ChatGPT-TODO.md",
   "docs/AI-TODO.md",
@@ -718,7 +734,9 @@ async function generateScreenshots(packetDir: string, options: PacketOptions): P
   const viewportDir = path.join(screenshotsDir, "viewport");
   const invalidScreenshotsDir = path.join(packetDir, "reports", "invalid-screenshots");
 
-  const routeOrder: ScreenshotMode[] = options.mobile ? ["mobile", "desktop"] : ["desktop", "mobile"];
+  const routeOrder: ScreenshotMode[] = options.mobile
+    ? ["mobile", "mobile-375", "mobile-430", "tablet", "desktop"]
+    : ["desktop", "tablet", "mobile", "mobile-375", "mobile-430"];
   const routes = options.routes && options.routes.length > 0 ? options.routes : defaultRoutes;
   const generated: string[] = [];
   const summary: ScreenshotSummaryEntry[] = [];
@@ -727,16 +745,7 @@ async function generateScreenshots(packetDir: string, options: PacketOptions): P
 
   try {
     for (const mode of routeOrder) {
-      const useMobile = mode === "mobile";
-      const context = await browser.newContext(
-        useMobile
-          ? {
-              ...playwright.devices["iPhone 13"],
-            }
-          : {
-              viewport: { width: 1440, height: 1080 },
-            },
-      );
+      const context = await browser.newContext(getScreenshotContextOptions(playwright, mode));
 
       const page = await context.newPage();
       for (const route of routes) {
@@ -863,6 +872,48 @@ async function generateScreenshotsWithProgress(packetDir: string, options: Packe
     progress.stop("failed");
     throw error;
   }
+}
+
+function getScreenshotContextOptions(
+  playwright: typeof import("@playwright/test"),
+  mode: ScreenshotMode,
+) {
+  if (mode === "mobile") {
+    return {
+      ...playwright.devices["iPhone 13"],
+    };
+  }
+
+  if (mode === "mobile-375") {
+    return {
+      viewport: { width: 375, height: 812 },
+      isMobile: true,
+      hasTouch: true,
+      deviceScaleFactor: 3,
+    };
+  }
+
+  if (mode === "mobile-430") {
+    return {
+      viewport: { width: 430, height: 932 },
+      isMobile: true,
+      hasTouch: true,
+      deviceScaleFactor: 3,
+    };
+  }
+
+  if (mode === "tablet") {
+    return {
+      viewport: { width: 820, height: 1180 },
+      isMobile: true,
+      hasTouch: true,
+      deviceScaleFactor: 2,
+    };
+  }
+
+  return {
+    viewport: { width: 1440, height: 1080 },
+  };
 }
 
 async function captureAndValidateScreenshot(input: {
@@ -1389,9 +1440,9 @@ async function writeReview(input: {
       : ["- No route errors recorded during screenshot capture."];
   const reviewTheseFirst = input.options.mobile
     ? [
-        "1. `screenshots/viewport/mobile-home.jpg`",
-        "2. `screenshots/viewport/mobile-work-with-me.jpg`",
-        "3. `screenshots/viewport/mobile-about.jpg`",
+        "1. `screenshots/viewport/mobile-home.jpg` (390px)",
+        "2. `screenshots/viewport/mobile-375-home.jpg` and `screenshots/viewport/mobile-430-home.jpg`",
+        "3. `screenshots/viewport/mobile-work-with-me.jpg`",
         "4. `MOBILE-REVIEW.md`",
         "5. `reports/mobile-review-index.json`",
       ]
@@ -1433,12 +1484,13 @@ async function writeReview(input: {
     ...(input.options.mobile
       ? [
           "## Mobile First Pass",
-          "- Start with `mobile-home`.",
+          "- Start with `mobile-home` (390px), then compare 375px and 430px captures.",
           "- Review the first viewport before any full-page scrolling.",
           "- Check header/nav wrapping.",
           "- Check hero headline size.",
           "- Check CTA/button tap targets.",
           "- Check horizontal overflow.",
+          "- Compare 375px, 390px, 430px, tablet, and desktop widths when the page changed visually.",
           "- Check whether the top section communicates clearly within 10 seconds.",
           "",
         ]
@@ -1483,6 +1535,7 @@ async function writeReview(input: {
     "- Use `--skip-tests` for quick visual packets from production.",
     "- Do not use `--skip-tests` after code changes unless intentionally doing a screenshot-only packet.",
     "- Run tests before asking ChatGPT to review implementation correctness.",
+    `- Screenshot runs include mobile widths ${mobileScreenshotWidths.join("px, ")}px plus tablet and desktop coverage when screenshots succeed.`,
     "",
     "## Known Review Themes",
     "- Mobile currently needs serious attention.",
@@ -1607,6 +1660,18 @@ function buildMobileReviewIndex(screenshotResult: ScreenshotResult, options: Pac
     const fullPageEntry = screenshotResult.summary.find(
       (entry) => entry.route === route && entry.mode === "mobile" && entry.variant === "full-page",
     );
+    const viewportEntry375 = screenshotResult.summary.find(
+      (entry) => entry.route === route && entry.mode === "mobile-375" && entry.variant === "viewport",
+    );
+    const viewportEntry430 = screenshotResult.summary.find(
+      (entry) => entry.route === route && entry.mode === "mobile-430" && entry.variant === "viewport",
+    );
+    const tabletViewportEntry = screenshotResult.summary.find(
+      (entry) => entry.route === route && entry.mode === "tablet" && entry.variant === "viewport",
+    );
+    const desktopViewportEntry = screenshotResult.summary.find(
+      (entry) => entry.route === route && entry.mode === "desktop" && entry.variant === "viewport",
+    );
     const routeStatus = screenshotResult.routeStatuses.find(
       (entry) => entry.route === route && entry.mode === "mobile",
     );
@@ -1615,10 +1680,22 @@ function buildMobileReviewIndex(screenshotResult: ScreenshotResult, options: Pac
       route,
       viewportScreenshotPath: viewportEntry?.filePath,
       fullPageScreenshotPath: fullPageEntry?.filePath,
+      viewportScreenshot375Path: viewportEntry375?.filePath,
+      viewportScreenshot430Path: viewportEntry430?.filePath,
+      tabletViewportScreenshotPath: tabletViewportEntry?.filePath,
+      desktopViewportScreenshotPath: desktopViewportEntry?.filePath,
       viewportStatus: viewportEntry?.status ?? "missing",
       fullPageStatus: fullPageEntry?.status ?? "missing",
+      viewportStatus375: viewportEntry375?.status ?? "missing",
+      viewportStatus430: viewportEntry430?.status ?? "missing",
+      tabletViewportStatus: tabletViewportEntry?.status ?? "missing",
+      desktopViewportStatus: desktopViewportEntry?.status ?? "missing",
       viewportSizeBytes: viewportEntry?.sizeBytes ?? 0,
       fullPageSizeBytes: fullPageEntry?.sizeBytes ?? 0,
+      viewportSizeBytes375: viewportEntry375?.sizeBytes ?? 0,
+      viewportSizeBytes430: viewportEntry430?.sizeBytes ?? 0,
+      tabletViewportSizeBytes: tabletViewportEntry?.sizeBytes ?? 0,
+      desktopViewportSizeBytes: desktopViewportEntry?.sizeBytes ?? 0,
       httpStatus: routeStatus?.httpStatus,
       recommendedPriority: getMobilePriority(route),
     };
@@ -1656,7 +1733,15 @@ async function writeMobileReview(packetDir: string, screenshotResult: Screenshot
 
   const prioritizedScreenshotLines = priorityOrder.flatMap((entry) => {
     const lines: string[] = [`- \`${entry.route}\` (${entry.recommendedPriority})`];
-    lines.push(`  viewport: ${formatScreenshotRef(entry.viewportScreenshotPath, entry.viewportStatus)}`);
+    lines.push(`  viewport 390px: ${formatScreenshotRef(entry.viewportScreenshotPath, entry.viewportStatus)}`);
+    lines.push(`  viewport 375px: ${formatScreenshotRef(entry.viewportScreenshot375Path, entry.viewportStatus375)}`);
+    lines.push(`  viewport 430px: ${formatScreenshotRef(entry.viewportScreenshot430Path, entry.viewportStatus430)}`);
+    lines.push(
+      `  viewport tablet: ${formatScreenshotRef(entry.tabletViewportScreenshotPath, entry.tabletViewportStatus)}`,
+    );
+    lines.push(
+      `  viewport desktop: ${formatScreenshotRef(entry.desktopViewportScreenshotPath, entry.desktopViewportStatus)}`,
+    );
     lines.push(`  full-page: ${formatScreenshotRef(entry.fullPageScreenshotPath, entry.fullPageStatus)}`);
     return lines;
   });
@@ -1681,6 +1766,7 @@ async function writeMobileReview(packetDir: string, screenshotResult: Screenshot
     ...(hasMobileTodo ? ["1. `docs/MOBILE-TODO.md`", "2. `screenshots/viewport/mobile-home.jpg`"] : ["1. `screenshots/viewport/mobile-home.jpg`"]),
     ...(hasMobileTodo ? ["3. `screenshots/viewport/mobile-work-with-me.jpg`", "4. `MOBILE-REVIEW.md`"] : ["2. `screenshots/viewport/mobile-work-with-me.jpg`", "3. `MOBILE-REVIEW.md`"]),
     "Review the first viewport before scrolling, then compare it to `mobile-work-with-me`, `mobile-about`, `mobile-music`, and `mobile-writings`.",
+    "When a page changed visually, compare the 375px, 390px, 430px, tablet, and desktop captures before calling the pass safe.",
     focusLabel,
     "",
     "## Priority Screenshots",
@@ -1692,6 +1778,7 @@ async function writeMobileReview(packetDir: string, screenshotResult: Screenshot
     "- Are the primary CTA/button tap targets comfortably tappable?",
     "- Is there any horizontal overflow?",
     "- Does the top section communicate clearly within 10 seconds?",
+    "- Does the page still hold together at 375px and 430px, not just the default mobile capture?",
     "",
     "## Full-Page Scrolling Checklist",
     "- Does spacing stay consistent as you scroll?",

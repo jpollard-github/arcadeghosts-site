@@ -209,20 +209,21 @@ export default function WorkWithMePage() {
           <p className="eyebrow">Work With Me</p>
           <h1>Small projects. Clear problems. Personal attention.</h1>
           <p className="work-lead">
-            I&apos;m Jason Pollard, a software developer with decades of
-            experience building web applications, tools, automations, and odd
-            ideas that somehow become real. I occasionally take on small side
-            projects when they sound interesting and I believe I can help. My
-            background spans architecture, implementation, team leadership,
-            platform migrations, and the patient untangling of troublesome
-            systems.
+            I help businesses and thoughtful teams with small software projects:
+            website improvements, internal tools, business automation, and
+            practical AI workflows.
           </p>
-          <p>
-            Need a website improvement, business automation, AI workflow,
-            internal tool, or technical problem solved? I help businesses and
-            teams turn messy technical problems into practical solutions.
+          <p className="work-hero-support">
+            If something is messy, slow, repetitive, overdue, or quietly
+            driving people nuts, I can usually help scope it, untangle it, and
+            turn it into a practical next step.
           </p>
-          <p className="work-hero-note">
+          <ul className="work-hero-highlights" aria-label="Primary project types">
+            <li>Website improvements and cleanup</li>
+            <li>Automation and AI workflow help</li>
+            <li>Internal tools and technical problem solving</li>
+          </ul>
+          <p className="work-hero-note work-hero-human-note">
             If you want to start with the human context before the practical
             details, <Link className="work-inline-link" href="/about">meet Jason here</Link>.
           </p>
@@ -239,7 +240,11 @@ export default function WorkWithMePage() {
               Email Jason
             </a>
           </div>
-          <p className="work-hero-note">
+          <p className="work-hero-note work-hero-availability">
+            Best fit: small fixed-price projects with a real problem to solve,
+            not open-ended staff augmentation.
+          </p>
+          <p className="work-hero-note work-hero-availability">
             Available remotely nationwide and locally throughout the North
             Carolina Triad, including Greensboro, Winston-Salem, High Point,
             Kernersville, and surrounding areas. If you want to reach out, send
@@ -330,7 +335,7 @@ export default function WorkWithMePage() {
         </div>
       </section>
 
-      <section className="content-section" id="pricing">
+      <section className="content-section work-pricing" id="pricing">
         <SectionHeading eyebrow="Typical Project Sizes" title="Enough pricing context to know whether this is in range.">
           I usually work on fixed-price projects. Exact pricing depends on the
           shape, constraints, and messiness of the problem, but these are
@@ -345,7 +350,7 @@ export default function WorkWithMePage() {
             </article>
           ))}
         </div>
-        <p className="work-hero-note">
+        <p className="work-hero-note work-section-note">
           If you&apos;re not sure where your project fits, email me the problem
           and I&apos;ll tell you honestly whether it sounds like a fit. If the
           work turns out to be larger, stranger, or more tangled than these
@@ -506,7 +511,7 @@ export default function WorkWithMePage() {
         </div>
       </section>
 
-      <section className="content-section work-contact">
+      <section className="content-section work-contact work-faq">
         <SectionHeading eyebrow="FAQ" title="A few quick answers that usually help people decide.">
           Most hesitation comes from not knowing how I work, whether I help
           locally, or whether the project needs to be perfectly defined before a
@@ -514,7 +519,7 @@ export default function WorkWithMePage() {
         </SectionHeading>
         <div className="work-fit-grid">
           {faqItems.map((item) => (
-            <article className="work-panel" key={item.question}>
+            <article className="work-panel work-faq-item" key={item.question}>
               <h3>{item.question}</h3>
               <p>{item.answer}</p>
             </article>
@@ -541,14 +546,26 @@ export default function WorkWithMePage() {
               Email Jason
             </a>
           </div>
-          <p>
+          <div className="work-contact-meta" aria-label="Contact expectations">
+            <p>
+              <strong>Best for:</strong> small fixed-price problems that need a
+              practical next step.
+            </p>
+            <p>
+              <strong>Response time:</strong> usually 1-2 business days.
+            </p>
+            <p>
+              <strong>Best first message:</strong> send the problem, not a
+              polished spec.
+            </p>
+          </div>
+          <p className="work-contact-email">
             Prefer email?{" "}
             <a className="work-inline-link" href={businessContact.emailHref}>
               {businessContact.emailAddress}
             </a>
           </p>
-          <p>Typical response time: 1-2 business days.</p>
-          <p>
+          <p className="work-contact-note">
             If it sounds like a fit, we can figure out scope, timeline, and
             whether a fixed-price project makes sense.
           </p>

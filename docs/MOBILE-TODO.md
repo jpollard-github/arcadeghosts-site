@@ -20,6 +20,77 @@ Current sequence for review:
 3. `review-packets/latest-site-review/screenshots/viewport/mobile-home.jpg`
 4. `review-packets/latest-site-review/REVIEW.md`
 
+## Cross-Phase Issues
+
+Recurring issues from multiple mobile passes should live here once they stop being one-off observations.
+
+### Checklist
+
+- [x] `[P1]` Revisit the homepage nav strip on very small screens and confirm it still feels comfortable at the right edge on real devices.
+- [ ] `[P1]` Keep checking desktop after each mobile pass because many layout primitives and spacing rules are still shared.
+- [x] `[P1]` Manually verify changed visual routes even when automated overflow tests pass.
+- [ ] `[P2]` Revisit very tall pages and trim or compress sections that add more scroll cost than decision value.
+- [x] `[P2]` Decide whether fixed decorative chrome should be reduced further for mobile review clarity or real-device comfort.
+- [ ] `[P2]` Improve screenshot reliability where full-page capture or fixed chrome makes review evidence noisy.
+
+### Notes
+
+- Homepage full-page capture has needed fallbacks because the route is extremely tall on mobile.
+- `/work-with-me` still places the secondary CTA just below the fold on the smallest viewport.
+- The floating ghost logo is less intrusive after the latest small-screen reduction, but it still appears in screenshots and should keep being judged against real-device comfort.
+- Review packets and automated checks help, but they do not replace intentional visual review.
+
+Status:
+
+In Progress
+
+## Ongoing Mobile Safety
+
+### Goal
+
+Make mobile responsiveness a permanent repo-level habit so future UI work stays safe by default instead of relying on memory or repeated prompting.
+
+### Checklist
+
+- [x] `[P0]` Add review packet screenshot coverage for `375px`, `390px`, `430px`, tablet, and desktop widths.
+- [x] `[P1]` Add shared responsive layout primitives for future pages and section work.
+- [ ] `[P1]` Track pages that still need manual mobile verification after visual changes.
+- [x] `[P2]` Add lightweight automated overflow guardrails where they stay trustworthy.
+
+### Review Criteria
+
+- Future Codex sessions can discover the repo’s mobile rules without extra prompting.
+- UI changes have a standard checklist and default screenshot evidence.
+- Shared primitives are available for future page and section work.
+- Mobile regressions become easier to spot before deployment.
+
+### Evidence
+
+- `docs/MOBILE-GUIDELINES.md`
+- `docs/CHANGE-CHECKLIST.md`
+- `AGENTS.md`
+- `reports/screenshot-summary.json`
+- `tests/e2e/mobile-safety.spec.ts`
+
+### Known Issues
+
+- Existing routes still use mostly legacy layout wrappers and will adopt shared primitives gradually.
+- Automated checks can catch overflow, but they cannot replace actual visual review.
+- Tablet and desktop screenshot coverage now exists in the packet flow, but future sessions still need to review the changed route set intentionally instead of trusting raw screenshot volume.
+
+### Future Ideas
+
+- Expand route coverage in the mobile-safety Playwright spec as more pages stabilize.
+- Add focused changed-route packets with `--routes` more often when visual work is isolated.
+
+### Exit Criteria
+
+- The repo docs, instructions, review packets, and basic tests all reinforce mobile safety without extra reminders.
+
+Status:
+
+In Progress
+
 ## Phase 1 — Homepage First Viewport
 
 ### Goal
@@ -133,11 +204,11 @@ Make `/work-with-me` feel clear, confident, and easy to act on from the first mo
 
 ### Checklist
 
-- [ ] `[P0]` Keep the page header readable without giant line breaks.
-- [ ] `[P0]` Improve first-screen clarity of what Jason does and who the page is for.
-- [ ] `[P1]` Make CTA blocks, proof, and trust signals easy to scan.
-- [ ] `[P1]` Check whether sticky or fixed UI interrupts reading.
-- [ ] `[P2]` Tighten any sections that feel more decorative than persuasive on mobile.
+- [x] `[P0]` Keep the page header readable without giant line breaks.
+- [x] `[P0]` Improve first-screen clarity of what Jason does and who the page is for.
+- [x] `[P1]` Make CTA blocks, proof, and trust signals easy to scan.
+- [x] `[P1]` Check whether sticky or fixed UI interrupts reading.
+- [x] `[P2]` Tighten any sections that feel more decorative than persuasive on mobile.
 
 ### Review Criteria
 
@@ -151,20 +222,32 @@ Make `/work-with-me` feel clear, confident, and easy to act on from the first mo
 - `screenshots/viewport/mobile-work-with-me.jpg`
 - `screenshots/mobile-work-with-me.jpg`
 - `reports/mobile-review-index.json`
+- Local verification screenshots captured during this pass at `375px`, `390px`, `430px`, and desktop against `http://127.0.0.1:3000/work-with-me`
 
 ### Known Issues
 
-- This page has only had light first-viewport review so far.
-- It is still likely carrying desktop spacing assumptions in deeper sections.
+- The page is still very tall on mobile, so later sections need continued judgment about what earns its space.
+- Desktop and tablet should still be spot-checked after future content-heavy changes because the route uses shared spacing rules.
 
 ### Future Ideas
 
 - Add a mobile-first CTA/proof order if the current desktop-first sequence keeps underperforming.
 - Consider simplifying or compressing supporting sections for smaller screens.
 
+### Exit Criteria
+
+- A compatible client can understand the offer and reach the primary CTA without heavy scrolling.
+- The hero feels deliberate instead of oversized or crowded on `375px`, `390px`, and `430px` widths.
+- Proof, trust, pricing, and contact sections scan cleanly on mobile without feeling like desktop cards stacked vertically.
+- No obvious desktop regression appears in the page header, CTA row, or supporting panels.
+
+Next recommended work:
+
+- Move to Phase 4 and improve About, Music, and Writings readability on mobile while keeping an eye out for any final `/work-with-me` trimming opportunities.
+
 Status:
 
-Not Started
+Complete
 
 ## Phase 4 — About / Music / Writings Readability
 
@@ -174,11 +257,11 @@ Improve the reading experience on the more text-driven personality pages so they
 
 ### Checklist
 
-- [ ] `[P0]` Tighten long-form typography where needed.
-- [ ] `[P1]` Review heading sizes and section spacing.
-- [ ] `[P1]` Make sure cards, lists, and dense modules still breathe.
-- [ ] `[P1]` Review whether decorative or side content pushes core reading too far down.
-- [ ] `[P2]` Normalize inconsistencies between content-heavy pages where it helps comprehension.
+- [x] `[P0]` Tighten long-form typography where needed.
+- [x] `[P1]` Review heading sizes and section spacing.
+- [x] `[P1]` Make sure cards, lists, and dense modules still breathe.
+- [x] `[P1]` Review whether decorative or side content pushes core reading too far down.
+- [x] `[P2]` Normalize inconsistencies between content-heavy pages where it helps comprehension.
 
 ### Review Criteria
 
@@ -198,7 +281,9 @@ Improve the reading experience on the more text-driven personality pages so they
 
 ### Known Issues
 
-- These routes have not been deeply reviewed yet after the homepage pass.
+- About is better paced now, but it is still the most text-forward of the Phase 4 routes and should be watched if new copy gets added.
+- Music is now much safer on small phones, but it is still the densest personality page and may deserve route-specific polish later if new modules or data-heavy sections get added.
+- Writings is the calmest of these pages, so the risk there is mostly keeping future cards and metadata from regressing into cramped layouts.
 - There is a risk of overcorrecting personality pages into generic text columns.
 
 ### Future Ideas
@@ -206,9 +291,20 @@ Improve the reading experience on the more text-driven personality pages so they
 - Add page-specific mobile refinements rather than forcing one universal content layout.
 - Revisit image/text sequencing on the most editorial pages.
 
+### Exit Criteria
+
+- About reads like guided field notes instead of a text wall.
+- Music feels intentional on phone widths rather than like a compressed desktop dashboard.
+- Writings keeps a clean editorial rhythm with readable headers, CTA links, and card spacing.
+- These pages still feel distinct from one another rather than sharing one flattened mobile template.
+
+Next recommended work:
+
+- Phase 5 can begin. Start with the playful route-specific pages while keeping an eye on Music if future content pushes density back up.
+
 Status:
 
-Not Started
+Ready For Review
 
 ## Phase 5 — Cats / Arcade / Personality Pages
 

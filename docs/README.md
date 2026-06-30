@@ -109,6 +109,53 @@ When not to use it:
 - When planning future framework changes.
 - When managing long-term content publishing ideas.
 
+### `MOBILE-TODO.md`
+
+Purpose:
+
+- Primary roadmap and engineering notebook for mobile work.
+
+When to use it:
+
+- Before any mobile UI iteration.
+- When deciding the next responsive layout pass.
+- When recording follow-up mobile issues after a visual change.
+
+When not to use it:
+
+- As a general content backlog.
+- As a substitute for implementation-specific CSS or component work.
+
+### `MOBILE-GUIDELINES.md`
+
+Purpose:
+
+- Stable mobile rules and acceptance criteria for UI work.
+
+When to use it:
+
+- Before changing layout, cards, heroes, CTAs, media, or sticky controls.
+- When a future session needs the repo’s mobile standards quickly.
+
+When not to use it:
+
+- As the active task queue.
+
+### `CHANGE-CHECKLIST.md`
+
+Purpose:
+
+- Reusable per-change checklist for responsive UI safety.
+
+When to use it:
+
+- Before closing out a visual UI change.
+- When deciding whether screenshots and follow-up docs are complete enough.
+
+When not to use it:
+
+- As a long-term roadmap.
+
 ## Publishing
 
 ### `CONTENT-TODO.md`

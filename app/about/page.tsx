@@ -134,19 +134,9 @@ export default function AboutPage() {
           </p>
           <p>
             If you are here professionally, the useful version is simple: I am
-            both the person and the builder. If you want proof of active work,
-            go to the Build Log and Projects. If you want the next step, go to
-            Work With Me. If you want the warmer context first, keep following
-            the side rooms.
+            both the person and the builder.
           </p>
-
           <h3>If you want the practical trail first:</h3>
-          <p>
-            <Link href="/build-log">Build Log</Link> is the proof-of-active-work
-            path. <Link href={businessPaths.workWithMe}>Work With Me</Link> is the
-            practical next step if you think I might be able to help. This
-            page is the human context that connects those two.
-          </p>
           <div className="section-link-grid about-card-grid">
             {aboutTrustCards.map((card) => (
               <AboutCardLink
@@ -159,6 +149,13 @@ export default function AboutPage() {
               />
             ))}
           </div>
+          <p>
+            <Link href="/build-log">Build Log</Link> is the proof-of-active-work
+            path. <Link href={businessPaths.workWithMe}>Work With Me</Link> is the
+            practical next step if you think I might be able to help. This
+            page is the human context that connects those two, and Projects
+            helps show the current workbench in motion.
+          </p>
 
           <h3>If you&apos;re the type of person who enjoys:</h3>
           <ul className="about-list">

@@ -82,6 +82,8 @@ Start there for:
 Especially useful companion docs:
 
 - `docs/CONTENT-TODO.md`
+- `docs/MOBILE-GUIDELINES.md`
+- `docs/CHANGE-CHECKLIST.md`
 - `docs/PERSONA-TESTS-RESULTS-TODO.backup.md`
 - `docs/low-friction-content-flow.md`
 
@@ -247,6 +249,7 @@ npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --m
 
 Use `--skip-tests` for production screenshot packets. Do not skip tests after implementation changes unless the packet is intentionally visual-only.
 Persona test screenshots are excluded from the packet by default; use `--include-persona-screenshots` only when you explicitly want the bulky per-persona image archive.
+Screenshot packets are expected to cover `375px`, `390px`, `430px`, tablet, and desktop widths when screenshot capture succeeds.
 
 Production screenshot packet:
 

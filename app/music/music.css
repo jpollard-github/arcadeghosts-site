@@ -738,3 +738,201 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+@media (max-width: 560px) {
+  .music-section::before {
+    inset: 7.5rem auto auto 50%;
+    width: 22rem;
+    height: 22rem;
+    opacity: 0.22;
+  }
+
+  .music-console {
+    gap: 1rem;
+    margin-top: 1.25rem;
+    padding: 0.95rem;
+  }
+
+  .music-console h3 {
+    margin-bottom: 0.8rem;
+    font-size: clamp(2rem, 10vw, 2.95rem);
+    line-height: 0.98;
+  }
+
+  .music-console p,
+  .music-insight-heading > span,
+  .music-league p,
+  .genre-weather-card p,
+  .music-era-card p,
+  .music-mood-card p,
+  .music-fixation-card p,
+  .peak-month-list p {
+    font-size: 0.96rem;
+    line-height: 1.58;
+  }
+
+  .music-stat-grid {
+    gap: 0.7rem;
+  }
+
+  .music-stat-grid div,
+  .music-rank-panel,
+  .music-panel,
+  .genre-weather-card,
+  .music-era-card,
+  .music-mood-card,
+  .music-fixation-card,
+  .odd-arcade-card,
+  .tape {
+    padding: 0.9rem;
+  }
+
+  .music-stat-grid div {
+    min-height: 0;
+  }
+
+  .music-stat-grid dd {
+    font-size: clamp(1.35rem, 8vw, 2rem);
+  }
+
+  .music-insight-band,
+  .music-league {
+    margin-top: 2.35rem;
+  }
+
+  .music-insight-heading {
+    margin-bottom: 0.95rem;
+  }
+
+  .music-insight-heading h2,
+  .music-league h3 {
+    margin-bottom: 0.7rem;
+    font-size: clamp(1.7rem, 8vw, 2.45rem);
+    line-height: 1.04;
+  }
+
+  .time-machine-toolbar {
+    align-items: stretch;
+  }
+
+  .time-machine-random {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .time-machine-card > button {
+    padding: 0.9rem;
+  }
+
+  .time-machine-card > button strong {
+    font-size: clamp(1.18rem, 7vw, 1.65rem);
+    line-height: 1.1;
+  }
+
+  .time-machine-card > button small {
+    font-size: 0.8rem;
+  }
+
+  .time-machine-detail {
+    gap: 0.85rem;
+    padding: 0 0.9rem 0.9rem;
+  }
+
+  .time-machine-stats div {
+    padding: 0.72rem 0.75rem;
+  }
+
+  .time-machine-stats dd {
+    font-size: 0.94rem;
+    line-height: 1.45;
+  }
+
+  .time-machine-weather {
+    font-size: 0.97rem;
+    line-height: 1.55;
+  }
+
+  .time-machine-fixation {
+    padding-left: 0.7rem;
+  }
+
+  .month-signal-strip {
+    min-height: 8.5rem;
+    padding: 0.6rem;
+  }
+
+  .genre-weather-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .music-rank-panel h3,
+  .music-panel h3,
+  .genre-weather-card h3,
+  .music-mood-card h3 {
+    margin-bottom: 0.8rem;
+    font-size: 0.96rem;
+  }
+
+  .music-rank-panel li {
+    grid-template-columns: 1.45rem minmax(0, 1fr);
+    gap: 0.28rem 0.6rem;
+    align-items: start;
+    padding-bottom: 0.78rem;
+  }
+
+  .music-rank-panel li > span {
+    margin-top: 0.08rem;
+    font-size: 0.72rem;
+  }
+
+  .music-rank-panel strong {
+    line-height: 1.32;
+  }
+
+  .music-rank-panel em {
+    grid-column: 2;
+    justify-self: start;
+    white-space: normal;
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+
+  .music-rank-panel small {
+    margin-top: 0.08rem;
+    line-height: 1.48;
+  }
+
+  .year-signal {
+    grid-template-columns: 2.85rem minmax(0, 1fr) 3.35rem;
+    gap: 0.55rem;
+  }
+
+  .year-signal > span,
+  .year-signal strong {
+    font-size: 0.76rem;
+  }
+
+  .music-era-meta span,
+  .music-chip-row span {
+    font-size: 0.72rem;
+  }
+
+  .music-fixation-card strong,
+  .odd-arcade-card strong {
+    font-size: clamp(1.2rem, 7vw, 1.75rem);
+  }
+
+  .music-chip-row {
+    gap: 0.38rem;
+    margin-top: 0.8rem;
+  }
+
+  .tape h3 {
+    min-height: 0;
+    margin-bottom: 0.75rem;
+  }
+
+  .music-league-link {
+    min-height: 11rem;
+  }
+}
