@@ -12,7 +12,7 @@ const packetTimestamp = new Date();
 const packetDate = formatDate(packetTimestamp);
 const packetTime = formatTime(packetTimestamp);
 
-const desktopRoutes = [
+const defaultRoutes = [
   "/",
   "/about",
   "/work-with-me",
@@ -38,6 +38,8 @@ type ScreenshotResult = {
   generated: string[];
   skippedReason?: string;
   baseUrl?: string;
+  summary: ScreenshotSummaryEntry[];
+  routeStatuses: RouteStatusEntry[];
 };
 
 type PacketOptions = {
@@ -46,8 +48,12 @@ type PacketOptions = {
   summaryFile?: string;
   screenshotBaseUrl?: string;
   includePersonaScreenshots: boolean;
+  includeScript: boolean;
+  focus: string;
+  routes?: string[];
   skipTests: boolean;
   skipScreenshots: boolean;
+  viewportOnly: boolean;
   mobile: boolean;
 };
 
@@ -65,6 +71,43 @@ type PacketContext = {
 type ProgressHandle = {
   stop: (detail?: string) => void;
 };
+
+type ScreenshotMode = "mobile" | "desktop";
+type ScreenshotVariant = "full-page" | "viewport";
+type ScreenshotStatus = "generated" | "failed" | "invalid";
+
+type ScreenshotSummaryEntry = {
+  route: string;
+  mode: ScreenshotMode;
+  variant: ScreenshotVariant;
+  filePath: string;
+  sizeBytes: number;
+  status: ScreenshotStatus;
+  error?: string;
+  baseUrl: string;
+};
+
+type RouteStatusEntry = {
+  route: string;
+  mode: ScreenshotMode;
+  httpStatus?: number;
+  error?: string;
+  baseUrl: string;
+};
+
+type MobileReviewIndexEntry = {
+  route: string;
+  viewportScreenshotPath?: string;
+  fullPageScreenshotPath?: string;
+  viewportStatus: ScreenshotStatus | "missing";
+  fullPageStatus: ScreenshotStatus | "missing";
+  viewportSizeBytes: number;
+  fullPageSizeBytes: number;
+  httpStatus?: number;
+  recommendedPriority: "critical" | "high" | "medium" | "low";
+};
+
+const suspiciousJpegSizeBytes = 10 * 1024;
 
 const sourceEntries = [
   "README.md",
@@ -168,6 +211,13 @@ async function main() {
     context.missingOptionalPaths,
   );
   logStep(`Copied source files (${sourceCount} entries)`);
+  if (options.includeScript) {
+    logStep("Including packet script for self-review");
+    await copyFileToPacket(
+      path.join(repoRoot, "scripts", "create-review-packet.ts"),
+      path.join(packetDir, "source", "scripts", "create-review-packet.ts"),
+    );
+  }
   const docsCount = await copyEntries(
     docsEntries,
     "docs",
@@ -222,11 +272,26 @@ async function main() {
   await writeChecksReport(path.join(packetDir, "reports", "checks.txt"), checkResults, context);
 
   const screenshotResult = options.skipScreenshots
-    ? { generated: [], skippedReason: "Skipped via --skip-screenshots." }
+    ? { generated: [], skippedReason: "Skipped via --skip-screenshots.", summary: [], routeStatuses: [] }
     : await generateScreenshotsWithProgress(packetDir, options);
-
-  if (screenshotResult.generated.length > 0) {
-    await ensureDir(path.join(packetDir, "screenshots"));
+  await fs.writeFile(
+    path.join(packetDir, "reports", "screenshot-summary.json"),
+    `${JSON.stringify(screenshotResult.summary, null, 2)}\n`,
+    "utf8",
+  );
+  await fs.writeFile(
+    path.join(packetDir, "reports", "route-status.json"),
+    `${JSON.stringify(screenshotResult.routeStatuses, null, 2)}\n`,
+    "utf8",
+  );
+  if (options.mobile) {
+    const mobileReviewIndex = buildMobileReviewIndex(screenshotResult, options);
+    await fs.writeFile(
+      path.join(packetDir, "reports", "mobile-review-index.json"),
+      `${JSON.stringify(mobileReviewIndex, null, 2)}\n`,
+      "utf8",
+    );
+    await writeMobileReview(packetDir, screenshotResult, options);
   }
 
   await writePacketInfo({
@@ -264,8 +329,11 @@ function parseArgs(argv: string[]): PacketOptions {
   const options: PacketOptions = {
     includePaths: [],
     includePersonaScreenshots: false,
+    includeScript: false,
+    focus: "all",
     skipTests: false,
     skipScreenshots: false,
+    viewportOnly: false,
     mobile: false,
   };
 
@@ -299,6 +367,21 @@ function parseArgs(argv: string[]): PacketOptions {
       continue;
     }
 
+    if (arg === "--focus" && argv[index + 1]) {
+      options.focus = argv[index + 1];
+      index += 1;
+      continue;
+    }
+
+    if (arg === "--routes" && argv[index + 1]) {
+      options.routes = argv[index + 1]
+        .split(",")
+        .map((value) => value.trim())
+        .filter(Boolean);
+      index += 1;
+      continue;
+    }
+
     if (arg === "--skip-tests") {
       options.skipTests = true;
       continue;
@@ -309,8 +392,18 @@ function parseArgs(argv: string[]): PacketOptions {
       continue;
     }
 
+    if (arg === "--include-script") {
+      options.includeScript = true;
+      continue;
+    }
+
     if (arg === "--skip-screenshots") {
       options.skipScreenshots = true;
+      continue;
+    }
+
+    if (arg === "--viewport-only") {
+      options.viewportOnly = true;
       continue;
     }
 
@@ -551,6 +644,8 @@ async function generateScreenshots(packetDir: string, options: PacketOptions): P
     return {
       generated: [],
       skippedReason: `Playwright was not available for screenshots: ${(error as Error).message}`,
+      summary: [],
+      routeStatuses: [],
     };
   }
 
@@ -561,20 +656,29 @@ async function generateScreenshots(packetDir: string, options: PacketOptions): P
     return {
       generated: [],
       skippedReason: `Screenshot setup was skipped: ${(error as Error).message}`,
+      summary: [],
+      routeStatuses: [],
     };
   }
   if (!localServer.baseUrl) {
     return {
       generated: [],
       skippedReason: localServer.reason ?? "No base URL was available for screenshots.",
+      summary: [],
+      routeStatuses: [],
     };
   }
 
   const screenshotsDir = path.join(packetDir, "screenshots");
   await ensureDir(screenshotsDir);
+  const viewportDir = path.join(screenshotsDir, "viewport");
+  const invalidScreenshotsDir = path.join(packetDir, "reports", "invalid-screenshots");
 
-  const routeOrder = options.mobile ? ["mobile", "desktop"] : ["desktop", "mobile"];
+  const routeOrder: ScreenshotMode[] = options.mobile ? ["mobile", "desktop"] : ["desktop", "mobile"];
+  const routes = options.routes && options.routes.length > 0 ? options.routes : defaultRoutes;
   const generated: string[] = [];
+  const summary: ScreenshotSummaryEntry[] = [];
+  const routeStatuses: RouteStatusEntry[] = [];
   const browser = await playwright.chromium.launch();
 
   try {
@@ -591,33 +695,92 @@ async function generateScreenshots(packetDir: string, options: PacketOptions): P
       );
 
       const page = await context.newPage();
-      for (const route of desktopRoutes) {
+      for (const route of routes) {
         const fileName = `${mode}-${routeToSlug(route)}.jpg`;
         const filePath = path.join(screenshotsDir, fileName);
         try {
-          await page.goto(new URL(route, localServer.baseUrl).toString(), {
+          const response = await page.goto(new URL(route, localServer.baseUrl).toString(), {
             waitUntil: "domcontentloaded",
             timeout: 45000,
+          });
+          routeStatuses.push({
+            route,
+            mode,
+            httpStatus: response?.status(),
+            error: response && response.status() >= 400 ? `HTTP ${response.status()}` : undefined,
+            baseUrl: localServer.baseUrl,
           });
           try {
             await page.waitForLoadState("networkidle", { timeout: 5000 });
           } catch {
             // Some pages may keep background work alive; a screenshot is still useful.
           }
-          await page.screenshot({
-            path: filePath,
-            fullPage: true,
-            quality: 70,
-            type: "jpeg",
-          });
-          generated.push(path.relative(packetDir, filePath));
-        } catch (error) {
-          const errorFile = path.join(
+          const fullPageResult = await captureAndValidateScreenshot({
+            baseUrl: localServer.baseUrl,
+            mode,
             packetDir,
-            "reports",
-            `${mode}-${routeToSlug(route)}-screenshot-error.txt`,
-          );
-          await fs.writeFile(errorFile, String(error), "utf8");
+            page,
+            pathWithinPacket: path.join("screenshots", fileName),
+            route,
+            summary,
+            variant: "full-page",
+            invalidScreenshotsDir,
+          });
+          if (fullPageResult.status === "generated") {
+            generated.push(fullPageResult.filePath);
+          }
+
+          if (options.viewportOnly) {
+            await ensureDir(viewportDir);
+            const viewportResult = await captureAndValidateScreenshot({
+              baseUrl: localServer.baseUrl,
+              mode,
+              packetDir,
+              page,
+              pathWithinPacket: path.join("screenshots", "viewport", fileName),
+              route,
+              summary,
+              variant: "viewport",
+              invalidScreenshotsDir,
+              screenshotOptions: {
+                fullPage: false,
+              },
+            });
+            if (viewportResult.status === "generated") {
+              generated.push(viewportResult.filePath);
+            }
+          }
+        } catch (error) {
+          routeStatuses.push({
+            route,
+            mode,
+            error: (error as Error).message,
+            baseUrl: localServer.baseUrl,
+          });
+          const errorMessage = (error as Error).stack ?? String(error);
+          await writeRouteErrorFile(packetDir, mode, route, errorMessage);
+          summary.push({
+            route,
+            mode,
+            variant: "full-page",
+            filePath: path.join("screenshots", `${mode}-${routeToSlug(route)}.jpg`),
+            sizeBytes: 0,
+            status: "failed",
+            error: errorMessage,
+            baseUrl: localServer.baseUrl,
+          });
+          if (options.viewportOnly) {
+            summary.push({
+              route,
+              mode,
+              variant: "viewport",
+              filePath: path.join("screenshots", "viewport", `${mode}-${routeToSlug(route)}.jpg`),
+              sizeBytes: 0,
+              status: "failed",
+              error: errorMessage,
+              baseUrl: localServer.baseUrl,
+            });
+          }
         }
       }
       await context.close();
@@ -633,12 +796,16 @@ async function generateScreenshots(packetDir: string, options: PacketOptions): P
       baseUrl: localServer.baseUrl,
       skippedReason:
         "Playwright was available, but no screenshots were captured successfully. See reports/*screenshot-error.txt.",
+      summary,
+      routeStatuses,
     };
   }
 
   return {
     generated,
     baseUrl: localServer.baseUrl,
+    summary,
+    routeStatuses,
   };
 }
 
@@ -652,6 +819,109 @@ async function generateScreenshotsWithProgress(packetDir: string, options: Packe
     progress.stop("failed");
     throw error;
   }
+}
+
+async function captureAndValidateScreenshot(input: {
+  baseUrl: string;
+  mode: ScreenshotMode;
+  packetDir: string;
+  page: import("@playwright/test").Page;
+  pathWithinPacket: string;
+  route: string;
+  summary: ScreenshotSummaryEntry[];
+  variant: ScreenshotVariant;
+  invalidScreenshotsDir: string;
+  screenshotOptions?: {
+    fullPage?: boolean;
+  };
+}) {
+  const absolutePath = path.join(input.packetDir, input.pathWithinPacket);
+  await ensureDir(path.dirname(absolutePath));
+  await input.page.screenshot({
+    path: absolutePath,
+    fullPage: input.screenshotOptions?.fullPage ?? true,
+    quality: 70,
+    type: "jpeg",
+  });
+
+  const validation = await validateScreenshotFile(absolutePath);
+  if (validation.status === "generated") {
+    const entry: ScreenshotSummaryEntry = {
+      route: input.route,
+      mode: input.mode,
+      variant: input.variant,
+      filePath: input.pathWithinPacket,
+      sizeBytes: validation.sizeBytes,
+      status: "generated",
+      baseUrl: input.baseUrl,
+    };
+    input.summary.push(entry);
+    return entry;
+  }
+
+  await ensureDir(input.invalidScreenshotsDir);
+  const movedPath = path.join(
+    input.invalidScreenshotsDir,
+    `${input.variant}-${input.mode}-${routeToSlug(input.route)}.jpg`,
+  );
+
+  if (await pathExists(absolutePath)) {
+    await fs.rename(absolutePath, movedPath);
+  }
+
+  const errorMessage = validation.error ?? "Screenshot file was invalid.";
+  await writeRouteErrorFile(input.packetDir, input.mode, input.route, `${input.variant}: ${errorMessage}`);
+
+  const invalidEntry: ScreenshotSummaryEntry = {
+    route: input.route,
+    mode: input.mode,
+    variant: input.variant,
+    filePath: path.relative(input.packetDir, movedPath),
+    sizeBytes: validation.sizeBytes,
+    status: "invalid",
+    error: errorMessage,
+    baseUrl: input.baseUrl,
+  };
+  input.summary.push(invalidEntry);
+  return invalidEntry;
+}
+
+async function validateScreenshotFile(filePath: string) {
+  if (!(await pathExists(filePath))) {
+    return {
+      status: "invalid" as const,
+      sizeBytes: 0,
+      error: "Screenshot file was not written.",
+    };
+  }
+
+  const stats = await fs.stat(filePath);
+  if (stats.size <= 0) {
+    return {
+      status: "invalid" as const,
+      sizeBytes: stats.size,
+      error: "Screenshot file was 0 bytes.",
+    };
+  }
+
+  const extension = path.extname(filePath).toLowerCase();
+  if ((extension === ".jpg" || extension === ".jpeg") && stats.size < suspiciousJpegSizeBytes) {
+    return {
+      status: "invalid" as const,
+      sizeBytes: stats.size,
+      error: `Screenshot file was suspiciously small (${stats.size} bytes).`,
+    };
+  }
+
+  return {
+    status: "generated" as const,
+    sizeBytes: stats.size,
+  };
+}
+
+async function writeRouteErrorFile(packetDir: string, mode: ScreenshotMode, route: string, message: string) {
+  const errorFile = path.join(packetDir, "reports", `${mode}-${routeToSlug(route)}-screenshot-error.txt`);
+  await fs.writeFile(errorFile, `${message}\n`, "utf8");
 }
 
 async function resolveBaseUrlForScreenshots(options: PacketOptions) {
@@ -886,6 +1156,10 @@ async function writePacketInfo(input: {
     `- skip tests: ${input.options.skipTests ? "yes" : "no"}`,
     `- skip screenshots: ${input.options.skipScreenshots ? "yes" : "no"}`,
     `- include persona screenshots: ${input.options.includePersonaScreenshots ? "yes" : "no"}`,
+    `- include script: ${input.options.includeScript ? "yes" : "no"}`,
+    `- viewport only: ${input.options.viewportOnly ? "yes" : "no"}`,
+    `- focus: ${input.options.focus}`,
+    `- routes: ${input.options.routes && input.options.routes.length > 0 ? input.options.routes.join(", ") : "(default)"}`,
     `- screenshot base URL: ${input.options.screenshotBaseUrl ?? process.env.SITE_REVIEW_BASE_URL ?? "(none)"}`,
     `- include paths: ${input.options.includePaths.length > 0 ? input.options.includePaths.join(", ") : "(none)"}`,
     `- summary file: ${input.options.summaryFile ?? "(none)"}`,
@@ -927,10 +1201,35 @@ async function writeReview(input: {
   checkResults: CommandResult[];
 }) {
   const mobileBias = input.options.mobile
-    ? "This packet was generated in mobile review mode, so start with the iPhone-style screenshots and tighten the first 1-2 screens before broad desktop polish."
+    ? "This packet was generated in mobile review mode. Start with `mobile-home`, review the first viewport before full-page scrolling, and tighten the opening mobile experience before broad desktop polish."
     : "Start with the homepage and Work With Me flow, then use the screenshots and copied source/docs to trace any friction back to the implementation and content decisions.";
 
   const summaryLink = input.options.summaryFile ? "- `reports/codex-summary.md` if present." : "";
+  const screenshotProblems = input.screenshotResult.summary.filter((entry) => entry.status !== "generated");
+  const screenshotTable = buildScreenshotMarkdownTable(input.screenshotResult.summary);
+  const routeStatusIssues = input.screenshotResult.routeStatuses.filter(
+    (entry) => entry.error || (entry.httpStatus !== undefined && entry.httpStatus >= 400),
+  );
+  const routeStatusLines =
+    routeStatusIssues.length > 0
+      ? routeStatusIssues.map((entry) => {
+          const statusLabel = entry.httpStatus ? `HTTP ${entry.httpStatus}` : "no HTTP status";
+          return `- ${entry.mode} ${entry.route}: ${statusLabel}${entry.error ? `; ${entry.error}` : ""}`;
+        })
+      : ["- No route errors recorded during screenshot capture."];
+  const reviewTheseFirst = input.options.mobile
+    ? [
+        "1. `screenshots/viewport/mobile-home.jpg`",
+        "2. `screenshots/viewport/mobile-work-with-me.jpg`",
+        "3. `screenshots/viewport/mobile-about.jpg`",
+        "4. `MOBILE-REVIEW.md`",
+        "5. `reports/mobile-review-index.json`",
+      ]
+    : [
+        "1. `screenshots/desktop-home.jpg`",
+        "2. `screenshots/desktop-work-with-me.jpg`",
+        "3. `screenshots/desktop-about.jpg`",
+      ];
 
   const reviewLines = [
     "# ArcadeGhosts Site Review Packet",
@@ -950,6 +1249,19 @@ async function writeReview(input: {
     "- SEO/OpenGraph basics",
     "- performance/accessibility risks",
     "",
+    ...(input.options.mobile
+      ? [
+          "## Mobile First Pass",
+          "- Start with `mobile-home`.",
+          "- Review the first viewport before any full-page scrolling.",
+          "- Check header/nav wrapping.",
+          "- Check hero headline size.",
+          "- Check CTA/button tap targets.",
+          "- Check horizontal overflow.",
+          "- Check whether the top section communicates clearly within 10 seconds.",
+          "",
+        ]
+      : []),
     "## Packet Layout",
     "- `source/` holds core Next.js app files, route folders, config, and editor context files.",
     "- `docs/` holds project guidance, priorities, architecture notes, and analytics docs.",
@@ -980,6 +1292,17 @@ async function writeReview(input: {
     "Using the latest review packet and ChatGPT feedback, implement the top priority fixes. Keep changes small and reviewable. Update TODO docs where appropriate. Run tests. Then run `npm run site:review-packet -- --summary-file <your-summary-file> --mobile` and report the new packet path.",
     "```",
     "",
+    "## Recommended Commands",
+    "```bash",
+    "npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --mobile --skip-tests",
+    "npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --mobile --viewport-only --skip-tests",
+    "npm run site:review-packet -- --mobile",
+    "npm run site:review-packet -- --mobile --summary-file reports/latest-codex-summary.md",
+    "```",
+    "- Use `--skip-tests` for quick visual packets from production.",
+    "- Do not use `--skip-tests` after code changes unless intentionally doing a screenshot-only packet.",
+    "- Run tests before asking ChatGPT to review implementation correctness.",
+    "",
     "## Known Review Themes",
     "- Mobile currently needs serious attention.",
     "- Prioritize readability, spacing, tap targets, section order, and reducing visual clutter.",
@@ -993,6 +1316,9 @@ async function writeReview(input: {
     "## Codex/User Note",
     input.options.note ?? "No additional note was provided.",
     "",
+    "## Packet Focus",
+    `Packet focus: \`${input.options.focus}\``,
+    "",
     "## Checks",
     `Overall status: ${input.context.checkStatus}`,
     ...(input.context.checkSummaries.length > 0
@@ -1005,6 +1331,29 @@ async function writeReview(input: {
     ...(input.screenshotResult.generated.length > 0
       ? input.screenshotResult.generated.map((entry) => `- ${entry}`)
       : [`- ${input.screenshotResult.skippedReason ?? "Screenshots were not generated."}`]),
+    "",
+    "## Review These First",
+    ...reviewTheseFirst,
+    "",
+    ...(screenshotProblems.length > 0
+      ? ["Warning: Some screenshots were invalid and should not be used for visual review.", ""]
+      : []),
+    "## Screenshot Summary",
+    screenshotTable,
+    "",
+    "See `reports/screenshot-summary.json` for the full JSON report.",
+    "",
+    "## Screenshot Problems",
+    ...(screenshotProblems.length > 0
+      ? screenshotProblems.map((entry) =>
+          `- ${entry.variant} ${entry.mode} ${entry.route}: ${entry.error ?? entry.status} (${entry.filePath})`,
+        )
+      : ["- None"]),
+    "",
+    "## Route Status",
+    ...routeStatusLines,
+    "",
+    "See `reports/route-status.json` for the full JSON report.",
     "",
     "## Missing Files",
     ...(input.context.missingOptionalPaths.length > 0
@@ -1022,6 +1371,210 @@ async function writeReview(input: {
   }
 
   await fs.writeFile(path.join(input.packetDir, "REVIEW.md"), `${reviewLines.join("\n")}\n`, "utf8");
+}
+
+function buildScreenshotMarkdownTable(entries: ScreenshotSummaryEntry[]) {
+  if (entries.length === 0) {
+    return "No screenshots were captured.";
+  }
+
+  const lines = [
+    "| Mode | Variant | Route | Status | Size | File |",
+    "| --- | --- | --- | --- | ---: | --- |",
+  ];
+
+  for (const entry of entries) {
+    lines.push(
+      `| ${entry.mode} | ${entry.variant} | \`${entry.route}\` | ${entry.status} | ${formatBytes(
+        entry.sizeBytes,
+      )} | \`${entry.filePath}\` |`,
+    );
+  }
+
+  return lines.join("\n");
+}
+
+function formatBytes(value: number) {
+  if (value >= 1024 * 1024) {
+    return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+  }
+
+  if (value >= 1024) {
+    return `${Math.round(value / 1024)} KB`;
+  }
+
+  return `${value} B`;
+}
+
+function buildMobileReviewIndex(screenshotResult: ScreenshotResult, options: PacketOptions): MobileReviewIndexEntry[] {
+  const routes = options.routes && options.routes.length > 0 ? options.routes : defaultRoutes;
+
+  return routes.map((route) => {
+    const viewportEntry = screenshotResult.summary.find(
+      (entry) => entry.route === route && entry.mode === "mobile" && entry.variant === "viewport",
+    );
+    const fullPageEntry = screenshotResult.summary.find(
+      (entry) => entry.route === route && entry.mode === "mobile" && entry.variant === "full-page",
+    );
+    const routeStatus = screenshotResult.routeStatuses.find(
+      (entry) => entry.route === route && entry.mode === "mobile",
+    );
+
+    return {
+      route,
+      viewportScreenshotPath: viewportEntry?.filePath,
+      fullPageScreenshotPath: fullPageEntry?.filePath,
+      viewportStatus: viewportEntry?.status ?? "missing",
+      fullPageStatus: fullPageEntry?.status ?? "missing",
+      viewportSizeBytes: viewportEntry?.sizeBytes ?? 0,
+      fullPageSizeBytes: fullPageEntry?.sizeBytes ?? 0,
+      httpStatus: routeStatus?.httpStatus,
+      recommendedPriority: getMobilePriority(route),
+    };
+  });
+}
+
+function getMobilePriority(route: string): "critical" | "high" | "medium" | "low" {
+  if (route === "/") {
+    return "critical";
+  }
+
+  if (route === "/work-with-me" || route === "/about") {
+    return "high";
+  }
+
+  if (
+    route === "/music" ||
+    route === "/writings" ||
+    route === "/arcade" ||
+    route === "/cats/beverly-and-lucinda"
+  ) {
+    return "medium";
+  }
+
+  return "low";
+}
+
+async function writeMobileReview(packetDir: string, screenshotResult: ScreenshotResult, options: PacketOptions) {
+  const mobileIndex = buildMobileReviewIndex(screenshotResult, options);
+  const focusLabel =
+    options.focus === "all"
+      ? "General mobile review across the key public pages."
+      : `Current focus: \`${options.focus}\`. Bias review and fix recommendations toward that area first.`;
+  const priorityOrder = prioritizeMobileRoutes(mobileIndex, options.focus);
+
+  const prioritizedScreenshotLines = priorityOrder.flatMap((entry) => {
+    const lines: string[] = [`- \`${entry.route}\` (${entry.recommendedPriority})`];
+    lines.push(`  viewport: ${formatScreenshotRef(entry.viewportScreenshotPath, entry.viewportStatus)}`);
+    lines.push(`  full-page: ${formatScreenshotRef(entry.fullPageScreenshotPath, entry.fullPageStatus)}`);
+    return lines;
+  });
+
+  const sourceHints = [
+    "source/app/page.tsx",
+    "source/app/home",
+    "source/app/globals.css",
+    "source/app/work-with-me",
+    "source/app/about",
+    "source/app/music",
+    "source/app/writings",
+    "source/app/layout.tsx",
+  ];
+  const presentHints = await filterExistingPacketPaths(packetDir, sourceHints);
+
+  const lines = [
+    "# Mobile Review",
+    "",
+    "## Start Here",
+    "Open `screenshots/viewport/mobile-home.jpg` first. Review the first viewport before scrolling, then compare it to `mobile-work-with-me`, `mobile-about`, `mobile-music`, and `mobile-writings`.",
+    focusLabel,
+    "",
+    "## Priority Screenshots",
+    ...prioritizedScreenshotLines,
+    "",
+    "## First-Viewport Checklist",
+    "- Is the header/nav wrapping awkwardly?",
+    "- Is the hero headline readable without feeling oversized?",
+    "- Are the primary CTA/button tap targets comfortably tappable?",
+    "- Is there any horizontal overflow?",
+    "- Does the top section communicate clearly within 10 seconds?",
+    "",
+    "## Full-Page Scrolling Checklist",
+    "- Does spacing stay consistent as you scroll?",
+    "- Do section transitions feel intentional rather than crowded?",
+    "- Are long blocks of copy still readable on mobile?",
+    "- Do cards, tiles, and media keep a sensible width and rhythm?",
+    "- Does the page remain navigable without fatigue?",
+    "",
+    "## Mobile Bug Log Template",
+    "1. Route:",
+    "2. Screenshot:",
+    "3. Problem:",
+    "4. Why it matters:",
+    "5. Likely source:",
+    "6. Smallest safe fix:",
+    "",
+    "## Codex Prompt Template",
+    "```text",
+    "Using the latest mobile review packet, fix the highest-priority mobile issues first. Start with mobile-home and mobile-work-with-me. Keep changes small and reviewable. Re-run tests unless this is intentionally a screenshot-only pass. Then generate a new packet with `npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --mobile --viewport-only --skip-tests --include-script --focus mobile-home` and report the new packet path.",
+    "```",
+    "",
+    "## Likely Source Hints",
+    ...(presentHints.length > 0 ? presentHints.map((entry) => `- \`${entry}\``) : ["- No matching source hints were found in this packet."]),
+  ];
+
+  await fs.writeFile(path.join(packetDir, "MOBILE-REVIEW.md"), `${lines.join("\n")}\n`, "utf8");
+}
+
+function prioritizeMobileRoutes(entries: MobileReviewIndexEntry[], focus: string) {
+  const rank = (entry: MobileReviewIndexEntry) => {
+    if (focus !== "all" && normalizeFocusLabel(entry.route).includes(normalizeFocusLabel(focus))) {
+      return -10;
+    }
+
+    if (entry.route === "/") {
+      return 0;
+    }
+    if (entry.route === "/work-with-me") {
+      return 1;
+    }
+    if (entry.route === "/about") {
+      return 2;
+    }
+    if (entry.route === "/music") {
+      return 3;
+    }
+    if (entry.route === "/writings") {
+      return 4;
+    }
+    return 10;
+  };
+
+  return [...entries].sort((left, right) => rank(left) - rank(right)).slice(0, 7);
+}
+
+function normalizeFocusLabel(value: string) {
+  return value.replace(/^\//, "").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+}
+
+function formatScreenshotRef(pathValue: string | undefined, status: string) {
+  if (!pathValue) {
+    return `missing (${status})`;
+  }
+  if (status !== "generated") {
+    return `${pathValue} (${status})`;
+  }
+  return pathValue;
+}
+
+async function filterExistingPacketPaths(packetDir: string, candidates: string[]) {
+  const existing: string[] = [];
+  for (const candidate of candidates) {
+    if (await pathExists(path.join(packetDir, candidate))) {
+      existing.push(candidate);
+    }
+  }
+  return existing;
 }
 
 async function refreshLatestCopy(packetDir: string, latestDir: string) {

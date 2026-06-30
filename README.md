@@ -224,9 +224,12 @@ Run lint, then build, then start:
 Create a site review packet for ChatGPT/Codex review:
 
 ```bash
+npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --mobile --viewport-only --skip-tests --include-script --focus mobile-home
 npm run site:review-packet
 npm run site:review-packet -- --mobile
 npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --mobile
+npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --mobile --viewport-only --skip-tests
+npm run site:review-packet -- --include-script
 npm run site:review-packet -- --include-persona-screenshots
 npm run site:review-packet -- --include docs/TODO.md,docs/CONTENT-TODO.md --note "Focus on mobile homepage"
 npm run site:review-packet -- --summary-file reports/latest-codex-summary.md --mobile
@@ -234,6 +237,15 @@ npm run site:review-packet -- --summary-file reports/latest-codex-summary.md --m
 
 The packet is written under `review-packets/` with a dated folder, a `latest-site-review/` convenience copy, and a zip archive when the `zip` command is available.
 Screenshots are saved as compressed JPEGs. If local port binding is unavailable, pass `--screenshot-base-url <url>` or set `SITE_REVIEW_BASE_URL`.
+Use `--viewport-only` to add first-viewport screenshots under `screenshots/viewport/` in addition to the full-page captures.
+Use `--include-script` to copy `scripts/create-review-packet.ts` into the packet for packet-generator review.
+Recommended mobile review command:
+
+```bash
+npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --mobile --viewport-only --skip-tests --include-script --focus mobile-home
+```
+
+Use `--skip-tests` for production screenshot packets. Do not skip tests after implementation changes unless the packet is intentionally visual-only.
 Persona test screenshots are excluded from the packet by default; use `--include-persona-screenshots` only when you explicitly want the bulky per-persona image archive.
 
 ```bash
