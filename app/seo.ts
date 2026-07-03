@@ -5,7 +5,7 @@ export const siteConfig = {
     "Jason Pollard's personal site for projects, writing, music, cats, arcade nostalgia, and strange little experiments.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://arcadeghosts.org",
   author: "Jason Pollard",
-  github: "https://github.com/jpollard-github/personal",
+  github: "https://github.com/jpollard-github/arcadeghosts-site",
   ogImage: "/opengraph-image",
 };
 

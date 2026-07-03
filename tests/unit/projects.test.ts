@@ -10,7 +10,10 @@ import {
 
 test("normalizeProjectHref accepts safe paths and https urls", () => {
   assert.equal(normalizeProjectHref("/games/example"), "/games/example");
-  assert.equal(normalizeProjectHref("https://github.com/jpollard-github/personal"), "https://github.com/jpollard-github/personal");
+  assert.equal(
+    normalizeProjectHref("https://github.com/jpollard-github/arcadeghosts-site"),
+    "https://github.com/jpollard-github/arcadeghosts-site",
+  );
 });
 
 test("normalizeProjectHref rejects unsupported schemes", () => {

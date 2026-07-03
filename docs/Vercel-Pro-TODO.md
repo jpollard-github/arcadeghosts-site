@@ -6,7 +6,7 @@ This document expands the three `Pro ROI Vercel` items into a concrete implement
 
 Practical operating checklist:
 
-- [VERCEL-PRO-OPERATIONS-TODO.md](/Users/jasonp/repos/personal/docs/VERCEL-PRO-OPERATIONS-TODO.md)
+- [VERCEL-PRO-OPERATIONS-TODO.md](./VERCEL-PRO-OPERATIONS-TODO.md)
 
 ## 1. Watch The Right Vercel Metrics
 
@@ -16,7 +16,7 @@ Goal:
 
 Primary execution doc:
 
-- [VERCEL-PRO-OPERATIONS-TODO.md](/Users/jasonp/repos/personal/docs/VERCEL-PRO-OPERATIONS-TODO.md)
+- [VERCEL-PRO-OPERATIONS-TODO.md](./VERCEL-PRO-OPERATIONS-TODO.md)
 
 ### Highest Priority
 
@@ -79,7 +79,7 @@ Goal:
 
 Primary execution doc:
 
-- [VERCEL-PRO-OPERATIONS-TODO.md](/Users/jasonp/repos/personal/docs/VERCEL-PRO-OPERATIONS-TODO.md)
+- [VERCEL-PRO-OPERATIONS-TODO.md](./VERCEL-PRO-OPERATIONS-TODO.md)
 
 ### Worth Using Soon
 

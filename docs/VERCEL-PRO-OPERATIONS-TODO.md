@@ -10,10 +10,10 @@ This document is for review rhythm, guardrails, and small automation planning. I
 
 Related docs:
 
-- Broader Vercel backlog: [Vercel-Pro-TODO.md](/Users/jasonp/repos/personal/docs/Vercel-Pro-TODO.md)
-- First AI implementation plan: [AI-TODO-FIRST.md](/Users/jasonp/repos/personal/docs/AI-TODO-FIRST.md)
-- Broader AI backlog: [AI-TODO.md](/Users/jasonp/repos/personal/docs/AI-TODO.md)
-- Website backlog informed by persona testing: [PERSONA-TESTS-RESULTS-TODO.backup.md](/Users/jasonp/repos/personal/docs/PERSONA-TESTS-RESULTS-TODO.backup.md)
+- Broader Vercel backlog: [Vercel-Pro-TODO.md](./Vercel-Pro-TODO.md)
+- First AI implementation plan: [AI-TODO-FIRST.md](./AI-TODO-FIRST.md)
+- Broader AI backlog: [AI-TODO.md](./AI-TODO.md)
+- Website backlog informed by persona testing: [PERSONA-TESTS-RESULTS-TODO.backup.md](./PERSONA-TESTS-RESULTS-TODO.backup.md)
 
 ## Current Manual Setup Priorities
 
@@ -70,7 +70,7 @@ Weekly checklist:
 
 TODOs:
 
-- [ ] Create a recurring weekly Vercel review note from [docs/analytics/vercel-review-template.md](/Users/jasonp/repos/personal/docs/analytics/vercel-review-template.md).
+- [ ] Create a recurring weekly Vercel review note from [docs/analytics/vercel-review-template.md](./analytics/vercel-review-template.md).
 - [ ] Keep review notes lightweight and decision-oriented, not dashboard screenshots.
 
 ## Priority 2: Custom Events Worth Tracking
@@ -151,7 +151,7 @@ Event checklist:
 
 TODOs:
 
-- [ ] Use [docs/analytics/custom-events.md](/Users/jasonp/repos/personal/docs/analytics/custom-events.md) as the canonical event reference before adding or changing analytics code.
+- [ ] Use [docs/analytics/custom-events.md](./analytics/custom-events.md) as the canonical event reference before adding or changing analytics code.
 - [ ] Keep payloads small.
 - [ ] Avoid personal or private data.
 - [ ] Avoid high-cardinality values unless needed.
@@ -228,8 +228,8 @@ Before AI launch:
 
 Cross-links:
 
-- First-pass AI plan: [AI-TODO-FIRST.md](/Users/jasonp/repos/personal/docs/AI-TODO-FIRST.md)
-- Broader AI backlog: [AI-TODO.md](/Users/jasonp/repos/personal/docs/AI-TODO.md)
+- First-pass AI plan: [AI-TODO-FIRST.md](./AI-TODO-FIRST.md)
+- Broader AI backlog: [AI-TODO.md](./AI-TODO.md)
 
 ## Priority 7: What Not To Build Yet
 

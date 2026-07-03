@@ -111,7 +111,7 @@ export const defaultContextRefreshProfile: ContextRefreshProfile = {
   preferredName: "Jason",
   region: "North Carolina Triad region",
   siteName: "ArcadeGhosts",
-  githubRepo: "https://github.com/jpollard-github/personal",
+  githubRepo: "https://github.com/jpollard-github/arcadeghosts-site",
   identitySummary:
     "Software developer, ArcadeGhosts creator, writer, and curious generalist who likes building useful weird things.",
   memoryCore: [
