@@ -33,6 +33,13 @@
   "exclude": [
     "node_modules",
     "review-packets",
-    "chatgpt-zip-packets"
+    "repo-reviews",
+    "chatgpt-zip-packets",
+    "playwright-report",
+    "test-results",
+    "persona-results",
+    "reports",
+    "dist",
+    "out"
   ]
 }

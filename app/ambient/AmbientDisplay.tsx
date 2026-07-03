@@ -7,7 +7,7 @@ import styles from "./ambient.module.css";
 
 type AmbientSignal = {
   id: string;
-  kind: "now" | "thought" | "cat";
+  kind: "now" | "thought" | "cat" | "project" | "writing";
   sourceLabel: string;
   title: string;
   body: string;
@@ -45,6 +45,10 @@ export function AmbientDisplay({ signals }: { signals: AmbientSignal[] }) {
   }, [signals.length]);
 
   const current = signals[index];
+  const isThought = current.kind === "thought";
+  const isCat = current.kind === "cat";
+  const isLibraryCard = current.kind === "project" || current.kind === "writing";
+  const isTextSignal = !current.imageSrc;
 
   function showPrevious() {
     setIndex((currentIndex) => (currentIndex - 1 + signals.length) % signals.length);
@@ -70,42 +74,57 @@ export function AmbientDisplay({ signals }: { signals: AmbientSignal[] }) {
         </header>
 
         <article
-          className={`${styles.stage} ${current.kind === "cat" ? styles.stageCat : styles.stageText}`}
+          className={`${styles.stage} ${isCat ? styles.stageCat : styles.stageText} ${isThought ? styles.stageThought : ""} ${
+            isLibraryCard ? styles.stageLibrary : ""
+          }`}
           key={current.id}
         >
           <div className={styles.signalCopy}>
-            <p className={styles.signalLabel}>{current.sourceLabel}</p>
-            <h2 className={styles.signalTitle}>{current.title}</h2>
-            <p className={styles.signalBody}>{current.body}</p>
-            <div className={styles.signalFooter}>
-              <p className={styles.signalMeta}>{current.meta}</p>
-              <Link className={styles.signalLink} href={current.href}>
-                {current.actionLabel}
-              </Link>
+            <div className={styles.signalCopyInner}>
+              <p className={styles.signalLabel}>{current.sourceLabel}</p>
+              <h2 className={styles.signalTitle}>{current.title}</h2>
+              <p
+                className={`${styles.signalBody} ${isThought ? styles.signalBodyThought : ""} ${
+                  isLibraryCard ? styles.signalBodyLibrary : ""
+                }`}
+              >
+                {current.body}
+              </p>
+              <div className={styles.signalFooter}>
+                <p className={styles.signalMeta}>{current.meta}</p>
+                <Link className={styles.signalLink} href={current.href}>
+                  {current.actionLabel}
+                </Link>
+              </div>
             </div>
           </div>
 
           <aside className={styles.signalAside}>
-            {current.imageSrc ? (
-              <div className={styles.imageFrame}>
-                <Image
-                  src={current.imageSrc}
-                  alt={current.imageAlt ?? ""}
-                  fill
-                  unoptimized
-                  sizes="(max-width: 900px) 100vw, 42vw"
-                  className={styles.image}
-                  priority
-                />
-              </div>
-            ) : (
-              <div className={styles.orbField} aria-hidden="true">
-                <span className={styles.orb} />
-                <span className={styles.orbEcho} />
-                <span className={styles.orbLine} />
-              </div>
-            )}
-            <p className={styles.asideText}>{current.aside}</p>
+            <div className={`${styles.signalAsideVisual} ${isTextSignal ? styles.signalAsideVisualText : ""}`}>
+              {current.imageSrc ? (
+                <div className={styles.imageFrame}>
+                  <Image
+                    src={current.imageSrc}
+                    alt={current.imageAlt ?? ""}
+                    fill
+                    unoptimized
+                    sizes="(max-width: 900px) 100vw, 42vw"
+                    className={styles.image}
+                    priority
+                  />
+                </div>
+              ) : (
+                <div className={styles.orbField} aria-hidden="true">
+                  <span className={styles.orb} />
+                  <span className={styles.orbEcho} />
+                  <span className={styles.orbLine} />
+                </div>
+              )}
+            </div>
+            <div className={styles.asideCard}>
+              <p className={styles.asideEyebrow}>{isCat ? "Room note" : "Signal note"}</p>
+              <p className={styles.asideText}>{current.aside}</p>
+            </div>
           </aside>
         </article>
 

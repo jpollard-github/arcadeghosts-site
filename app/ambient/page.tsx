@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { AmbientDisplay } from "./AmbientDisplay";
 import { getPublicNowItems } from "../lib/now";
-import { getPublicTinyThoughts, type TinyThought } from "../lib/tiny-thoughts";
+import { getPublicTinyThoughts, type TinyThought, type TinyThoughtCategory } from "../lib/tiny-thoughts";
+import { getPublicProjects, type SiteProject } from "../lib/projects";
 import { beverlyAndLucindaPhotos, thomasJonesMissyCassPhotos } from "../site-data";
 import { absoluteUrl } from "../seo";
+import { writings, type WritingEntry } from "../writings";
 
 export const dynamic = "force-dynamic";
 
@@ -37,9 +39,51 @@ function formatThoughtMeta(thought: TinyThought) {
   return `${thought.category.replace(/-/g, " ")} • ${date}`;
 }
 
+function formatThoughtTitle(category: TinyThoughtCategory) {
+  const titles: Record<TinyThoughtCategory, string> = {
+    lesson: "Lesson Note",
+    observation: "Observation",
+    funny: "Passing Joke",
+    opinion: "Opinion Drift",
+    arcade: "Arcade Glint",
+    music: "Music Drift",
+    cat: "Cat Note",
+    "twin-peaks": "Black Lodge Weather",
+    other: "Tiny Thought",
+  };
+
+  return titles[category];
+}
+
+function trimAmbientText(value: string, maxLength: number) {
+  const normalized = value.replace(/\s+/g, " ").trim();
+
+  if (normalized.length <= maxLength) {
+    return normalized;
+  }
+
+  return `${normalized.slice(0, maxLength - 3).trimEnd()}...`;
+}
+
+function formatProjectMeta(project: SiteProject) {
+  const parts = [project.type];
+
+  if (project.status && project.status !== "active") {
+    parts.push(project.status);
+  }
+
+  return parts.join(" • ");
+}
+
+function formatWritingMeta(writing: WritingEntry) {
+  return `${writing.icon} Writing`;
+}
+
 function buildAmbientSignals(input: {
   nowItems: Awaited<ReturnType<typeof getPublicNowItems>>;
   thoughts: TinyThought[];
+  projects: Awaited<ReturnType<typeof getPublicProjects>>;
+  writings: WritingEntry[];
 }) {
   const nowSignals = input.nowItems.slice(0, 3).map((item) => ({
     id: `now-${item.id}`,
@@ -58,15 +102,14 @@ function buildAmbientSignals(input: {
     id: `thought-${thought.id}`,
     kind: "thought" as const,
     sourceLabel: "Tiny Thought",
-    title: thought.content.length > 72 ? `${thought.content.slice(0, 69).trimEnd()}...` : thought.content,
-    body: thought.inspiredBy
-      ? `Inspired by ${thought.inspiredBy}.`
-      : "A short signal from the counter: small enough to stay light, alive enough to keep.",
+    title: formatThoughtTitle(thought.category),
+    body: trimAmbientText(thought.content, 185),
     meta: formatThoughtMeta(thought),
     href: absoluteUrl("/tiny-thoughts"),
     actionLabel: "Browse tiny thoughts",
-    aside:
-      "Tiny Thoughts are the quickest pulse in the whole site: observations, feelings, little jokes, and scraps of weather that did not need to become essays.",
+    aside: thought.inspiredBy
+      ? `Inspired by ${thought.inspiredBy}. Tiny Thoughts are the quickest pulse in the site: small scraps of weather, feeling, humor, and overheard life that never needed to become essays.`
+      : "Tiny Thoughts are the quickest pulse in the site: observations, feelings, little jokes, and scraps of weather that did not need to become essays.",
   }));
 
   const catSignals = [
@@ -102,8 +145,44 @@ function buildAmbientSignals(input: {
     },
   ];
 
-  const groups = [catSignals, nowSignals, thoughtSignals];
-  const combined: Array<(typeof catSignals)[number] | (typeof nowSignals)[number] | (typeof thoughtSignals)[number]> = [];
+  const projectSignals = input.projects.slice(0, 2).map((project) => ({
+    id: `project-${project.id}`,
+    kind: "project" as const,
+    sourceLabel: "Project",
+    title: project.title,
+    body: trimAmbientText(project.description, 150),
+    meta: formatProjectMeta(project),
+    href: project.href ? absoluteUrl(project.href) : absoluteUrl("/#projects"),
+    actionLabel: project.href?.startsWith("/") ? "Open project" : "Visit project",
+    aside:
+      project.nextAction && project.nextAction.toLowerCase() !== "none"
+        ? `Next move: ${trimAmbientText(project.nextAction, 110)}`
+        : "Projects give Ambient a longer heartbeat: active experiments, half-built worlds, and useful work still in motion.",
+  }));
+
+  const writingSignals = input.writings.slice(0, 2).map((writing) => ({
+    id: `writing-${writing.slug}`,
+    kind: "writing" as const,
+    sourceLabel: "Writing",
+    title: writing.title,
+    body: trimAmbientText(writing.description, 145),
+    meta: formatWritingMeta(writing),
+    href: absoluteUrl(`/writings/${writing.slug}`),
+    actionLabel: "Read piece",
+    aside:
+      writing.related[0]?.reason
+        ? trimAmbientText(writing.related[0].reason, 135)
+        : "Writings slow the room down on purpose: memory, grief, attention, comedy, and trying again tomorrow.",
+  }));
+
+  const groups = [catSignals, nowSignals, thoughtSignals, projectSignals, writingSignals];
+  const combined: Array<
+    | (typeof catSignals)[number]
+    | (typeof nowSignals)[number]
+    | (typeof thoughtSignals)[number]
+    | (typeof projectSignals)[number]
+    | (typeof writingSignals)[number]
+  > = [];
   const maxLength = Math.max(...groups.map((group) => group.length));
 
   for (let index = 0; index < maxLength; index += 1) {
@@ -125,7 +204,12 @@ function selectAmbientSignals(
 ) {
   const requestedType = query.type?.trim().toLowerCase();
   const typeFiltered =
-    requestedType === "now" || requestedType === "thought" || requestedType === "tiny-thought" || requestedType === "cat"
+    requestedType === "now" ||
+    requestedType === "thought" ||
+    requestedType === "tiny-thought" ||
+    requestedType === "cat" ||
+    requestedType === "project" ||
+    requestedType === "writing"
       ? signals.filter((signal) =>
           requestedType === "tiny-thought" ? signal.kind === "thought" : signal.kind === requestedType,
         )
@@ -151,9 +235,10 @@ export default async function AmbientPage({
 }: {
   searchParams?: Promise<AmbientQuery>;
 }) {
-  const [nowItems, thoughts] = await Promise.all([
+  const [nowItems, thoughts, projects] = await Promise.all([
     getPublicNowItems(),
     getPublicTinyThoughts(4).catch(() => []),
+    getPublicProjects().catch(() => []),
   ]);
   const query = (await searchParams) ?? {};
 
@@ -161,6 +246,8 @@ export default async function AmbientPage({
     buildAmbientSignals({
       nowItems,
       thoughts,
+      projects,
+      writings,
     }),
     query,
   );

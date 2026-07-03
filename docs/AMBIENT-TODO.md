@@ -111,6 +111,8 @@ Ship the first usable Ambient experience as a single full-screen page that alrea
 - The first pass uses a small real signal set only: public Now items, recent Tiny Thoughts, and cat-room photography.
 - Rotation stays intentionally simple for now: one display stage, automatic cycling, and manual previous/next controls.
 - The route hides the normal fixed site chrome while Ambient is active so the screen feels more like an installation.
+- The first device-focused follow-up pass now treats landscape tablet review as a first-class proofing target inside the existing review-packet workflow.
+- Stable Ambient review states now include the default route plus forced `now`, `tiny-thought`, and `cat` captures for visual comparison.
 
 ### Content Sources Used In Phase 1
 
@@ -123,6 +125,7 @@ Ship the first usable Ambient experience as a single full-screen page that alrea
 - Tiny Thoughts currently use a compact display treatment and do not yet surface linked attachments or image attachments inside Ambient.
 - Cat signals are intentionally curated from the existing photo rooms rather than randomized deeply.
 - Mobile-phone-specific tuning is not the target yet; the first pass is meant for desktop and tablet comfort first.
+- Ambient may deserve one more small tablet visual pass before broadening the source library if desk-distance readability still feels uneven on the real Samsung device.
 
 ### Known Constraints
 
@@ -147,10 +150,10 @@ Expand Ambient from a proof of concept into a real content-fed experience powere
 
 ### Checklist
 
-- [ ] `[P0]` Pull in Now items as a dependable text-first source.
-- [ ] `[P0]` Pull in Tiny Thoughts as short ambient text moments.
-- [ ] `[P0]` Pull in cat photography as a warm visual source.
-- [ ] `[P1]` Pull in projects and writings as slower, more reflective cards.
+- [x] `[P0]` Pull in Now items as a dependable text-first source.
+- [x] `[P0]` Pull in Tiny Thoughts as short ambient text moments.
+- [x] `[P0]` Pull in cat photography as a warm visual source.
+- [x] `[P1]` Pull in projects and writings as slower, more reflective cards.
 - [ ] `[P1]` Pull in recent approved guestbook signals in a gentle, non-chatty way.
 - [ ] `[P2]` Decide which sources deserve images, text-only modes, or mixed layouts.
 
@@ -168,11 +171,24 @@ Expand Ambient from a proof of concept into a real content-fed experience powere
 - `/api/guestbook`
 - `app/writings.ts`
 - `app/site-content/cats.ts`
+- `app/ambient/page.tsx`
+- `app/ambient/AmbientDisplay.tsx`
+- `app/ambient/ambient.module.css`
+
+### Progress Notes
+
+- Ambient now rotates across five existing site-connected signal families: `Now`, `Tiny Thoughts`, cat photography, projects, and writings.
+- This first Phase 2 pass keeps the visual system intentionally narrow by reusing the existing Ambient text/image stage rather than inventing source-specific layouts.
+- `Tiny Thought` signals now render as fuller desk-distance reading moments instead of turning the thought text into the oversized title.
+- `Project` signals are derived from existing public project metadata and use trimmed descriptions plus `nextAction` when available to keep the cards alive without becoming task-manager UI.
+- `Writing` signals are derived from `app/writings.ts` and intentionally stay short, reflective, and linked back to the site’s writing pages.
+- Stable query-param review states now include `type=project` and `type=writing` alongside the earlier `now`, `tiny-thought`, and `cat` states.
 
 ### Known Constraints
 
 - Keep source logic lightweight.
 - Do not create source-specific mini-products unless a source keeps proving it deserves more.
+- Signal weighting is still simple rotation for now, so the next pass may want to tune cadence before adding many more source families.
 
 ### Exit Criteria
 
@@ -180,7 +196,7 @@ Expand Ambient from a proof of concept into a real content-fed experience powere
 
 Status:
 
-Planned
+In Progress
 
 ## Phase 3 — Music, Weather, And Time Of Day
 
@@ -490,3 +506,52 @@ Decide what Ambient becomes once it is mature enough to deserve a stronger ident
 Status:
 
 Planned
+
+## Later Option — Optional News Window / Current Events Mode
+
+### Goal
+
+Preserve room for an optional, manually invoked news or current-events view without letting it distort Ambient's calming default purpose.
+
+### Checklist
+
+- [ ] `[P2]` Decide whether news belongs as a manual button, gesture, temporary mode, or deliberately configured profile instead of part of the default rotation.
+- [ ] `[P2]` Define a calm news presentation based on headlines, summaries, or digests rather than live-feed behavior.
+- [ ] `[P2]` Decide whether source controls or category preferences such as local, tech, AI, or general news are worth supporting later.
+- [ ] `[P2]` Explore time-boxed modes such as a manually triggered five-minute news window.
+- [ ] `[P2]` Ensure any breaking-news or alerts mode stays rare, dismissible, and clearly outside the normal Ambient mood loop.
+
+### Review Criteria
+
+- News stays optional and later-phase only.
+- Ambient does not become cable news wallpaper.
+- The calming default rotation remains intact.
+- The interaction feels intentional and bounded rather than like a stress-inducing feed.
+
+### Product Guidance
+
+- Do not include autoplay video.
+- Do not include a doomscroll-style feed.
+- Do not make news part of the default calming Ambient rotation.
+- Prefer manual invocation such as `Show recent news`.
+- Keep the mode dismissible and time-boxed.
+- Prioritize calm digests over live streams.
+
+### Possible Future Modes
+
+- `Recent News` button
+- `Breaking News` only for major events
+- local alerts or weather-adjacent alerts
+- tech or AI news profile
+- quiet headline digest
+- manually triggered five-minute news view
+
+### Known Constraints
+
+- This should not enter current Phase 2 implementation work.
+- Do not build live-news plumbing before the core Ambient experience earns it.
+- If this ever ships, it should remain a small optional lane rather than a new product direction.
+
+Status:
+
+Deferred / Later

@@ -264,6 +264,38 @@ Ambient should feel closer to emotional set design than product UI.
 - low-stimulation bedtime mode
 - holiday or event-specific one-off profiles
 
+## Optional News Window / Current Events Mode
+
+Ambient may eventually support an optional way to check recent or breaking news.
+
+This should be treated as a later-phase mode, not a default Ambient behavior.
+
+Important rules:
+
+- do not include autoplay video
+- do not include a doomscroll-style feed
+- do not make news part of the default calming Ambient rotation
+- prefer a manual button, gesture, profile, or temporary mode such as `Show recent news`
+- keep the experience time-boxed and easy to dismiss
+- prioritize headlines, summaries, or calm digests over live feeds
+- consider source controls, categories, and local / tech / AI / general-news preferences
+- avoid turning Ambient into a stress machine
+
+Possible future shapes:
+
+- a `Recent News` button
+- a `Breaking News` mode only for major events
+- local alerts or weather-adjacent alerts
+- a tech or AI news profile
+- a quiet headline digest
+- a manually triggered five-minute news view
+
+Product guidance:
+
+Ambient should not become cable news wallpaper.
+
+If news ever appears, it should do so only when Jason asks for it or when a deliberately configured profile makes room for it.
+
 ## Non-Goals
 
 Ambient is not trying to become:
@@ -301,3 +333,4 @@ Even before implementation, a few things are already clear:
 - Which device deserves the first real hardware test?
 - Should settings stay local-only for a long time?
 - At what point does Ambient earn its own public-facing name?
+- If news ever exists here, what is the calmest possible interaction model that still feels genuinely useful?

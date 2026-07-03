@@ -5,6 +5,7 @@ out
 dist
 .env*
 *.log
+*.tsbuildinfo
 .vercel
 resume/
 playwright-report

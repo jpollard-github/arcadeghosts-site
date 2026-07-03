@@ -75,7 +75,15 @@ type ProgressHandle = {
   stop: (detail?: string) => void;
 };
 
-type ScreenshotMode = "mobile-375" | "mobile" | "mobile-430" | "tablet" | "desktop";
+type ScreenshotMode =
+  | "mobile-375"
+  | "mobile"
+  | "mobile-430"
+  | "tablet"
+  | "tablet-landscape"
+  | "tablet-wide"
+  | "tablet-large"
+  | "desktop";
 type ScreenshotVariant = "full-page" | "viewport";
 type ScreenshotStatus = "generated" | "failed" | "invalid";
 
@@ -122,18 +130,27 @@ type MobileReviewIndexEntry = {
   viewportScreenshot375Path?: string;
   viewportScreenshot430Path?: string;
   tabletViewportScreenshotPath?: string;
+  tabletLandscapeViewportScreenshotPath?: string;
+  tabletWideViewportScreenshotPath?: string;
+  tabletLargeViewportScreenshotPath?: string;
   desktopViewportScreenshotPath?: string;
   viewportStatus: ScreenshotStatus | "missing";
   fullPageStatus: ScreenshotStatus | "missing";
   viewportStatus375: ScreenshotStatus | "missing";
   viewportStatus430: ScreenshotStatus | "missing";
   tabletViewportStatus: ScreenshotStatus | "missing";
+  tabletLandscapeViewportStatus: ScreenshotStatus | "missing";
+  tabletWideViewportStatus: ScreenshotStatus | "missing";
+  tabletLargeViewportStatus: ScreenshotStatus | "missing";
   desktopViewportStatus: ScreenshotStatus | "missing";
   viewportSizeBytes: number;
   fullPageSizeBytes: number;
   viewportSizeBytes375: number;
   viewportSizeBytes430: number;
   tabletViewportSizeBytes: number;
+  tabletLandscapeViewportSizeBytes: number;
+  tabletWideViewportSizeBytes: number;
+  tabletLargeViewportSizeBytes: number;
   desktopViewportSizeBytes: number;
   httpStatus?: number;
   recommendedPriority: "critical" | "high" | "medium" | "low";
@@ -213,7 +230,11 @@ const reportEntries = [
 const defaultCodexReportPath = "reports/codex-report.md";
 
 async function main() {
+  const startedAt = Date.now();
   const options = parseArgs(process.argv.slice(2));
+  logStep(
+    `Starting review packet (focus=${options.focus}, checks=${options.skipTests ? "skipped" : "lint+unit"}, screenshots=${options.skipScreenshots ? "skipped" : "enabled"})`,
+  );
   if (!options.reportFile) {
     const defaultReportSource = path.join(repoRoot, defaultCodexReportPath);
     if (await pathExists(defaultReportSource)) {
@@ -378,6 +399,7 @@ async function main() {
   } else {
     console.log("Zip archive: skipped (the `zip` command was unavailable)");
   }
+  logStep(`Finished in ${formatElapsedTime(Date.now() - startedAt)}`);
 }
 
 function parseArgs(argv: string[]): PacketOptions {
@@ -482,6 +504,21 @@ function formatDate(value: Date) {
 
 function formatTime(value: Date) {
   return `${String(value.getHours()).padStart(2, "0")}${String(value.getMinutes()).padStart(2, "0")}`;
+}
+
+function formatElapsedTime(durationMs: number) {
+  if (durationMs < 1000) {
+    return `${durationMs}ms`;
+  }
+
+  const seconds = durationMs / 1000;
+  if (seconds < 60) {
+    return `${seconds.toFixed(2)}s`;
+  }
+
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds - minutes * 60;
+  return `${minutes}m ${remainingSeconds.toFixed(2)}s`;
 }
 
 async function ensureDir(targetDir: string) {
@@ -736,8 +773,8 @@ async function generateScreenshots(packetDir: string, options: PacketOptions): P
   const invalidScreenshotsDir = path.join(packetDir, "reports", "invalid-screenshots");
 
   const routeOrder: ScreenshotMode[] = options.mobile
-    ? ["mobile", "mobile-375", "mobile-430", "tablet", "desktop"]
-    : ["desktop", "tablet", "mobile", "mobile-375", "mobile-430"];
+    ? ["mobile", "mobile-375", "mobile-430", "tablet", "tablet-landscape", "tablet-wide", "tablet-large", "desktop"]
+    : ["desktop", "tablet-landscape", "tablet-wide", "tablet-large", "tablet", "mobile", "mobile-375", "mobile-430"];
   const routes = options.routes && options.routes.length > 0 ? options.routes : defaultRoutes;
   const generated: string[] = [];
   const summary: ScreenshotSummaryEntry[] = [];
@@ -906,6 +943,33 @@ function getScreenshotContextOptions(
   if (mode === "tablet") {
     return {
       viewport: { width: 820, height: 1180 },
+      isMobile: true,
+      hasTouch: true,
+      deviceScaleFactor: 2,
+    };
+  }
+
+  if (mode === "tablet-landscape") {
+    return {
+      viewport: { width: 1180, height: 820 },
+      isMobile: true,
+      hasTouch: true,
+      deviceScaleFactor: 2,
+    };
+  }
+
+  if (mode === "tablet-wide") {
+    return {
+      viewport: { width: 1280, height: 800 },
+      isMobile: true,
+      hasTouch: true,
+      deviceScaleFactor: 2,
+    };
+  }
+
+  if (mode === "tablet-large") {
+    return {
+      viewport: { width: 1920, height: 1200 },
       isMobile: true,
       hasTouch: true,
       deviceScaleFactor: 2,
@@ -1429,11 +1493,14 @@ async function writeReview(input: {
     squashedFocus.includes("workwithme") ||
     squashedFocus.includes("consulting") ||
     squashedFocus.includes("businesslane");
+  const ambientFocus = squashedFocus.includes("ambient");
   const hasMobileTodo = await pathExists(path.join(input.packetDir, "docs", "MOBILE-TODO.md"));
   const hasMobileReview = await pathExists(path.join(input.packetDir, "MOBILE-REVIEW.md"));
   const hasWorkWithMeTodo = await pathExists(path.join(input.packetDir, "docs", "WORK-WITH-ME-TODO.md"));
-  const mobileBias = input.options.mobile
-    ? "This packet was generated in mobile review mode. Start with `mobile-home`, review the first viewport before full-page scrolling, and tighten the opening mobile experience before broad desktop polish."
+  const mobileBias = ambientFocus
+    ? "This packet was generated in ambient device-review mode. Start with the tablet-landscape captures, then compare the text-only and cat/image states before making wider visual calls."
+    : input.options.mobile
+      ? "This packet was generated in mobile review mode. Start with `mobile-home`, review the first viewport before full-page scrolling, and tighten the opening mobile experience before broad desktop polish."
     : workWithMeFocus
       ? "This packet is focused on the Work With Me business lane. Start with `/work-with-me`, the CTA order, and the canonical Work With Me TODO before broader site review."
       : "Start with the homepage and Work With Me flow, then use the screenshots and copied source/docs to trace any friction back to the implementation and content decisions.";
@@ -1452,7 +1519,15 @@ async function writeReview(input: {
           return `- ${entry.mode} ${entry.route}: ${statusLabel}${entry.error ? `; ${entry.error}` : ""}`;
         })
       : ["- No route errors recorded during screenshot capture."];
-  const reviewTheseFirst = input.options.mobile
+  const reviewTheseFirst = ambientFocus
+    ? [
+        "1. `screenshots/viewport/tablet-landscape-ambient.jpg`",
+        "2. `screenshots/viewport/tablet-wide-ambient.jpg`",
+        "3. `screenshots/viewport/tablet-landscape-ambient-type-now-signal-0.jpg`",
+        "4. `screenshots/viewport/tablet-landscape-ambient-type-tiny-thought-signal-0.jpg`",
+        "5. `screenshots/viewport/tablet-landscape-ambient-type-cat-signal-0.jpg`",
+      ]
+    : input.options.mobile
     ? [
         "1. `screenshots/viewport/mobile-home.jpg` (390px)",
         "2. `screenshots/viewport/mobile-375-home.jpg` and `screenshots/viewport/mobile-430-home.jpg`",
@@ -1473,7 +1548,14 @@ async function writeReview(input: {
         "2. `screenshots/desktop-work-with-me.jpg`",
         "3. `screenshots/desktop-about.jpg`",
       ];
-  const startHereItems = input.options.mobile
+  const startHereItems = ambientFocus
+    ? [
+        "`REVIEW.md`",
+        "`screenshots/viewport/tablet-landscape-ambient.jpg`",
+        "`screenshots/viewport/tablet-landscape-ambient-type-now-signal-0.jpg`",
+        "`source/app/ambient/AmbientDisplay.tsx`",
+      ]
+    : input.options.mobile
     ? [
         ...(hasMobileTodo ? ["`docs/MOBILE-TODO.md`"] : []),
         ...(hasMobileReview ? ["`MOBILE-REVIEW.md`"] : []),
@@ -1498,6 +1580,8 @@ async function writeReview(input: {
     mobileBias,
     workWithMeFocus
       ? "Review the Work With Me path first, then verify whether the page makes the right first business next step obvious without flattening the rest of the site."
+      : ambientFocus
+        ? "Review the Ambient route first, especially the tablet landscape states, then verify whether the page feels calm, balanced, and desk-display-worthy even when the signal is text-heavy."
       : "Review the homepage first, then verify whether the site quickly communicates who Jason is, what kind of people should keep exploring, and where a potential client or collaborator should go next.",
     "",
     "## Current Focus",
@@ -1509,6 +1593,14 @@ async function writeReview(input: {
           "- business-lane implementation TODO clarity",
           "- trust and conversion review limited to Work With Me surfaces",
         ]
+      : ambientFocus
+        ? [
+            "- ambient tablet landscape readability",
+            "- visual balance at desk distance",
+            "- strength of text-only signal states",
+            "- warm / haunted installation mood",
+            "- review-packet screenshot coverage for ambient stable states",
+          ]
       : [
           "- mobile/iPhone readability",
           "- homepage first impression",
@@ -1521,7 +1613,7 @@ async function writeReview(input: {
           "- performance/accessibility risks",
         ]),
     "",
-    ...(input.options.mobile
+    ...(input.options.mobile && !ambientFocus
       ? [
           "## Mobile First Pass",
           "- Start with `mobile-home` (390px), then compare 375px and 430px captures.",
@@ -1530,7 +1622,7 @@ async function writeReview(input: {
           "- Check hero headline size.",
           "- Check CTA/button tap targets.",
           "- Check horizontal overflow.",
-          "- Compare 375px, 390px, 430px, tablet, and desktop widths when the page changed visually.",
+          "- Compare 375px, 390px, 430px, tablet portrait, tablet landscape, tablet wide, tablet large, and desktop widths when the page changed visually.",
           "- Check whether the top section communicates clearly within 10 seconds.",
           "",
         ]
@@ -1553,6 +1645,14 @@ async function writeReview(input: {
           "4. Contact and inquiry surfaces only if they support Work With Me",
           "5. Stop before broad homepage/About/Build Log redesign ideas",
         ]
+      : ambientFocus
+        ? [
+            "1. Ambient tablet landscape viewport captures",
+            "2. Ambient text-only stable states",
+            "3. Ambient cat/image stable state",
+            "4. Ambient route source and styling files",
+            "5. Ambient roadmap docs",
+          ]
       : [
           "1. Home mobile",
           "2. Home desktop",
@@ -1569,6 +1669,8 @@ async function writeReview(input: {
     "```text",
     workWithMeFocus
       ? "Please review this ArcadeGhosts website packet with a narrow focus on the Work With Me business lane. Focus first on CTA hierarchy, inquiry-vs-email-vs-discovery order, clarity of the first business next step, and whether the new Work With Me TODO is a clean canonical implementation target. Keep recommendations incremental. Do not redesign the site or rewrite the personal/creative sections."
+      : ambientFocus
+        ? "Please review this ArcadeGhosts packet with a narrow focus on the Ambient route as a landscape tablet display. Focus first on visual balance, readable desk-distance type, whether text-only states feel as strong as the cat/image state, and whether the route feels calm, warm, and worth leaving on during lunch or coding breaks. Keep recommendations incremental. Do not redesign the site or add new infrastructure."
       : "Please review this ArcadeGhosts personal website packet. Focus first on mobile/iPhone UX, then emotional clarity, navigation, content hierarchy, performance/accessibility risks, and whether the site helps Jason find compatible people, creative collaborators, and potential clients without feeling too cluttered or self-indulgent. Give prioritized fixes, quick wins, and suggested Codex tasks.",
     "```",
     "",
@@ -1576,6 +1678,8 @@ async function writeReview(input: {
     "```text",
     workWithMeFocus
       ? "Using the latest review packet and ChatGPT feedback, implement the top priority Work With Me fixes only. Keep changes small and reviewable. Preserve inquiry as primary, email as secondary, and discovery as post-qualification. Update `docs/WORK-WITH-ME-TODO.md` where appropriate. Run tests. Then run `npm run site:review-packet -- --summary-file <your-summary-file> --focus work-with-me` and report the new packet path."
+      : ambientFocus
+        ? "Using the latest Ambient-focused review packet and ChatGPT feedback, implement the top priority `/ambient` tablet-landscape fixes only. Keep changes small and visual. Do not add new infrastructure or big new content sources. Update `docs/AMBIENT-TODO.md` where appropriate. Run validation. Then run `npm run site:review-packet -- --summary-file <your-summary-file> --focus ambient --mobile --viewport-only --routes /ambient,/ambient?type=now&signal=0,/ambient?type=tiny-thought&signal=0,/ambient?type=cat&signal=0` and report the new packet path."
       : "Using the latest review packet and ChatGPT feedback, implement the top priority fixes. Keep changes small and reviewable. Update TODO docs where appropriate. Run tests. Then run `npm run site:review-packet -- --summary-file <your-summary-file> --mobile` and report the new packet path.",
     "```",
     "",
@@ -1588,6 +1692,12 @@ async function writeReview(input: {
           "npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --focus work-with-me --mobile --viewport-only --skip-tests",
           "npm run site:review-packet -- --focus work-with-me --summary-file reports/latest-codex-summary.md",
         ]
+      : ambientFocus
+        ? [
+            "npm run site:review-packet -- --focus ambient --mobile --viewport-only --routes /ambient,/ambient?type=now&signal=0,/ambient?type=tiny-thought&signal=0,/ambient?type=cat&signal=0",
+            "npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --focus ambient --mobile --viewport-only --skip-tests --routes /ambient,/ambient?type=now&signal=0,/ambient?type=tiny-thought&signal=0,/ambient?type=cat&signal=0",
+            "npm run site:review-packet -- --focus ambient --summary-file reports/latest-codex-summary.md --mobile --viewport-only --routes /ambient,/ambient?type=now&signal=0,/ambient?type=tiny-thought&signal=0,/ambient?type=cat&signal=0",
+          ]
       : [
           "npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --mobile --skip-tests",
           "npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --mobile --viewport-only --skip-tests",
@@ -1598,10 +1708,17 @@ async function writeReview(input: {
     "- Use `--skip-tests` for quick visual packets from production.",
     "- Do not use `--skip-tests` after code changes unless intentionally doing a screenshot-only packet.",
     "- Run tests before asking ChatGPT to review implementation correctness.",
-    `- Screenshot runs include mobile widths ${mobileScreenshotWidths.join("px, ")}px plus tablet and desktop coverage when screenshots succeed.`,
+    `- Screenshot runs include mobile widths ${mobileScreenshotWidths.join("px, ")}px plus tablet portrait, tablet landscape (1180x820), tablet wide (1280x800), tablet large (1920x1200), and desktop coverage when screenshots succeed.`,
     "",
     "## Known Review Themes",
-    ...(workWithMeFocus
+    ...(ambientFocus
+      ? [
+          "- Keep the layout calm, spacious, and desk-readable in tablet landscape first.",
+          "- Make text-only states feel deliberate enough to stand beside the cat/image state.",
+          "- Prefer small spacing, scale, and composition changes over new features.",
+          "- Use the added stable-state screenshots to compare `now`, `tiny-thought`, and `cat` treatments directly.",
+        ]
+      : workWithMeFocus
       ? [
           "- Preserve the current CTA hierarchy: inquiry first, email second, discovery later.",
           "- Do not turn the page into a generic consulting brochure.",
@@ -1741,6 +1858,15 @@ function buildMobileReviewIndex(screenshotResult: ScreenshotResult, options: Pac
     const tabletViewportEntry = screenshotResult.summary.find(
       (entry) => entry.route === route && entry.mode === "tablet" && entry.variant === "viewport",
     );
+    const tabletLandscapeViewportEntry = screenshotResult.summary.find(
+      (entry) => entry.route === route && entry.mode === "tablet-landscape" && entry.variant === "viewport",
+    );
+    const tabletWideViewportEntry = screenshotResult.summary.find(
+      (entry) => entry.route === route && entry.mode === "tablet-wide" && entry.variant === "viewport",
+    );
+    const tabletLargeViewportEntry = screenshotResult.summary.find(
+      (entry) => entry.route === route && entry.mode === "tablet-large" && entry.variant === "viewport",
+    );
     const desktopViewportEntry = screenshotResult.summary.find(
       (entry) => entry.route === route && entry.mode === "desktop" && entry.variant === "viewport",
     );
@@ -1755,18 +1881,27 @@ function buildMobileReviewIndex(screenshotResult: ScreenshotResult, options: Pac
       viewportScreenshot375Path: viewportEntry375?.filePath,
       viewportScreenshot430Path: viewportEntry430?.filePath,
       tabletViewportScreenshotPath: tabletViewportEntry?.filePath,
+      tabletLandscapeViewportScreenshotPath: tabletLandscapeViewportEntry?.filePath,
+      tabletWideViewportScreenshotPath: tabletWideViewportEntry?.filePath,
+      tabletLargeViewportScreenshotPath: tabletLargeViewportEntry?.filePath,
       desktopViewportScreenshotPath: desktopViewportEntry?.filePath,
       viewportStatus: viewportEntry?.status ?? "missing",
       fullPageStatus: fullPageEntry?.status ?? "missing",
       viewportStatus375: viewportEntry375?.status ?? "missing",
       viewportStatus430: viewportEntry430?.status ?? "missing",
       tabletViewportStatus: tabletViewportEntry?.status ?? "missing",
+      tabletLandscapeViewportStatus: tabletLandscapeViewportEntry?.status ?? "missing",
+      tabletWideViewportStatus: tabletWideViewportEntry?.status ?? "missing",
+      tabletLargeViewportStatus: tabletLargeViewportEntry?.status ?? "missing",
       desktopViewportStatus: desktopViewportEntry?.status ?? "missing",
       viewportSizeBytes: viewportEntry?.sizeBytes ?? 0,
       fullPageSizeBytes: fullPageEntry?.sizeBytes ?? 0,
       viewportSizeBytes375: viewportEntry375?.sizeBytes ?? 0,
       viewportSizeBytes430: viewportEntry430?.sizeBytes ?? 0,
       tabletViewportSizeBytes: tabletViewportEntry?.sizeBytes ?? 0,
+      tabletLandscapeViewportSizeBytes: tabletLandscapeViewportEntry?.sizeBytes ?? 0,
+      tabletWideViewportSizeBytes: tabletWideViewportEntry?.sizeBytes ?? 0,
+      tabletLargeViewportSizeBytes: tabletLargeViewportEntry?.sizeBytes ?? 0,
       desktopViewportSizeBytes: desktopViewportEntry?.sizeBytes ?? 0,
       httpStatus: routeStatus?.httpStatus,
       recommendedPriority: getMobilePriority(route),
@@ -1812,6 +1947,24 @@ async function writeMobileReview(packetDir: string, screenshotResult: Screenshot
       `  viewport tablet: ${formatScreenshotRef(entry.tabletViewportScreenshotPath, entry.tabletViewportStatus)}`,
     );
     lines.push(
+      `  viewport tablet landscape: ${formatScreenshotRef(
+        entry.tabletLandscapeViewportScreenshotPath,
+        entry.tabletLandscapeViewportStatus,
+      )}`,
+    );
+    lines.push(
+      `  viewport tablet wide: ${formatScreenshotRef(
+        entry.tabletWideViewportScreenshotPath,
+        entry.tabletWideViewportStatus,
+      )}`,
+    );
+    lines.push(
+      `  viewport tablet large: ${formatScreenshotRef(
+        entry.tabletLargeViewportScreenshotPath,
+        entry.tabletLargeViewportStatus,
+      )}`,
+    );
+    lines.push(
       `  viewport desktop: ${formatScreenshotRef(entry.desktopViewportScreenshotPath, entry.desktopViewportStatus)}`,
     );
     lines.push(`  full-page: ${formatScreenshotRef(entry.fullPageScreenshotPath, entry.fullPageStatus)}`);
@@ -1838,7 +1991,7 @@ async function writeMobileReview(packetDir: string, screenshotResult: Screenshot
     ...(hasMobileTodo ? ["1. `docs/MOBILE-TODO.md`", "2. `screenshots/viewport/mobile-home.jpg`"] : ["1. `screenshots/viewport/mobile-home.jpg`"]),
     ...(hasMobileTodo ? ["3. `screenshots/viewport/mobile-work-with-me.jpg`", "4. `MOBILE-REVIEW.md`"] : ["2. `screenshots/viewport/mobile-work-with-me.jpg`", "3. `MOBILE-REVIEW.md`"]),
     "Review the first viewport before scrolling, then compare it to `mobile-work-with-me`, `mobile-about`, `mobile-music`, and `mobile-writings`.",
-    "When a page changed visually, compare the 375px, 390px, 430px, tablet, and desktop captures before calling the pass safe.",
+    "When a page changed visually, compare the 375px, 390px, 430px, tablet portrait, tablet landscape, tablet wide, tablet large, and desktop captures before calling the pass safe.",
     focusLabel,
     "",
     "## Priority Screenshots",

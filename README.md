@@ -191,6 +191,36 @@ Lint:
 npm run lint
 ```
 
+Timed lint:
+
+```bash
+npm run lint:timed
+```
+
+Fastest useful validation during iteration:
+
+```bash
+npm run verify:fast
+```
+
+Default confidence check after a normal code change:
+
+```bash
+npm run verify
+```
+
+Milestone or release confidence:
+
+```bash
+npm run verify:full
+```
+
+Run a focused TypeScript pass:
+
+```bash
+npm run typecheck
+```
+
 Run unit tests:
 
 ```bash
@@ -221,6 +251,14 @@ Build production output:
 npm run build
 ```
 
+Timed wrappers print start time, end time, elapsed time, and exit code while preserving the full command output:
+
+- `npm run lint:timed`
+- `npm run typecheck:timed`
+- `npm run test:unit:timed`
+- `npm run build:timed`
+- `npm run site:review-packet:timed`
+
 Run the production server locally:
 
 ```bash
@@ -247,10 +285,12 @@ npm run site:review-packet -- --focus work-with-me
 ```
 
 The packet is written under `review-packets/` with a dated folder, a `latest-site-review/` convenience copy, and a zip archive when the `zip` command is available.
+`npm run site:review-packet` is primarily a visual review workflow. By default it runs `lint` and `test:unit`, but it does not replace `npm run verify` or `npm run verify:full`.
 Screenshots are saved as compressed JPEGs. If local port binding is unavailable, pass `--screenshot-base-url <url>` or set `SITE_REVIEW_BASE_URL`.
 Use `--viewport-only` to add first-viewport screenshots under `screenshots/viewport/` in addition to the full-page captures.
 Use `--include-script` to copy `scripts/create-review-packet.ts` into the packet for packet-generator review.
 Use `--focus work-with-me` when you want the unified packet to bias `REVIEW.md` toward the consulting funnel and `docs/WORK-WITH-ME-TODO.md` without creating a separate packet generator.
+Use `npm run site:review-packet:timed -- --mobile --viewport-only` when you want wrapper-level timing around packet generation.
 Recommended mobile review command:
 
 ```bash
@@ -285,6 +325,33 @@ Guidance:
 - Use local packets during active development to avoid pushing every tiny visual change.
 - Use `--skip-tests` for quick production screenshot packets.
 - Do not skip tests after implementation changes unless the packet is intentionally visual-only.
+
+Recommended workflow:
+
+- `npm run verify:fast` for rapid local iteration.
+- `npm run verify` before reporting a completed code change to Jason or Codex.
+- `npm run verify:full` for milestone, release, or deployment confidence.
+- `npm run site:review-packet` after visual/UI work when you want screenshots or a review bundle.
+
+Suggested Codex validation reporting format:
+
+```text
+Changed files:
+- ...
+
+Validation:
+- npm run lint:timed: passed in Xs
+- npm run typecheck:timed: passed in Xs
+- npm run test:unit:timed: passed in Xs
+- npm run build:timed: passed in Xs
+
+Visual review:
+- review packet generated in Xs
+- screenshots saved to ...
+
+Notes:
+- ...
+```
 
 ```bash
 npm run go
