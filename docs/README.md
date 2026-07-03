@@ -17,6 +17,7 @@ The current phase of ArcadeGhosts is publishing, outreach, and learning from rea
 Daily work should usually start with `CONTENT-TODO.md`, then check `PERSONA-TESTS-RESULTS-TODO.backup.md`.
 
 `LEAD-GENERATION-TODO.md` is the primary document for business growth, separate from content publishing.
+`WORK-WITH-ME-TODO.md` is the canonical site-implementation TODO for Work With Me and consulting-funnel website changes.
 
 `CONTENT-TODO.md` is for publishing and improving the site.
 `LEAD-GENERATION-TODO.md` is for finding first clients.
@@ -37,9 +38,10 @@ Framework and AI docs are reference or future docs, not today’s default work q
 If the current goal is getting a first client, start with:
 
 1. `docs/LEAD-GENERATION-TODO.md`
-2. `docs/BUSINESS-FUNNEL.md`
-3. `docs/lead-generation-tracker-template.md`
-4. Brand Kit client collateral only as support
+2. `docs/WORK-WITH-ME-TODO.md` for accepted website implementation work
+3. `docs/BUSINESS-FUNNEL.md`
+4. `docs/lead-generation-tracker-template.md`
+5. Brand Kit client collateral only as support
 
 If the current goal is growing the site, start with:
 

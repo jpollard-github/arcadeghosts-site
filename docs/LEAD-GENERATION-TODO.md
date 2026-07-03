@@ -500,6 +500,11 @@ Goal:
 
 Improve first-conversation readiness without redesigning the site.
 
+Implementation home:
+
+- Accepted Work With Me website changes now belong in `docs/WORK-WITH-ME-TODO.md`.
+- Keep this document focused on outreach operations, experiments, and supporting website ideas rather than the canonical site implementation checklist.
+
 Current read:
 
 - Work With Me is easy to find from the homepage nav and Start Here paths.

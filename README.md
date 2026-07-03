@@ -243,12 +243,14 @@ npm run site:review-packet -- --include-script
 npm run site:review-packet -- --include-persona-screenshots
 npm run site:review-packet -- --include docs/TODO.md,docs/CONTENT-TODO.md --note "Focus on mobile homepage"
 npm run site:review-packet -- --summary-file reports/latest-codex-summary.md --mobile
+npm run site:review-packet -- --focus work-with-me
 ```
 
 The packet is written under `review-packets/` with a dated folder, a `latest-site-review/` convenience copy, and a zip archive when the `zip` command is available.
 Screenshots are saved as compressed JPEGs. If local port binding is unavailable, pass `--screenshot-base-url <url>` or set `SITE_REVIEW_BASE_URL`.
 Use `--viewport-only` to add first-viewport screenshots under `screenshots/viewport/` in addition to the full-page captures.
 Use `--include-script` to copy `scripts/create-review-packet.ts` into the packet for packet-generator review.
+Use `--focus work-with-me` when you want the unified packet to bias `REVIEW.md` toward the consulting funnel and `docs/WORK-WITH-ME-TODO.md` without creating a separate packet generator.
 Recommended mobile review command:
 
 ```bash

@@ -295,14 +295,30 @@ export default function WorkWithMePage() {
           ))}
         </div>
         <article className="work-panel work-outcomes-panel">
-          <h3>Most projects start with a discovery session.</h3>
+          <h3>Some projects benefit from a paid discovery session after first contact.</h3>
           <p>
-            If you want help sorting out the real problem before committing to
-            a larger build, start with a focused 90-minute session for $200.
+            If you already know you want help and need a structured next step,
+            start with a project inquiry or a direct email. If we need to sort
+            out the real problem before committing to a larger build, we can
+            use a focused 90-minute session for $200 after that first
+            conversation.
           </p>
           <div className="hero-actions" aria-label="Discovery session links">
             <TrackedLink
               className="button primary"
+              href={businessLinks.projectInquiry}
+              target="_blank"
+              rel="noreferrer"
+              trackingEvent="intake_form_click"
+              trackingProperties={{
+                route: "/work-with-me",
+                surface: "discovery_intro",
+              }}
+            >
+              Start a Project Inquiry
+            </TrackedLink>
+            <TrackedLink
+              className="button secondary"
               href={businessLinks.discoverySession}
               target="_blank"
               rel="noreferrer"
@@ -314,19 +330,6 @@ export default function WorkWithMePage() {
               }}
             >
               Book a Discovery Session
-            </TrackedLink>
-            <TrackedLink
-              className="button secondary"
-              href={businessLinks.projectInquiry}
-              target="_blank"
-              rel="noreferrer"
-              trackingEvent="intake_form_click"
-              trackingProperties={{
-                route: "/work-with-me",
-                surface: "discovery_intro",
-              }}
-            >
-              Start a Project Inquiry
             </TrackedLink>
           </div>
           <p className="work-hero-note">
@@ -391,14 +394,16 @@ export default function WorkWithMePage() {
       <section className="content-section">
         <SectionHeading eyebrow="Low-Risk Start" title="A small first step if you want clarity before a larger project.">
           Some problems need a scoped build. Some just need a sharp technical
-          conversation. This option gives you a clean way to start.
+          conversation. If we have already talked and a paid discovery step
+          makes sense, this gives us a clean way to continue.
         </SectionHeading>
         <article className="work-panel work-outcomes-panel">
           <p className="card-eyebrow">90-Minute Technical Strategy Session • $200 fixed price</p>
           <p>
-            For most projects, we start here. Bring me your software problem,
-            AI idea, architecture question, workflow bottleneck, or aging
-            codebase.
+            This is best after an initial conversation, project inquiry, or
+            email when we both want a structured working session. Bring me your
+            software problem, AI idea, architecture question, workflow
+            bottleneck, or aging codebase.
           </p>
           <p>
             We&apos;ll clarify what you&apos;re trying to accomplish, identify
@@ -412,6 +417,19 @@ export default function WorkWithMePage() {
           <div className="hero-actions" aria-label="Discovery booking links">
             <TrackedLink
               className="button primary"
+              href={businessLinks.projectInquiry}
+              target="_blank"
+              rel="noreferrer"
+              trackingEvent="intake_form_click"
+              trackingProperties={{
+                route: "/work-with-me",
+                surface: "strategy_session",
+              }}
+            >
+              Start a Project Inquiry
+            </TrackedLink>
+            <TrackedLink
+              className="button secondary"
               href={businessLinks.discoverySession}
               target="_blank"
               rel="noreferrer"

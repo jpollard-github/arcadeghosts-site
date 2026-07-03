@@ -188,6 +188,7 @@ const docsEntries = [
   "docs/EDITORIAL-GUIDE.md",
   "docs/ADMIN-VISION.md",
   "docs/BUSINESS-FUNNEL.md",
+  "docs/WORK-WITH-ME-TODO.md",
   "docs/LEAD-GENERATION-TODO.md",
   "docs/REPO-ARCHITECTURE-NOTES.md",
   "docs/analytics",
@@ -1418,11 +1419,20 @@ async function writeReview(input: {
   screenshotResult: ScreenshotResult;
   checkResults: CommandResult[];
 }) {
+  const normalizedFocus = normalizeFocusLabel(input.options.focus);
+  const squashedFocus = normalizedFocus.replace(/-/g, "");
+  const workWithMeFocus =
+    squashedFocus.includes("workwithme") ||
+    squashedFocus.includes("consulting") ||
+    squashedFocus.includes("businesslane");
   const hasMobileTodo = await pathExists(path.join(input.packetDir, "docs", "MOBILE-TODO.md"));
   const hasMobileReview = await pathExists(path.join(input.packetDir, "MOBILE-REVIEW.md"));
+  const hasWorkWithMeTodo = await pathExists(path.join(input.packetDir, "docs", "WORK-WITH-ME-TODO.md"));
   const mobileBias = input.options.mobile
     ? "This packet was generated in mobile review mode. Start with `mobile-home`, review the first viewport before full-page scrolling, and tighten the opening mobile experience before broad desktop polish."
-    : "Start with the homepage and Work With Me flow, then use the screenshots and copied source/docs to trace any friction back to the implementation and content decisions.";
+    : workWithMeFocus
+      ? "This packet is focused on the Work With Me business lane. Start with `/work-with-me`, the CTA order, and the canonical Work With Me TODO before broader site review."
+      : "Start with the homepage and Work With Me flow, then use the screenshots and copied source/docs to trace any friction back to the implementation and content decisions.";
 
   const summaryLink = input.options.summaryFile ? "- `reports/codex-summary.md` if present." : "";
   const reportLink = input.options.reportFile ? "- `reports/codex-report.md` if present." : "";
@@ -1446,6 +1456,14 @@ async function writeReview(input: {
         "4. `MOBILE-REVIEW.md`",
         "5. `reports/mobile-review-index.json`",
       ]
+    : workWithMeFocus
+      ? [
+          "1. `docs/WORK-WITH-ME-TODO.md`",
+          "2. `screenshots/desktop-work-with-me.jpg`",
+          "3. `source/app/work-with-me/page.tsx`",
+          "4. `source/app/lib/business-config.ts`",
+          "5. `docs/BUSINESS-FUNNEL.md`",
+        ]
     : [
         "1. `screenshots/desktop-home.jpg`",
         "2. `screenshots/desktop-work-with-me.jpg`",
@@ -1458,7 +1476,13 @@ async function writeReview(input: {
         "`screenshots/viewport/mobile-home.jpg` and `screenshots/viewport/mobile-work-with-me.jpg`",
         "`REVIEW.md`",
       ]
-    : ["`REVIEW.md`", "`screenshots/desktop-home.jpg`", "`screenshots/desktop-work-with-me.jpg`"];
+    : workWithMeFocus
+      ? [
+          "`REVIEW.md`",
+          ...(hasWorkWithMeTodo ? ["`docs/WORK-WITH-ME-TODO.md`"] : []),
+          "`screenshots/desktop-work-with-me.jpg`",
+        ]
+      : ["`REVIEW.md`", "`screenshots/desktop-home.jpg`", "`screenshots/desktop-work-with-me.jpg`"];
   const startHereLines = startHereItems.map((item, index) => `${index + 1}. ${item}`);
 
   const reviewLines = [
@@ -1468,18 +1492,30 @@ async function writeReview(input: {
     ...startHereLines,
     "",
     mobileBias,
-    "Review the homepage first, then verify whether the site quickly communicates who Jason is, what kind of people should keep exploring, and where a potential client or collaborator should go next.",
+    workWithMeFocus
+      ? "Review the Work With Me path first, then verify whether the page makes the right first business next step obvious without flattening the rest of the site."
+      : "Review the homepage first, then verify whether the site quickly communicates who Jason is, what kind of people should keep exploring, and where a potential client or collaborator should go next.",
     "",
     "## Current Focus",
-    "- mobile/iPhone readability",
-    "- homepage first impression",
-    "- navigation clarity",
-    "- “Find my people” emotional signal",
-    "- work-with-me conversion path",
-    "- music/writing/cats/arcade personality pages",
-    "- admin/content workflow sanity",
-    "- SEO/OpenGraph basics",
-    "- performance/accessibility risks",
+    ...(workWithMeFocus
+      ? [
+          "- work-with-me CTA hierarchy",
+          "- inquiry -> email -> discovery funnel order",
+          "- calm first-conversation positioning",
+          "- business-lane implementation TODO clarity",
+          "- trust and conversion review limited to Work With Me surfaces",
+        ]
+      : [
+          "- mobile/iPhone readability",
+          "- homepage first impression",
+          "- navigation clarity",
+          "- “Find my people” emotional signal",
+          "- work-with-me conversion path",
+          "- music/writing/cats/arcade personality pages",
+          "- admin/content workflow sanity",
+          "- SEO/OpenGraph basics",
+          "- performance/accessibility risks",
+        ]),
     "",
     ...(input.options.mobile
       ? [
@@ -1505,32 +1541,55 @@ async function writeReview(input: {
     "- `extra/` holds anything explicitly added with `--include`.",
     "",
     "## Suggested Review Order",
-    "1. Home mobile",
-    "2. Home desktop",
-    "3. Work With Me mobile",
-    "4. Music page",
-    "5. Writings page and one writing detail page",
-    "6. Cats and arcade pages",
-    "7. Search/tiny thoughts/updates",
-    "8. Admin/content workflow files",
-    "9. Tests/persona testing",
+    ...(workWithMeFocus
+      ? [
+          "1. Work With Me desktop and mobile",
+          "2. Canonical Work With Me TODO",
+          "3. Business funnel docs and business config",
+          "4. Contact and inquiry surfaces only if they support Work With Me",
+          "5. Stop before broad homepage/About/Build Log redesign ideas",
+        ]
+      : [
+          "1. Home mobile",
+          "2. Home desktop",
+          "3. Work With Me mobile",
+          "4. Music page",
+          "5. Writings page and one writing detail page",
+          "6. Cats and arcade pages",
+          "7. Search/tiny thoughts/updates",
+          "8. Admin/content workflow files",
+          "9. Tests/persona testing",
+        ]),
     "",
     "## ChatGPT Review Prompt",
     "```text",
-    "Please review this ArcadeGhosts personal website packet. Focus first on mobile/iPhone UX, then emotional clarity, navigation, content hierarchy, performance/accessibility risks, and whether the site helps Jason find compatible people, creative collaborators, and potential clients without feeling too cluttered or self-indulgent. Give prioritized fixes, quick wins, and suggested Codex tasks.",
+    workWithMeFocus
+      ? "Please review this ArcadeGhosts website packet with a narrow focus on the Work With Me business lane. Focus first on CTA hierarchy, inquiry-vs-email-vs-discovery order, clarity of the first business next step, and whether the new Work With Me TODO is a clean canonical implementation target. Keep recommendations incremental. Do not redesign the site or rewrite the personal/creative sections."
+      : "Please review this ArcadeGhosts personal website packet. Focus first on mobile/iPhone UX, then emotional clarity, navigation, content hierarchy, performance/accessibility risks, and whether the site helps Jason find compatible people, creative collaborators, and potential clients without feeling too cluttered or self-indulgent. Give prioritized fixes, quick wins, and suggested Codex tasks.",
     "```",
     "",
     "## Codex Follow-Up Prompt Template",
     "```text",
-    "Using the latest review packet and ChatGPT feedback, implement the top priority fixes. Keep changes small and reviewable. Update TODO docs where appropriate. Run tests. Then run `npm run site:review-packet -- --summary-file <your-summary-file> --mobile` and report the new packet path.",
+    workWithMeFocus
+      ? "Using the latest review packet and ChatGPT feedback, implement the top priority Work With Me fixes only. Keep changes small and reviewable. Preserve inquiry as primary, email as secondary, and discovery as post-qualification. Update `docs/WORK-WITH-ME-TODO.md` where appropriate. Run tests. Then run `npm run site:review-packet -- --summary-file <your-summary-file> --focus work-with-me` and report the new packet path."
+      : "Using the latest review packet and ChatGPT feedback, implement the top priority fixes. Keep changes small and reviewable. Update TODO docs where appropriate. Run tests. Then run `npm run site:review-packet -- --summary-file <your-summary-file> --mobile` and report the new packet path.",
     "```",
     "",
     "## Recommended Commands",
     "```bash",
-    "npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --mobile --skip-tests",
-    "npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --mobile --viewport-only --skip-tests",
-    "npm run site:review-packet -- --mobile",
-    "npm run site:review-packet -- --mobile --summary-file reports/latest-codex-summary.md",
+    ...(workWithMeFocus
+      ? [
+          "npm run site:review-packet -- --focus work-with-me",
+          "npm run site:review-packet -- --focus work-with-me --mobile --viewport-only",
+          "npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --focus work-with-me --mobile --viewport-only --skip-tests",
+          "npm run site:review-packet -- --focus work-with-me --summary-file reports/latest-codex-summary.md",
+        ]
+      : [
+          "npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --mobile --skip-tests",
+          "npm run site:review-packet -- --screenshot-base-url https://arcadeghosts.org --mobile --viewport-only --skip-tests",
+          "npm run site:review-packet -- --mobile",
+          "npm run site:review-packet -- --mobile --summary-file reports/latest-codex-summary.md",
+        ]),
     "```",
     "- Use `--skip-tests` for quick visual packets from production.",
     "- Do not use `--skip-tests` after code changes unless intentionally doing a screenshot-only packet.",
@@ -1538,14 +1597,23 @@ async function writeReview(input: {
     `- Screenshot runs include mobile widths ${mobileScreenshotWidths.join("px, ")}px plus tablet and desktop coverage when screenshots succeed.`,
     "",
     "## Known Review Themes",
-    "- Mobile currently needs serious attention.",
-    "- Prioritize readability, spacing, tap targets, section order, and reducing visual clutter.",
-    "- Preserve the weird/retro/Twin Peaks/arcade/cat personality. Do not sand it into a generic portfolio.",
-    "- Make the homepage easier to understand in 10 seconds.",
-    "- Make “Work With Me” easy to find but not overpowering.",
-    "- Separate “personal signal” from “business conversion” enough that both work.",
-    "- Use persona testing as a review input, not as fake certainty.",
-    "- Prefer small iterative changes over giant redesigns.",
+    ...(workWithMeFocus
+      ? [
+          "- Preserve the current CTA hierarchy: inquiry first, email second, discovery later.",
+          "- Do not turn the page into a generic consulting brochure.",
+          "- Do not let review suggestions expand into broad homepage, About, or Build Log rewrites in this pass.",
+          "- Prefer small governance and funnel-clarity changes over new sections or redesign.",
+        ]
+      : [
+          "- Mobile currently needs serious attention.",
+          "- Prioritize readability, spacing, tap targets, section order, and reducing visual clutter.",
+          "- Preserve the weird/retro/Twin Peaks/arcade/cat personality. Do not sand it into a generic portfolio.",
+          "- Make the homepage easier to understand in 10 seconds.",
+          "- Make “Work With Me” easy to find but not overpowering.",
+          "- Separate “personal signal” from “business conversion” enough that both work.",
+          "- Use persona testing as a review input, not as fake certainty.",
+          "- Prefer small iterative changes over giant redesigns.",
+        ]),
     "",
     "## Codex/User Note",
     input.options.note ?? "No additional note was provided.",
