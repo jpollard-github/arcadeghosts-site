@@ -1257,7 +1257,11 @@ function routeToSlug(route: string) {
   if (route === "/") {
     return "home";
   }
-  return route.replace(/^\//, "").replace(/\//g, "-");
+  return route
+    .replace(/^\//, "")
+    .replace(/[^a-z0-9]+/gi, "-")
+    .replace(/^-+|-+$/g, "")
+    .toLowerCase();
 }
 
 async function copyIncludedPaths(optionsIncludePaths: string[], packetDir: string, context: PacketContext) {

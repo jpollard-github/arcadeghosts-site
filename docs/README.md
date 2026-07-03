@@ -158,6 +158,39 @@ When not to use it:
 
 - As a long-term roadmap.
 
+### `AMBIENT.md`
+
+Purpose:
+
+- Vision and architecture document for the Ambient display project.
+
+When to use it:
+
+- Before starting Ambient feature work.
+- When deciding what Ambient is supposed to be.
+- When checking whether an idea makes the project more magical or just more complicated.
+
+When not to use it:
+
+- As the active implementation queue.
+
+### `AMBIENT-TODO.md`
+
+Purpose:
+
+- Phased roadmap for Ambient as a long-term personal display project.
+
+When to use it:
+
+- When deciding the next Ambient phase.
+- When scoping Ambient work into reviewable slices.
+- When checking whether a proposed feature belongs now, later, or never.
+
+When not to use it:
+
+- As a general site backlog.
+- As a reason to add new content systems before the current site content has been reused well.
+
 ## Publishing
 
 ### `CONTENT-TODO.md`
