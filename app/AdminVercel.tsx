@@ -8,14 +8,14 @@ const vercelLinks = [
     eyebrow: "Project",
     title: "Main Project Overview",
     text: "Your main Vercel project home for deployments, usage, settings, and project-level controls.",
-    href: "https://vercel.com/jpollardgithubs-projects/personal",
+    href: "https://vercel.com/jpollardgithubs-projects/arcadeghosts-site",
     cta: "Open Project Overview",
   },
   {
     eyebrow: "Analytics",
     title: "Web Analytics Dashboard",
     text: "Review the new custom events, page views, and visitor behavior for the public site.",
-    href: "https://vercel.com/jpollardgithubs-projects/personal/analytics",
+    href: "https://vercel.com/jpollardgithubs-projects/arcadeghosts-site/analytics",
     cta: "Open Analytics",
   },
   {

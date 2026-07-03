@@ -23,8 +23,8 @@ Goal: distinguish `personal` used as a repo/project identifier from `personal` u
 
 ### Package / project metadata
 
-- `package.json` name is already `jasons-awesome-80s-site`
-- `package-lock.json` matches `jasons-awesome-80s-site`
+- `package.json` name is now `arcadeghosts-site`
+- `package-lock.json` matches `arcadeghosts-site`
 - I did not find `personal` as the npm package name
 
 ### Docs with absolute local path assumptions

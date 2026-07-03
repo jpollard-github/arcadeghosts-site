@@ -239,7 +239,7 @@ test("authenticated admin can open vercel control room", async ({ page }) => {
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Open Analytics", exact: true }),
-  ).toHaveAttribute("href", "https://vercel.com/jpollardgithubs-projects/personal/analytics");
+  ).toHaveAttribute("href", "https://vercel.com/jpollardgithubs-projects/arcadeghosts-site/analytics");
   await expect(
     page.getByText("What to look at in analytics"),
   ).toBeVisible();
