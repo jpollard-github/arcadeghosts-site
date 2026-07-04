@@ -321,6 +321,7 @@ Give Ambient its own calm motion vocabulary: gentle crossfades, quiet transition
 - [x] `[P0]` Add crossfades between signals.
 - [x] `[P0]` Tune default rotation timing.
 - [ ] `[P1]` Add subtle animation to text/image reveals where it improves mood.
+- [ ] `[P1]` Reduce vertical content shift during card transitions.
 - [ ] `[P1]` Prevent abrupt layout jumps when signal types change.
 - [x] `[P2]` Add optional motion reduction behavior for accessibility and low-stimulation use.
 
@@ -339,6 +340,10 @@ Give Ambient its own calm motion vocabulary: gentle crossfades, quiet transition
 
 - Avoid animation systems that become harder to maintain than the display itself.
 - Smoothness matters more than novelty.
+- The current bump seems to happen during card changes, especially between different signal and layout types: the fade is present, but content position still shifts upward or reflows noticeably.
+- The desired feel is that cards dissolve or drift calmly, not jump.
+- Investigate stable stage sizing, vertical alignment, min-height strategy, shared layout shells, and transition-layer positioning before adding more motion flourishes.
+- Keep the fix small, prioritize tablet-landscape behavior, and recheck on the Samsung tablet before deciding whether it is a blocker.
 
 ### Exit Criteria
 
