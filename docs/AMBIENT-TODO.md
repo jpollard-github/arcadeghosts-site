@@ -29,6 +29,7 @@ Guiding principles:
 - keep it fun
 - prefer beautiful UX over complex engineering
 - prefer site data reuse over new content systems
+- aim for the comforting feeling of a place where people exist, without demanding your attention
 - keep the website as the single source of truth
 - avoid unnecessary abstraction
 - favor shipping over perfection

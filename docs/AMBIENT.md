@@ -21,6 +21,7 @@ leave it open on a screen and be glad it exists.
 - create something beautiful enough to leave running
 - reuse the site’s existing content instead of building a second content platform
 - make the display feel alive without feeling busy
+- create the comforting feeling of a place where people exist, without demanding your attention
 - produce a fun personal artifact at every phase, not just a future promise
 - let ArcadeGhosts spill into physical space a little
 - keep engineering light enough that the joy survives
