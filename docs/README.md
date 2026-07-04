@@ -4,17 +4,21 @@ This index is here to help future Jason open the right document first.
 
 The current phase of ArcadeGhosts is publishing, outreach, and learning from real visitors.
 
+Start planning sessions with `docs/NEXT-90-DAYS.md`.
+Use it as the lightweight operating plan for what matters now, then drop into the source TODOs it links to.
+
 ## Current Priority Order
 
-1. `docs/CONTENT-TODO.md` — publish and improve ArcadeGhosts content
-2. `docs/LEAD-GENERATION-TODO.md` — business growth and first-conversation experiments
-3. `docs/PERSONA-TESTS-RESULTS-TODO.backup.md` — website and product improvements from real use and persona testing
-4. Brand Kit repo TODO — separate repo, used to support client-facing collateral
-5. `docs/AI-TODO-FIRST.md` — deferred until deterministic, content, and outreach workflows are stable
-6. `docs/VERCEL-PRO-OPERATIONS-TODO.md` — weekly analytics, spend, and operations rhythm
-7. `docs/PERSONA-TODO.md` — framework roadmap, dormant unless real use exposes a limitation
+1. `docs/NEXT-90-DAYS.md` — current operating plan across Earn, Be Known, and Explore
+2. `docs/CONTENT-TODO.md` — publish and improve ArcadeGhosts content
+3. `docs/LEAD-GENERATION-TODO.md` — business growth and first-conversation experiments
+4. `docs/PERSONA-TESTS-RESULTS-TODO.backup.md` — website and product improvements from real use and persona testing
+5. Brand Kit repo TODO — separate repo, used to support client-facing collateral
+6. `docs/AI-TODO-FIRST.md` — deferred until deterministic, content, and outreach workflows are stable
+7. `docs/VERCEL-PRO-OPERATIONS-TODO.md` — weekly analytics, spend, and operations rhythm
+8. `docs/PERSONA-TODO.md` — framework roadmap, dormant unless real use exposes a limitation
 
-Daily work should usually start with `CONTENT-TODO.md`, then check `PERSONA-TESTS-RESULTS-TODO.backup.md`.
+Daily work should usually start with `NEXT-90-DAYS.md`, then move into the linked source TODOs.
 
 `LEAD-GENERATION-TODO.md` is the primary document for business growth, separate from content publishing.
 `WORK-WITH-ME-TODO.md` is the canonical site-implementation TODO for Work With Me and consulting-funnel website changes.
@@ -66,6 +70,7 @@ Analytics-driven improvement
 
 ### Every Session
 
+- `docs/NEXT-90-DAYS.md`
 - `docs/CONTENT-TODO.md`
 - `docs/PERSONA-TESTS-RESULTS-TODO.backup.md` if content, navigation, or UX changed
 
