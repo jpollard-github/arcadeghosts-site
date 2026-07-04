@@ -284,6 +284,10 @@ export default function WorkWithMePage() {
           hours. They are hiring a thoughtful developer who can understand a
           messy problem, communicate clearly, and build something useful.
         </SectionHeading>
+        <p className="work-hero-note">
+          If you want the advisory-council version of how I pressure-test decisions,
+          <Link className="work-inline-link" href="/agents"> meet The Five Agents here</Link>.
+        </p>
         <div className="section-link-grid">
           {trustClusterCards.map((card) => (
             <Link className="section-link-card" href={card.href} key={card.title}>

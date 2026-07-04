@@ -58,6 +58,18 @@ const staticEntries: SearchEntry[] = [
       "music playlists music league synth listening room spotify songs albums artists genres fluorescent weather",
   },
   {
+    id: "page-agents",
+    type: "page",
+    title: "The Five Agents",
+    description: "Jason Pollard's advisory council for execution, truth, building, voice, and alignment.",
+    href: "/agents",
+    eyebrow: "Advisory council",
+    cta: "Meet the five agents",
+    priority: 83,
+    searchText:
+      "five agents advisory council energizer bunny widow handyman comic sans shepherd execution strategy truth telling builder copywriting alignment personas",
+  },
+  {
     id: "page-movies-tv",
     type: "page",
     title: "Movies & TV",

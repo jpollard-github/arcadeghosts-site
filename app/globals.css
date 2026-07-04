@@ -2998,6 +2998,220 @@ p {
   padding-top: 0;
 }
 
+.agents-page {
+  padding-top: 5.8rem;
+}
+
+.agents-back-link {
+  margin-bottom: 1.5rem;
+}
+
+.agents-hero {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.agents-hero-copy {
+  max-width: 46rem;
+}
+
+.agents-subtitle {
+  max-width: 38rem;
+  margin-bottom: 1rem;
+  color: var(--ink);
+  font-size: clamp(1.12rem, 2.6vw, 1.5rem);
+  line-height: 1.45;
+}
+
+.agents-intro-grid {
+  align-items: stretch;
+}
+
+.agents-intro-card p:last-child {
+  margin-bottom: 0;
+}
+
+.agents-grid {
+  align-items: start;
+  gap: 1.3rem;
+}
+
+.agents-card {
+  overflow: hidden;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
+}
+
+.agents-card-image-wrap {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  margin: -1.1rem -1.1rem 1.15rem;
+  border-bottom: 1px solid rgba(248, 239, 227, 0.12);
+  background:
+    radial-gradient(circle at top, rgba(255, 198, 109, 0.16), transparent 45%),
+    linear-gradient(180deg, rgba(147, 108, 255, 0.1), rgba(8, 9, 12, 0.2));
+}
+
+.agents-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.03);
+  filter: saturate(0.94) brightness(0.94);
+  transition: transform 220ms ease, filter 220ms ease;
+}
+
+.agents-card-copy h2 {
+  margin-bottom: 0.35rem;
+  font-size: clamp(1.5rem, 3vw, 1.95rem);
+}
+
+.agents-card-philosophy {
+  margin-bottom: 0.6rem;
+  color: var(--amber);
+  font-size: 1rem;
+  font-style: italic;
+  line-height: 1.55;
+}
+
+.agents-card-meta {
+  margin-bottom: 0.9rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.agents-card-mission {
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+.agents-card-section + .agents-card-section {
+  margin-top: 1rem;
+}
+
+.agents-card-section h3 {
+  margin-bottom: 0.55rem;
+  color: var(--amber);
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.agents-power-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.agents-power-list li {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid rgba(248, 239, 227, 0.14);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.agents-signature-question {
+  margin-bottom: 0;
+  color: var(--ink);
+  font-size: 1.02rem;
+  line-height: 1.65;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.agents-quote {
+  margin: 1.15rem 0 0;
+  padding: 1rem 1rem 0 1.1rem;
+  border-left: 3px solid rgba(41, 240, 212, 0.45);
+  color: var(--muted);
+  font-size: 1rem;
+  opacity: 0.82;
+  transition: opacity 180ms ease, border-color 180ms ease;
+}
+
+.agents-quote p {
+  margin-bottom: 0;
+}
+
+.agents-usage-section .section-heading {
+  max-width: 42rem;
+}
+
+.agents-usage-grid {
+  margin-top: 1.5rem;
+}
+
+.agents-usage-card p {
+  margin-bottom: 0;
+  line-height: 1.7;
+}
+
+.agents-usage-close {
+  max-width: 40rem;
+  margin: 1.5rem 0 0;
+  color: var(--ink);
+  font-size: 1.04rem;
+  line-height: 1.7;
+}
+
+.agents-future-section {
+  padding-top: 0.35rem;
+}
+
+.agents-future-card {
+  max-width: 42rem;
+}
+
+.agents-future-card h2 {
+  margin-bottom: 0.7rem;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+}
+
+.agents-future-card p:last-child {
+  margin-bottom: 0;
+}
+
+.agents-future-note {
+  color: var(--muted);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .agents-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(41, 240, 212, 0.28);
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.3);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
+      var(--panel);
+  }
+
+  .agents-card:hover .agents-card-image {
+    transform: scale(1.06);
+    filter: saturate(1.04) brightness(1.02);
+  }
+
+  .agents-card:hover .agents-signature-question {
+    color: var(--amber);
+    transform: translateX(2px);
+  }
+
+  .agents-card:hover .agents-quote {
+    opacity: 1;
+    border-left-color: rgba(41, 240, 212, 0.72);
+  }
+}
+
 .writing-page {
   min-height: 100vh;
   padding: clamp(6rem, 10vw, 8rem) 1rem clamp(2rem, 6vw, 5rem);
@@ -4238,6 +4452,58 @@ p {
 
   .about-page .about-card-grid {
     margin-top: 1rem;
+  }
+
+  .agents-page {
+    padding-top: 5.5rem;
+    padding-bottom: 2.8rem;
+  }
+
+  .agents-back-link {
+    margin-bottom: 1.3rem;
+    font-size: 0.74rem;
+  }
+
+  .agents-subtitle {
+    max-width: none;
+    font-size: 1.06rem;
+    line-height: 1.58;
+  }
+
+  .agents-card-image-wrap {
+    margin: -1rem -1rem 1rem;
+  }
+
+  .agents-card-copy h2 {
+    font-size: clamp(1.42rem, 8vw, 1.86rem);
+    line-height: 1.02;
+  }
+
+  .agents-card-philosophy {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .agents-card-meta {
+    font-size: 0.82rem;
+  }
+
+  .agents-power-list {
+    gap: 0.45rem;
+  }
+
+  .agents-power-list li {
+    min-height: 2.4rem;
+  }
+
+  .agents-usage-grid {
+    margin-top: 1.15rem;
+  }
+
+  .agents-usage-close {
+    margin-top: 1.2rem;
+    font-size: 1rem;
+    line-height: 1.65;
   }
 
   .writing-index-page {

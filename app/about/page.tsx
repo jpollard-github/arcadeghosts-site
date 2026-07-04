@@ -136,6 +136,10 @@ export default function AboutPage() {
             If you are here professionally, the useful version is simple: I am
             both the person and the builder.
           </p>
+          <p>
+            If you want the stranger version of that same truth, <Link href="/agents">The Five Agents</Link>{" "}
+            is the closest thing this site has to a field guide for how I make decisions.
+          </p>
           <h3>If you want the practical trail first:</h3>
           <div className="section-link-grid about-card-grid">
             {aboutTrustCards.map((card) => (
