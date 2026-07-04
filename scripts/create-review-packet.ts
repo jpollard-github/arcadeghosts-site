@@ -58,6 +58,7 @@ type PacketOptions = {
   skipScreenshots: boolean;
   viewportOnly: boolean;
   mobile: boolean;
+  reveal: boolean;
 };
 
 type PacketContext = {
@@ -399,6 +400,13 @@ async function main() {
   } else {
     console.log("Zip archive: skipped (the `zip` command was unavailable)");
   }
+  if (options.reveal) {
+    await revealGeneratedPacket({
+      createdZip,
+      packetDir,
+      zipPath,
+    });
+  }
   logStep(`Finished in ${formatElapsedTime(Date.now() - startedAt)}`);
 }
 
@@ -412,6 +420,7 @@ function parseArgs(argv: string[]): PacketOptions {
     skipScreenshots: false,
     viewportOnly: false,
     mobile: false,
+    reveal: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -492,10 +501,33 @@ function parseArgs(argv: string[]): PacketOptions {
 
     if (arg === "--mobile") {
       options.mobile = true;
+      continue;
+    }
+
+    if (arg === "--reveal") {
+      options.reveal = true;
     }
   }
 
   return options;
+}
+
+async function revealGeneratedPacket(input: { createdZip: boolean; packetDir: string; zipPath: string }) {
+  const revealTarget = input.createdZip ? input.zipPath : input.packetDir;
+
+  console.log(`Reveal target: ${revealTarget}`);
+
+  if (process.platform !== "darwin") {
+    logStep("Reveal skipped: Finder reveal is only available on macOS.");
+    return;
+  }
+
+  try {
+    await execFileAsync("open", ["-R", revealTarget]);
+    logStep(`Revealed in Finder: ${revealTarget}`);
+  } catch (error) {
+    logStep(`Reveal skipped: ${(error as Error).message}`);
+  }
 }
 
 function formatDate(value: Date) {

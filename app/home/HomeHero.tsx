@@ -22,6 +22,8 @@ export function HomeHero() {
               key={item.href}
               href={item.href}
               data-mobile-priority={item.mobilePriority}
+              aria-label={item.ariaLabel}
+              title={item.title}
             >
               <span className="nav-label-full">{item.label}</span>
               <span className="nav-label-compact">{item.mobileLabel}</span>

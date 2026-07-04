@@ -9,6 +9,7 @@
     "dev": "next dev",
     "build": "next build",
     "build:timed": "node scripts/run-npm-script-with-timing.mjs build",
+    "ambient:scenes:validate": "node --import tsx scripts/validate-ambient-scenes.ts",
     "start": "next start",
     "go": "npm run lint && npm run build && npm run start",
     "lint": "eslint .",

@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { AmbientDisplay } from "./AmbientDisplay";
+import type { AmbientSignal } from "./ambient-signals";
+import { normalizeAmbientTimeMode } from "./ambient-time";
+import { getAmbientSceneManifest, selectAmbientSceneForSignal } from "./ambient-scenes";
+import { getPublicGuestbookEntries, type GuestbookCategory, type GuestbookEntry } from "../lib/guestbook";
 import { getPublicNowItems } from "../lib/now";
 import { getPublicTinyThoughts, type TinyThought, type TinyThoughtCategory } from "../lib/tiny-thoughts";
 import { getPublicProjects, type SiteProject } from "../lib/projects";
@@ -27,6 +31,8 @@ export const metadata: Metadata = {
 type AmbientQuery = {
   signal?: string;
   type?: string;
+  time?: string;
+  mood?: string;
 };
 
 function formatThoughtMeta(thought: TinyThought) {
@@ -79,12 +85,43 @@ function formatWritingMeta(writing: WritingEntry) {
   return `${writing.icon} Writing`;
 }
 
+function formatGuestbookMeta(entry: GuestbookEntry) {
+  const date = new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(entry.createdAt));
+
+  return `${formatGuestbookCategory(entry.category)} • ${date}`;
+}
+
+function formatGuestbookCategory(category: GuestbookCategory) {
+  switch (category) {
+    case "site-note":
+      return "site note";
+    case "twin-peaks":
+      return "twin peaks";
+    default:
+      return category.replace(/-/g, " ");
+  }
+}
+
+function formatGuestbookTitle(name: string) {
+  return `From ${name}`;
+}
+
+function summarizeGuestbookMessage(message: string) {
+  return trimAmbientText(message, 132);
+}
+
 function buildAmbientSignals(input: {
   nowItems: Awaited<ReturnType<typeof getPublicNowItems>>;
   thoughts: TinyThought[];
   projects: Awaited<ReturnType<typeof getPublicProjects>>;
+  guestbookEntries: GuestbookEntry[];
   writings: WritingEntry[];
-}) {
+  scenes: Awaited<ReturnType<typeof getAmbientSceneManifest>>["scenes"];
+}): AmbientSignal[] {
   const nowSignals = input.nowItems.slice(0, 3).map((item) => ({
     id: `now-${item.id}`,
     kind: "now" as const,
@@ -175,13 +212,27 @@ function buildAmbientSignals(input: {
         : "Writings slow the room down on purpose: memory, grief, attention, comedy, and trying again tomorrow.",
   }));
 
-  const groups = [catSignals, nowSignals, thoughtSignals, projectSignals, writingSignals];
+  const guestbookSignals = input.guestbookEntries.slice(0, 1).map((entry) => ({
+    id: `guestbook-${entry.id}`,
+    kind: "guestbook" as const,
+    sourceLabel: "Guestbook",
+    title: formatGuestbookTitle(entry.name),
+    body: summarizeGuestbookMessage(entry.message),
+    meta: formatGuestbookMeta(entry),
+    href: absoluteUrl("/#guestbook"),
+    actionLabel: "Open guestbook",
+    aside:
+      "Guestbook notes should land softly here: a small human signal reached the room, stayed a while, and made the site feel a little more inhabited.",
+  }));
+
+  const groups = [catSignals, nowSignals, thoughtSignals, projectSignals, writingSignals, guestbookSignals];
   const combined: Array<
     | (typeof catSignals)[number]
     | (typeof nowSignals)[number]
     | (typeof thoughtSignals)[number]
     | (typeof projectSignals)[number]
     | (typeof writingSignals)[number]
+    | (typeof guestbookSignals)[number]
   > = [];
   const maxLength = Math.max(...groups.map((group) => group.length));
 
@@ -195,7 +246,19 @@ function buildAmbientSignals(input: {
     }
   }
 
-  return combined;
+  return combined.map((signal) => {
+    const selectedScene = selectAmbientSceneForSignal(signal, input.scenes);
+
+    if (!selectedScene) {
+      return signal;
+    }
+
+    return {
+      ...signal,
+      imageSrc: selectedScene.imageSrc,
+      imageAlt: selectedScene.imageAlt,
+    };
+  });
 }
 
 function selectAmbientSignals(
@@ -209,7 +272,8 @@ function selectAmbientSignals(
     requestedType === "tiny-thought" ||
     requestedType === "cat" ||
     requestedType === "project" ||
-    requestedType === "writing"
+    requestedType === "writing" ||
+    requestedType === "guestbook"
       ? signals.filter((signal) =>
           requestedType === "tiny-thought" ? signal.kind === "thought" : signal.kind === requestedType,
         )
@@ -235,22 +299,27 @@ export default async function AmbientPage({
 }: {
   searchParams?: Promise<AmbientQuery>;
 }) {
-  const [nowItems, thoughts, projects] = await Promise.all([
+  const [nowItems, thoughts, projects, guestbookEntries, sceneManifest] = await Promise.all([
     getPublicNowItems(),
     getPublicTinyThoughts(4).catch(() => []),
     getPublicProjects().catch(() => []),
+    getPublicGuestbookEntries(1).catch(() => []),
+    getAmbientSceneManifest(),
   ]);
   const query = (await searchParams) ?? {};
+  const forcedTimeMode = normalizeAmbientTimeMode(query.time ?? query.mood);
 
   const signals = selectAmbientSignals(
     buildAmbientSignals({
       nowItems,
       thoughts,
       projects,
+      guestbookEntries,
       writings,
+      scenes: sceneManifest.scenes,
     }),
     query,
   );
 
-  return <AmbientDisplay signals={signals} />;
+  return <AmbientDisplay signals={signals} forcedTimeMode={forcedTimeMode} />;
 }

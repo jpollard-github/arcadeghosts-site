@@ -154,7 +154,11 @@ Expand Ambient from a proof of concept into a real content-fed experience powere
 - [x] `[P0]` Pull in Tiny Thoughts as short ambient text moments.
 - [x] `[P0]` Pull in cat photography as a warm visual source.
 - [x] `[P1]` Pull in projects and writings as slower, more reflective cards.
-- [ ] `[P1]` Pull in recent approved guestbook signals in a gentle, non-chatty way.
+- [x] `[P0]` Tune cadence with smarter dwell timing by signal type.
+- [x] `[P0]` Add gentle crossfades and transition polish for calmer signal changes.
+- [x] `[P1]` Create the `Ambient Scene Library` structure, manifest, docs, and integration points for reusable side imagery.
+- [x] `[P1]` Import the first real Ambient Scene batch into the new library.
+- [x] `[P1]` Pull in recent approved guestbook signals in a gentle, non-chatty way.
 - [ ] `[P2]` Decide which sources deserve images, text-only modes, or mixed layouts.
 
 ### Review Criteria
@@ -174,21 +178,84 @@ Expand Ambient from a proof of concept into a real content-fed experience powere
 - `app/ambient/page.tsx`
 - `app/ambient/AmbientDisplay.tsx`
 - `app/ambient/ambient.module.css`
+- `app/ambient/ambient-scenes.ts`
+- `public/ambient/scenes/*`
 
 ### Progress Notes
 
-- Ambient now rotates across five existing site-connected signal families: `Now`, `Tiny Thoughts`, cat photography, projects, and writings.
+- Ambient now rotates across six existing site-connected signal families: `Now`, `Tiny Thoughts`, cat photography, projects, writings, and gentle guestbook notes.
 - This first Phase 2 pass keeps the visual system intentionally narrow by reusing the existing Ambient text/image stage rather than inventing source-specific layouts.
 - `Tiny Thought` signals now render as fuller desk-distance reading moments instead of turning the thought text into the oversized title.
 - `Project` signals are derived from existing public project metadata and use trimmed descriptions plus `nextAction` when available to keep the cards alive without becoming task-manager UI.
 - `Writing` signals are derived from `app/writings.ts` and intentionally stay short, reflective, and linked back to the site’s writing pages.
+- `Guestbook` signals now draw only from approved public guestbook entries, stay intentionally rare, and render as a single calm note rather than a social feed.
 - Stable query-param review states now include `type=project` and `type=writing` alongside the earlier `now`, `tiny-thought`, and `cat` states.
+- Stable review states now also include `type=guestbook` so the guestbook treatment can be checked directly in tablet-landscape captures.
+- The repo now includes a dedicated `Ambient Scene Library` structure at `public/ambient/scenes/` with category folders, a manifest, import guidance, and a small validator script.
+- Ambient text-heavy signals can now draw from the scene library when real scene assets are imported, while cat cards keep their existing first-party imagery intact.
+- The empty-library case is deliberate and safe: no fake assets are assumed, and Ambient should continue to degrade gracefully until real scenes are added.
+- The next scene-library step should be a small first batch, not a giant dump: start with a few imported `cozy-desks`, `warm-lamps-shadows`, `night-skies`, and `rain-on-windows` assets, then validate and packet-review before expanding further.
+- Real scene-library growth should be treated as an ongoing content practice, not a blocker for implementation phases: Ambient can keep evolving while the visual library slowly becomes more personal over time.
+- The next implementation priority is now cadence and motion rather than more source expansion: dwell timing should feel signal-aware, and transitions should get softer before the library gets busier.
+- Ambient now uses smarter dwell timing by signal type, with longer holds for slower signals and additional reading time for longer `Tiny Thought` cards.
+- Gentle crossfades are now part of the core display language, with reduced-motion users falling back to direct swaps instead of forced animation.
 
 ### Known Constraints
 
 - Keep source logic lightweight.
 - Do not create source-specific mini-products unless a source keeps proving it deserves more.
-- Signal weighting is still simple rotation for now, so the next pass may want to tune cadence before adding many more source families.
+- Scene-library growth remains ongoing content work, not a blocker for the next implementation pass.
+- Near-term display polish should prioritize smarter dwell timing by signal type before adding many more source families.
+- Near-term motion work should favor gentle crossfades and calmer signal handoffs over bigger visual system changes.
+- Guestbook should stay a low-frequency warmth signal, not a chatty primary source.
+- Real scene generation/import still happens outside the repo and needs a deliberate curation pass before the library becomes visually active.
+
+### Future Scene Library Growth
+
+The Ambient Scene Library should gradually expand over months and years.
+
+Scene sources may include:
+
+- Jason's own photography
+- AI-generated scenes
+- edited photography
+- curated or licensed imagery where appropriate
+
+Priority should be given to original photography because it naturally reflects the ArcadeGhosts atmosphere and makes the site feel personal rather than generic.
+
+Possible photography categories include:
+
+- rainy windows
+- coffee shops
+- coding desks
+- warm lamps
+- bookshelves
+- notebooks
+- keyboards
+- cats
+- moonlight
+- fog
+- quiet streets
+- parks
+- trees
+- reflections
+- arcades
+- CRTs
+- record players
+- seasonal scenes
+
+Photography should be treated as an ongoing collection effort rather than a dedicated project.
+
+Examples:
+
+- take a few photos during normal life
+- keep interesting images
+- occasionally edit or crop them
+- import them into the Ambient Scene Library using the normal workflow
+
+This is intentionally not a blocker for Ambient development.
+
+Ambient should continue evolving while the library slowly becomes more personal over time.
 
 ### Exit Criteria
 
@@ -207,7 +274,7 @@ Let Ambient start responding to mood, listening, and time rather than feeling li
 ### Checklist
 
 - [ ] `[P0]` Define the first music-aware display treatment using existing site music data and Spotify-adjacent surfaces.
-- [ ] `[P1]` Add time-of-day theme shifts such as morning, evening, and late-night modes.
+- [x] `[P1]` Add time-of-day theme shifts such as morning, evening, and late-night modes.
 - [ ] `[P1]` Add weather-aware styling only if it improves atmosphere instead of clutter.
 - [ ] `[P1]` Decide whether “now playing” should be live, cached, or gracefully omitted when unavailable.
 - [ ] `[P2]` Explore seasonal variants that can quietly change palette or source weighting.
@@ -229,13 +296,19 @@ Let Ambient start responding to mood, listening, and time rather than feeling li
 - Spotify live integration is optional, not a requirement for the project to feel successful.
 - Weather and time should guide mood first, not become widgets.
 
+### Progress Notes
+
+- Ambient now supports four lightweight time-of-day atmosphere modes driven by local browser time: `morning`, `afternoon`, `evening`, and `late-night`.
+- This first Phase 3 pass changes mood only, not content: layout, signal library, cadence, crossfades, and reduced-motion behavior all stay intact.
+- Stable debug review states can now force time with query params such as `?time=evening` or `?time=late-night` so packets can compare the same signal across different atmospheres.
+
 ### Exit Criteria
 
 - Ambient has a stronger sense of atmosphere and changing time.
 
 Status:
 
-Planned
+In Progress
 
 ## Phase 4 — Motion Language
 
@@ -245,11 +318,11 @@ Give Ambient its own calm motion vocabulary: gentle crossfades, quiet transition
 
 ### Checklist
 
-- [ ] `[P0]` Add crossfades between signals.
-- [ ] `[P0]` Tune default rotation timing.
+- [x] `[P0]` Add crossfades between signals.
+- [x] `[P0]` Tune default rotation timing.
 - [ ] `[P1]` Add subtle animation to text/image reveals where it improves mood.
 - [ ] `[P1]` Prevent abrupt layout jumps when signal types change.
-- [ ] `[P2]` Add optional motion reduction behavior for accessibility and low-stimulation use.
+- [x] `[P2]` Add optional motion reduction behavior for accessibility and low-stimulation use.
 
 ### Review Criteria
 

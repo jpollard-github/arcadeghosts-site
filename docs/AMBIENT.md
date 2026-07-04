@@ -138,6 +138,121 @@ The question is not “how many sources can fit?”
 
 The question is “which ones make the display feel more alive?”
 
+## Ambient Scene Library
+
+Ambient should have its own reusable scene library for text-heavy states that do not have first-party photography of their own.
+
+This is not a throwaway placeholder bucket.
+
+Treat it as a curated `Ambient Scene Library`: calm, dark, warm, slightly haunted images that work beside site signals without overwhelming them.
+
+The repo structure for this lives at:
+
+- `public/ambient/scenes/`
+- `public/ambient/scenes/manifest.json`
+- `public/ambient/scenes/README.md`
+
+The intended categories are:
+
+- misty forests
+- moonlit lakes
+- night skies
+- cozy desks with coffee and keyboards
+- subtle arcade glow
+- CRT reflections
+- rain on windows
+- headphones and vinyl
+- books and notebooks
+- quiet cat silhouettes
+- atmospheric city streets
+- warm lamps and shadows
+
+Guidance:
+
+- prefer original or properly licensed images only
+- prefer `WebP`
+- prefer `16:9` landscape
+- target `1920x1080` or larger
+- no embedded text
+- no logos
+- no recognizable copyrighted characters
+- no busy focal points that fight with text
+- favor atmosphere, negative space, and desk-distance calm
+
+Workflow:
+
+1. Generate or source images outside the repo using an approved workflow.
+2. Export them in a web-friendly format, ideally `WebP`.
+3. Save them into the correct category folder.
+4. Add entries to `manifest.json`.
+5. Run `npm run ambient:scenes:validate`.
+6. Run `npm run verify`.
+7. Generate an Ambient review packet.
+
+The first real import batch should stay intentionally small.
+
+Prefer starting with a few scenes in categories that are most likely to help text-heavy cards immediately:
+
+- `cozy-desks`
+- `warm-lamps-shadows`
+- `night-skies`
+- `rain-on-windows`
+
+That keeps the first visual review focused while still proving the library and manifest workflow end to end.
+
+An empty scene library is still valid.
+
+Ambient should degrade gracefully until real scenes are imported, but the route should be ready to use the library immediately once the first images are added.
+
+The strongest Ambient library will likely become a curated blend of original photography, AI-generated artwork, and other carefully selected visual assets.
+
+### Future Scene Library Growth
+
+The Ambient Scene Library should gradually expand over months and years.
+
+Scene sources may include:
+
+- Jason's own photography
+- AI-generated scenes
+- edited photography
+- curated or licensed imagery where appropriate
+
+Priority should be given to original photography because it naturally reflects the ArcadeGhosts atmosphere and makes the site feel personal rather than generic.
+
+Possible photography categories include:
+
+- rainy windows
+- coffee shops
+- coding desks
+- warm lamps
+- bookshelves
+- notebooks
+- keyboards
+- cats
+- moonlight
+- fog
+- quiet streets
+- parks
+- trees
+- reflections
+- arcades
+- CRTs
+- record players
+- seasonal scenes
+
+Photography should be treated as an ongoing collection effort rather than a dedicated project.
+
+Examples:
+
+- take a few photos during normal life
+- keep interesting images
+- occasionally edit or crop them
+- import them into the Ambient Scene Library using the normal workflow
+
+This is intentionally not a blocker for Ambient implementation.
+
+Ambient should continue evolving while the library slowly becomes more personal over time.
+
 ## Hardware Targets
 
 Ambient should aim at modest, realistic devices first:

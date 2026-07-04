@@ -6,8 +6,25 @@ import {
 } from "../site-data";
 import { businessLinks, businessPaths } from "../lib/business-config";
 
-export const navItems = [
+type HomeNavItem = {
+  label: string;
+  mobileLabel: string;
+  href: string;
+  mobilePriority: "primary" | "secondary" | "supporting";
+  ariaLabel?: string;
+  title?: string;
+};
+
+export const navItems: readonly HomeNavItem[] = [
   { label: "Start Here", mobileLabel: "Start", href: "#start-here", mobilePriority: "primary" },
+  {
+    label: "First Glow",
+    mobileLabel: "Glow",
+    href: "/ambient",
+    mobilePriority: "secondary",
+    ariaLabel: "Open the Ambient display",
+    title: "Ambient display",
+  },
   { label: "Now", mobileLabel: "Now", href: "#now", mobilePriority: "supporting" },
   { label: "Projects", mobileLabel: "Build", href: "#projects", mobilePriority: "primary" },
   { label: "Writing", mobileLabel: "Essays", href: "#writing", mobilePriority: "primary" },

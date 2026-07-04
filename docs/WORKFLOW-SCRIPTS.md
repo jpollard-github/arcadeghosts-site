@@ -9,3 +9,6 @@ npm run verify:full
 
 Visual work:
 npm run site:review-packet:timed
+
+Upload-ready visual work on macOS:
+npm run site:review-packet:timed -- --reveal
