@@ -29,8 +29,8 @@ const relatedSignals = [
     cta: "Play the game",
   },
   {
-    href: "/movies-tv",
-    title: "Movies & TV",
+    href: "/screening",
+    title: "Screening",
     description:
       "The larger screen-signal room where Twin Peaks sits beside other strange, resonant obsessions.",
     reason: "Because this project came from the same symbolic weather as the media that shaped it.",

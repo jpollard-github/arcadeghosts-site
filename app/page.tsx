@@ -6,6 +6,7 @@ import { HomeHero } from "./home/HomeHero";
 import { HomeHashScroller } from "./home/HomeHashScroller";
 import { HomeIntroBand } from "./home/HomeIntroBand";
 import { HomeProjects } from "./home/HomeProjects";
+import { HomeScreening } from "./home/HomeScreening";
 import { HomeStartHere } from "./home/HomeStartHere";
 import { HomeTinyThoughts } from "./home/HomeTinyThoughts";
 import { HomeWriting } from "./home/HomeWriting";
@@ -109,6 +110,7 @@ export default async function Home() {
       <HomeWriting />
       <HomeTinyThoughts />
       <HomeFunAndGames />
+      <HomeScreening />
       <HomeCats />
       <HomeAbout />
     </main>

@@ -1,6 +1,6 @@
 import { createOgImage, ogImageContentType, ogImageSize } from "../og";
 
-export const alt = "ArcadeGhosts movies and TV room";
+export const alt = "ArcadeGhosts screening room";
 export const size = ogImageSize;
 export const contentType = ogImageContentType;
 

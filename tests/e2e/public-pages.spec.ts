@@ -44,8 +44,8 @@ test("about page renders identity and resonance sections", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("movies and tv page renders the media grid", async ({ page }) => {
-  await page.goto("/movies-tv");
+test("screening page renders the media grid", async ({ page }) => {
+  await page.goto("/screening");
 
   await expect(
     page.getByRole("heading", { name: "Stories that keep following me around." }),
@@ -55,6 +55,15 @@ test("movies and tv page renders the media grid", async ({ page }) => {
   ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Twin Peaks Season 1" }),
+  ).toBeVisible();
+});
+
+test("legacy movies and tv route redirects to screening", async ({ page }) => {
+  await page.goto("/movies-tv");
+
+  await expect(page).toHaveURL(/\/screening$/);
+  await expect(
+    page.getByRole("heading", { name: "Stories that keep following me around." }),
   ).toBeVisible();
 });
 

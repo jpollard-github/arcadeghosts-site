@@ -13,7 +13,7 @@ const routes = [
   "/writings",
   "/search",
   "/arcade",
-  "/movies-tv",
+  "/screening",
   "/terminal",
   "/tiny-thoughts",
   "/twin-peaks-self",
@@ -47,7 +47,7 @@ const tapTargetChecks = [
     selectors: [".back-link", ".arcade-card-copy a"],
   },
   {
-    route: "/movies-tv",
+    route: "/screening",
     selectors: [".back-link", ".media-card-copy > a"],
   },
   {

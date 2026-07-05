@@ -46,9 +46,9 @@ const staticEntries: SearchEntry[] = [
   {
     id: "page-movies-tv",
     type: "page",
-    title: "Movies & TV",
+    title: "Screening",
     description: "Twin Peaks, Severance, horror, curious comedies, and screen signals.",
-    href: "/movies-tv",
+    href: "/screening",
     eyebrow: "Taste map",
     cta: "Browse screen signals",
     priority: 82,

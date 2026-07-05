@@ -39,8 +39,8 @@ const relatedSignals = [
     cta: "Read smaller signals",
   },
   {
-    href: "/movies-tv",
-    title: "Movies & TV",
+    href: "/screening",
+    title: "Screening",
     description:
       "A parallel taste map full of atmospheric favorites, curious comedies, and recurring emotional weather.",
     reason: "Because the same sensibility shaping this listening room also shapes the screen obsessions.",

@@ -13,7 +13,7 @@ test("homepage renders the hero and key sections", async ({ page }) => {
     }),
   ).toBeVisible();
   await expect(
-    mainNav.locator('a[href="/movies-tv"]'),
+    mainNav.locator('a[href="#screening"]'),
   ).toBeVisible();
   await expect(
     mainNav.locator('a[href="mailto:jason@arcadeghosts.org"]'),
@@ -45,16 +45,16 @@ test("homepage renders the hero and key sections", async ({ page }) => {
   await expect(page.getByText("80s Dev Terminal")).toHaveCount(0);
 });
 
-test("homepage navigation reaches the screening page", async ({ page }) => {
+test("homepage navigation reaches the screening section", async ({ page }) => {
   await page.goto("/");
   const mainNav = page.getByRole("navigation", { name: "Main navigation" });
 
-  await mainNav.locator('a[href="/movies-tv"]').click();
+  await mainNav.locator('a[href="#screening"]').click();
 
-  await expect(page).toHaveURL(/\/movies-tv$/);
+  await expect(page).toHaveURL(/#screening$/);
   await expect(
     page.getByRole("heading", {
-      name: "Stories that keep following me around.",
+      name: "A few screen stories still glowing in the lobby.",
     }),
   ).toBeVisible();
 });

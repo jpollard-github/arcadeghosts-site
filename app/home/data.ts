@@ -19,26 +19,18 @@ export const navItems: readonly HomeNavItem[] = [
   { label: "Start Here", mobileLabel: "Start", href: "#start-here", mobilePriority: "primary" },
   { label: "Projects", mobileLabel: "Build", href: "#projects", mobilePriority: "primary" },
   { label: "Writing", mobileLabel: "Essays", href: "#writing", mobilePriority: "primary" },
+  { label: "Tiny Thoughts", mobileLabel: "Tiny", href: "#tiny-thoughts", mobilePriority: "primary" },
   { label: "Fun & Games", mobileLabel: "Fun", href: "#fun-and-games", mobilePriority: "primary" },
   {
     label: "Screening",
     mobileLabel: "Screen",
-    href: "/movies-tv",
+    href: "#screening",
     mobilePriority: "primary",
-    ariaLabel: "Open the favorite movies and TV page",
-    title: "Favorite movies and TV",
+    ariaLabel: "Jump to the screening section",
+    title: "Screening section",
   },
-  { label: "Music", mobileLabel: "Music", href: "/music", mobilePriority: "primary" },
   { label: "Cats", mobileLabel: "Cats", href: "#cats", mobilePriority: "primary" },
   { label: "About", mobileLabel: "About", href: "#about", mobilePriority: "primary" },
-  {
-    label: "Contact",
-    mobileLabel: "Contact",
-    href: businessContact.emailHref,
-    mobilePriority: "primary",
-    ariaLabel: "Email Jason",
-    title: "Email Jason",
-  },
 ] as const;
 
 export const githubRepoUrl = businessLinks.github;
@@ -49,7 +41,7 @@ export const surpriseMeLinks = [
   { href: "/games/between-two-lodges" },
   { href: "/twin-peaks-self" },
   { href: "/music" },
-  { href: "/movies-tv" },
+  { href: "/screening" },
   { href: "/arcade" },
   { href: "/cats/beverly-and-lucinda" },
   { href: "/cats/thomas-jones-missy-cass" },
@@ -140,9 +132,9 @@ export const aboutCards = [
   },
   {
     eyebrow: "Taste Map",
-    title: "Movies & TV",
+    title: "Screening",
     text: `${visualMedia.length} screen signals: Twin Peaks, Severance, horror, curious comedies, and other resonant static.`,
-    href: "/movies-tv",
+    href: "/screening",
     cta: "Browse",
   },
   {

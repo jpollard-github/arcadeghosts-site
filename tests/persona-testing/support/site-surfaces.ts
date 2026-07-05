@@ -38,7 +38,7 @@ export const basePublicRouteCatalog: RouteCatalogEntry[] = [
   { id: "about", label: "About", path: "/about", area: "public", tags: ["thoughtful", "identity", "curious"], category: "identity", journeyEligible: true },
   { id: "music", label: "Music", path: "/music", area: "public", tags: ["music", "concerts", "listening"], category: "media", journeyEligible: true },
   { id: "arcade", label: "Arcade", path: "/arcade", area: "public", tags: ["retro", "arcades", "games"], category: "play", journeyEligible: true },
-  { id: "movies-tv", label: "Movies & TV", path: "/movies-tv", area: "public", tags: ["movies", "television", "weird"], category: "media", journeyEligible: true },
+  { id: "movies-tv", label: "Screening", path: "/screening", area: "public", tags: ["movies", "television", "weird"], category: "media", journeyEligible: true },
   { id: "twin-peaks-self", label: "Twin Peaks Self", path: "/twin-peaks-self", area: "public", tags: ["twin", "peaks", "thoughtful"], category: "media", journeyEligible: true },
   { id: "games-between-two-lodges", label: "Between Two Lodges", path: "/games/between-two-lodges", area: "public", tags: ["games", "twin", "peaks"], category: "play", journeyEligible: true },
   { id: "cats-beverly", label: "Beverly And Lucinda", path: "/cats/beverly-and-lucinda", area: "public", tags: ["cats", "warmth", "home"], category: "warmth", journeyEligible: true },

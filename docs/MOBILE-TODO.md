@@ -824,6 +824,7 @@ After mobile work settles, verify that the shared layout system still protects d
 Next recommended work:
 
 - Finish Phase 11 real-device QA, then rerun this desktop regression pass once from the final mobile-adjusted state.
+- Capture fresh `375px`, `390px`, and `430px` homepage screenshots for the new `Screening` section once a non-dev-server visual QA path is available.
 
 Status:
 
