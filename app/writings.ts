@@ -28,13 +28,13 @@ export const writings: WritingEntry[] = [
         href: "/#fun-and-games",
         title: "Fun & Games",
         description:
-          "The playful side of the site: strange prompts, game-shaped paths, and interactive static.",
+          "The playful side of the site: curious prompts, game-shaped paths, and interactive static.",
         reason: "Because comeback energy and playfulness belong near each other here.",
-        cta: "Follow the strange signal",
+        cta: "Follow the curious signal",
       },
       {
-        href: "/#now",
-        title: "What I'm Building Now",
+        href: "/#projects",
+        title: "Projects",
         description:
           "A live snapshot of the projects, ideas, and practical moves that are still glowing.",
         reason: "Because the site is partly about what it means to keep going in public.",

@@ -9,31 +9,6 @@ import { writings } from "../writings";
 
 const staticEntries: SearchEntry[] = [
   {
-    id: "page-build-log",
-    type: "page",
-    title: "Build Log",
-    description:
-      "A public work log of recent site improvements, fixes, experiments, and structural changes behind the scenes.",
-    href: "/build-log",
-    eyebrow: "Behind the curtain",
-    cta: "Open build log",
-    priority: 94,
-    searchText:
-      "build log work log changelog behind the scenes recent changes shipped fixes improvements tests analytics editorial workflow performance",
-  },
-  {
-    id: "page-updates",
-    type: "page",
-    title: "Updates",
-    description: "A running stream of recent writings and tiny thoughts for people looking for fresh things to read.",
-    href: "/updates",
-    eyebrow: "Fresh signals",
-    cta: "Open updates",
-    priority: 95,
-    searchText:
-      "updates changelog recent writing tiny thoughts fresh signals latest activity archive",
-  },
-  {
     id: "page-tiny-thoughts",
     type: "page",
     title: "Tiny Thoughts",
@@ -73,7 +48,7 @@ const staticEntries: SearchEntry[] = [
     id: "page-movies-tv",
     type: "page",
     title: "Movies & TV",
-    description: "Twin Peaks, Severance, horror, strange comedies, and screen signals.",
+    description: "Twin Peaks, Severance, horror, curious comedies, and screen signals.",
     href: "/movies-tv",
     eyebrow: "Taste map",
     cta: "Browse screen signals",
@@ -118,10 +93,22 @@ const staticEntries: SearchEntry[] = [
       "work with me freelance consulting side projects automation ai workflow developer tooling web applications technical problem solving",
   },
   {
+    id: "page-terminal",
+    type: "page",
+    title: "Terminal",
+    description: "A green-screen command room with shortcuts into projects, about, music, cats, arcade, and contact.",
+    href: "/terminal",
+    eyebrow: "Fun and games",
+    cta: "Open terminal",
+    priority: 77,
+    searchText:
+      "terminal green screen command line projects about music cats arcade contact old computer neon personal signal",
+  },
+  {
     id: "page-between-two-lodges",
     type: "page",
     title: "Between Two Lodges",
-    description: "A browser text adventure about coffee, clues, dreams, and strange woods.",
+    description: "A browser text adventure about coffee, clues, dreams, and curious woods.",
     href: "/games/between-two-lodges",
     eyebrow: "Game",
     cta: "Play the game",

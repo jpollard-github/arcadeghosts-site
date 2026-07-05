@@ -14,24 +14,24 @@ const quickLinks = [
     title: "Proof, trust, and next step",
     text: "If you are here with practical intent, skip the hallway and go straight to the trust path.",
     links: [
-      { href: "/build-log", label: "Build Log" },
+      { href: "/#projects", label: "Projects" },
       { href: businessPaths.workWithMe, label: "Work With Me" },
       { href: "/about", label: "About" },
     ],
   },
   {
     eyebrow: "Returning",
-    title: "Fresh things and living rooms",
-    text: "If you already know the place a little, these are the fastest ways to see what is alive right now.",
+    title: "Living rooms",
+    text: "If you already know the place a little, these are the fastest ways to check the rooms that change most often.",
     links: [
-      { href: "/updates", label: "Updates" },
       { href: "/tiny-thoughts", label: "Tiny Thoughts" },
       { href: "/writings", label: "Writings" },
+      { href: "/music", label: "Music" },
     ],
   },
   {
     eyebrow: "Weird",
-    title: "Stranger corners",
+    title: "Curious corners",
     text: "Search is good for direct finding, but these are the rooms people usually mean when they want the odder heartbeat.",
     links: [
       { href: "/twin-peaks-self", label: "Twin Peaks Self" },
@@ -68,7 +68,7 @@ export function SearchPageClient({ entries }: { entries: SearchEntry[] }) {
 
   return (
     <section className="content-section search-section">
-      <Link className="back-link" href="/#top">
+      <Link className="back-link" href="/">
         Back Home
       </Link>
       <div className="search-header">

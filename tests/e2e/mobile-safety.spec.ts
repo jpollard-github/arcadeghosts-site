@@ -15,8 +15,8 @@ const routes = [
   "/search",
   "/arcade",
   "/movies-tv",
+  "/terminal",
   "/tiny-thoughts",
-  "/updates",
   "/twin-peaks-self",
   "/cats/beverly-and-lucinda",
   "/cats/thomas-jones-missy-cass",
@@ -30,10 +30,6 @@ const tapTargetChecks = [
   {
     route: "/search",
     selectors: [".back-link", ".search-input-wrap input", ".search-quick-link-chip", ".search-result-link"],
-  },
-  {
-    route: "/updates",
-    selectors: [".back-link", ".feed-link", ".update-link"],
   },
   {
     route: "/tiny-thoughts",
@@ -54,6 +50,10 @@ const tapTargetChecks = [
   {
     route: "/movies-tv",
     selectors: [".back-link", ".media-card-copy > a"],
+  },
+  {
+    route: "/terminal",
+    selectors: [".back-link", ".hero-terminal-reset", ".hero-terminal-input-row input"],
   },
 ] as const;
 

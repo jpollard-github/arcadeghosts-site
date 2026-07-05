@@ -8,14 +8,14 @@ import { visualMedia } from "../site-data";
 export const metadata: Metadata = {
   title: "Movies and TV Shows That Resonated",
   description:
-    "Twin Peaks, Severance, horror, strange comedies, memory-loop movies, and other movies and TV shows that stuck with Jason Pollard.",
+    "Twin Peaks, Severance, horror, curious comedies, memory-loop movies, and other movies and TV shows that stuck with Jason Pollard.",
   alternates: {
     canonical: "/movies-tv",
   },
   openGraph: {
     title: "Movies and TV Shows That Resonated",
     description:
-      "Twin Peaks, Severance, horror, strange comedies, memory-loop movies, and other screen obsessions.",
+      "Twin Peaks, Severance, horror, curious comedies, memory-loop movies, and other screen obsessions.",
     url: "/movies-tv",
   },
 };
@@ -62,7 +62,7 @@ export default function MoviesTvPage() {
       <section className="content-section media-section collection-section">
         <SectionHeading eyebrow="Movies & TV" title="Stories that keep following me around.">
           This room is less about reviews and more about the stories, moods,
-          and strange signals that keep circling back through my life.
+          and curious signals that keep circling back through my life.
         </SectionHeading>
         <div className="media-intro-panel">
           <p className="media-intro-lead">
@@ -70,7 +70,7 @@ export default function MoviesTvPage() {
             just leave a residue I still recognize later.
           </p>
           <p>
-            Twin Peaks, Severance, horror, strange comedies, memory loops,
+            Twin Peaks, Severance, horror, curious comedies, memory loops,
             longing, dread, tenderness, fluorescent weirdness. This is the
             shelf of screen stories that stayed loud enough to become part of
             the site&apos;s atmosphere.

@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "ArcadeGhosts",
   title: "ArcadeGhosts | Jason Pollard",
   description:
-    "Jason Pollard's personal site for projects, writing, music, cats, arcade nostalgia, and strange little experiments.",
+    "Jason Pollard's personal site for projects, writing, music, cats, arcade nostalgia, and curious little experiments.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://arcadeghosts.org",
   author: "Jason Pollard",
   github: "https://github.com/jpollard-github/arcadeghosts-site",

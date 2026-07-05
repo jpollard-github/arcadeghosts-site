@@ -69,7 +69,7 @@ test("movies and tv page renders the media grid", async ({ page }) => {
   await page.goto("/movies-tv");
 
   await expect(
-    page.getByRole("heading", { name: "Movies & TV Shows." }),
+    page.getByRole("heading", { name: "Stories that keep following me around." }),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Back Home" }),
@@ -77,6 +77,19 @@ test("movies and tv page renders the media grid", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Twin Peaks Season 1" }),
   ).toBeVisible();
+});
+
+test("terminal page renders the standalone green terminal", async ({ page }) => {
+  await page.goto("/terminal");
+
+  await expect(
+    page.getByRole("heading", { name: "The green-screen room has its own door now." }),
+  ).toBeVisible();
+  await expect(page.getByText("80s Dev Terminal")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Back Home" })).toHaveAttribute(
+    "href",
+    "/#fun-and-games",
+  );
 });
 
 test("search page can find twin peaks rooms and public writings", async ({ page }) => {
@@ -112,7 +125,7 @@ test("writings index and a writing detail page render correctly", async ({ page 
   await expect(page.getByRole("region", { name: "A few nearby signals." })).toBeVisible();
 });
 
-test("tiny thoughts archive and updates page expose rss and recent signals", async ({ page }) => {
+test("tiny thoughts archive exposes rss", async ({ page }) => {
   await page.goto("/tiny-thoughts");
 
   await expect(
@@ -121,35 +134,17 @@ test("tiny thoughts archive and updates page expose rss and recent signals", asy
   await expect(
     page.getByRole("link", { name: "Subscribe via RSS" }),
   ).toHaveAttribute("href", "/tiny-thoughts/rss.xml");
-
-  await page.goto("/updates");
-
-  await expect(
-    page.getByRole("heading", { name: "What changed in the booth." }),
-  ).toBeVisible();
-  await expect(page.getByRole("link", { name: "Writing RSS" })).toHaveAttribute("href", "/writings/rss.xml");
-  await expect(page.getByRole("link", { name: "Tiny Thoughts RSS" })).toHaveAttribute("href", "/tiny-thoughts/rss.xml");
 });
 
-test("build log page surfaces recent site work", async ({ page }) => {
-  await page.goto("/build-log");
-
-  await expect(
-    page.getByRole("heading", { name: "What changed behind the curtain." }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("article").filter({
-      has: page.getByRole("heading", {
-        name: "Compressed image-heavy rooms and homepage art",
+test("removed build log and updates routes return not found", async ({ page }) => {
+  for (const route of ["/build-log", "/updates"]) {
+    await page.goto(route);
+    await expect(
+      page.getByRole("heading", {
+        name: "The page you are looking for is not what it seems.",
       }),
-    }).getByRole("heading", {
-      name: "Compressed image-heavy rooms and homepage art",
-    }),
-  ).toBeVisible();
-  await expect(page.getByRole("link", { name: "Back Home" })).toHaveAttribute(
-    "href",
-    "/#build-log",
-  );
+    ).toBeVisible();
+  }
 });
 
 test("custom 404 page renders surreal copy", async ({ page }) => {
@@ -208,7 +203,8 @@ test("public feed, sitemap, robots, and json endpoints respond with expected sha
   expect(await robots.text()).toContain("Sitemap:");
   const sitemapText = await sitemap.text();
   expect(sitemapText).toContain("/tiny-thoughts");
-  expect(sitemapText).toContain("/build-log");
+  expect(sitemapText).not.toContain("/build-log");
+  expect(sitemapText).not.toContain("/updates");
 
   const projectsJson = (await projects.json()) as { projects: unknown[] };
   const nowJson = (await now.json()) as { items: unknown[] };

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { aboutCards } from "./data";
-import { businessPaths } from "../lib/business-config";
 
 function AboutCardLink({
   href,
@@ -47,7 +46,7 @@ export function HomeAbout() {
         <h2>Who I am and how I think.</h2>
         <p>
           I&apos;m Jason Pollard, a software developer, cat dad, music
-          enthusiast, arcade wanderer, and lifelong collector of strange ideas.
+          enthusiast, arcade wanderer, and lifelong collector of curious ideas.
           I build tools and experiments that are practical enough to use and
           personal enough to remember.
         </p>
@@ -67,14 +66,13 @@ export function HomeAbout() {
           <li>Twin Peaks atmosphere</li>
           <li>Hidden meaning in songs and films</li>
           <li>Old arcades and forgotten cabinets</li>
-          <li>Deep conversations and strange ideas</li>
+          <li>Deep conversations and curious ideas</li>
         </ul>
 
         <p>
           ArcadeGhosts is ultimately an experiment in whether a collection of
           interests, stories, projects, music, photos, and ideas can attract
-          the right conversations. If something here feels familiar, reach out.{" "}
-          <Link href={businessPaths.workWithMe}>I occasionally take on small side projects too.</Link>
+          the right conversations. If something here feels familiar, reach out.
         </p>
 
         <p className="about-preview-link">

@@ -31,6 +31,10 @@ export type RouteCatalogEntry = SiteSurface & {
 
 export const basePublicRouteCatalog: RouteCatalogEntry[] = [
   { id: "home", label: "Homepage", path: "/", area: "public", tags: ["software", "writing", "curious", "projects"], category: "orientation", journeyEligible: true },
+  // Legacy persona-test alias preserved after the public Build Log route removal.
+  { id: "build-log", label: "Projects", path: "/#projects", area: "public", tags: ["software", "projects", "proof"], category: "projects", journeyEligible: true },
+  // Legacy persona-test alias preserved after the public Updates route removal.
+  { id: "updates", label: "Tiny Thoughts", path: "/tiny-thoughts#latest", area: "public", tags: ["writing", "fresh", "signals"], category: "writing", journeyEligible: true },
   { id: "about", label: "About", path: "/about", area: "public", tags: ["thoughtful", "identity", "curious"], category: "identity", journeyEligible: true },
   { id: "work-with-me", label: "Work With Me", path: "/work-with-me", area: "public", tags: ["software", "clear", "trust", "projects"], category: "business", journeyEligible: true },
   { id: "music", label: "Music", path: "/music", area: "public", tags: ["music", "concerts", "listening"], category: "media", journeyEligible: true },
@@ -43,8 +47,6 @@ export const basePublicRouteCatalog: RouteCatalogEntry[] = [
   { id: "writings", label: "Writings", path: "/writings", area: "public", tags: ["writing", "thoughtful", "curiosity"], category: "writing", journeyEligible: true },
   { id: "tiny-thoughts", label: "Tiny Thoughts", path: "/tiny-thoughts", area: "public", tags: ["writing", "small", "signals"], category: "writing", journeyEligible: true },
   { id: "search", label: "Search", path: "/search", area: "public", tags: ["find", "orientation", "curiosity"], category: "utility", journeyEligible: true },
-  { id: "updates", label: "Updates", path: "/updates", area: "public", tags: ["recent", "changes", "projects"], category: "orientation", journeyEligible: true },
-  { id: "build-log", label: "Build Log", path: "/build-log", area: "public", tags: ["building", "projects", "software"], category: "projects", journeyEligible: true },
   { id: "error-preview-not-found", label: "404 Preview", path: "/error-preview/not-found", area: "public", tags: ["errors", "tone", "surreal"], category: "errors", journeyEligible: false },
   { id: "error-preview-server-error", label: "500 Preview", path: "/error-preview/server-error", area: "public", tags: ["errors", "tone", "surreal"], category: "errors", journeyEligible: false },
 ];

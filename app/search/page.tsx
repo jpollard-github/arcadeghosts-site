@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Search ArcadeGhosts",
     description:
-      "Find writings, projects, Tiny Thoughts, games, music, and strange little signals across the site.",
+      "Find writings, projects, Tiny Thoughts, games, music, and curious little signals across the site.",
     url: "/search",
   },
 };

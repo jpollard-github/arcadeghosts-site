@@ -7,7 +7,7 @@ export function MusicOddFindingsArcade() {
       <InsightHeading
         eyebrow="Odd Findings Arcade"
         id="music-odd-arcade-title"
-        title="Collectible little warnings from the stranger corners of the archive."
+        title="Collectible little warnings from the more curious corners of the archive."
       >
         Not every useful pattern needs a whole era. Some of them are just weird
         enough to deserve their own cabinet stickers.

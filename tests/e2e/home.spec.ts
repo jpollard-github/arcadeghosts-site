@@ -5,57 +5,62 @@ test("homepage renders the hero and key sections", async ({ page }) => {
   const mainNav = page.getByRole("navigation", { name: "Main navigation" });
 
   await expect(
+    page.getByText("A living portfolio for software, writing, and who is Jason."),
+  ).toBeVisible();
+  await expect(
     page.getByRole("heading", {
-      name: "Useful tools with a strange little heartbeat.",
+      name: "Useful tools with a curious little heartbeat.",
     }),
   ).toBeVisible();
+  await expect(
+    mainNav.locator('a[href="/movies-tv"]'),
+  ).toBeVisible();
+  await expect(
+    mainNav.locator('a[href="mailto:jason@arcadeghosts.org"]'),
+  ).toHaveAttribute("href", "mailto:jason@arcadeghosts.org");
   await expect(
     mainNav.getByRole("link", { name: "Work With Me", exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", {
-      name: "What I'm building and thinking about.",
-    }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", {
-      name: "Recent changes worth noticing.",
-    }),
-  ).toBeVisible();
+  ).toHaveCount(0);
   await expect(
     page.getByRole("heading", {
       name: "Shipped, active, paused, and becoming.",
     }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: "Games, rooms, and playable static.",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: "Who I am and how I think.",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Start Here", exact: true }).first(),
+  ).toHaveAttribute("href", "#start-here");
+  await expect(
+    page.locator(".hero-actions"),
+  ).toHaveCount(0);
+  await expect(page.getByText("80s Dev Terminal")).toHaveCount(0);
 });
 
-test("homepage navigation reaches the work page", async ({ page }) => {
+test("homepage navigation reaches the screening page", async ({ page }) => {
   await page.goto("/");
   const mainNav = page.getByRole("navigation", { name: "Main navigation" });
 
-  await mainNav.getByRole("link", { name: "Work With Me", exact: true }).click();
+  await mainNav.locator('a[href="/movies-tv"]').click();
 
-  await expect(page).toHaveURL(/\/work-with-me$/);
+  await expect(page).toHaveURL(/\/movies-tv$/);
   await expect(
     page.getByRole("heading", {
-      name: "Small projects. Clear problems. Personal attention.",
+      name: "Stories that keep following me around.",
     }),
   ).toBeVisible();
 });
 
-test("homepage build log preview links to the full build log", async ({ page }) => {
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Open the full build log" }).click();
-
-  await expect(page).toHaveURL(/\/build-log$/);
-  await expect(
-    page.getByRole("heading", { name: "What changed behind the curtain." }),
-  ).toBeVisible();
-});
-
-test("homepage terminal shows help and project link output", async ({ page }) => {
-  await page.goto("/");
+test("terminal page shows help and project link output", async ({ page }) => {
+  await page.goto("/terminal");
 
   await expect(
     page.getByText("80s Dev Terminal"),

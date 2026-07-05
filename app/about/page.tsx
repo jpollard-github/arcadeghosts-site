@@ -5,11 +5,11 @@ import { businessPaths } from "../lib/business-config";
 
 const aboutTrustCards = [
   {
-    eyebrow: "Proof",
-    title: "Build Log",
-    text: "A public work log showing shipped improvements, editorial cleanup, test passes, and the behind-the-scenes tuning that keeps the site alive.",
-    href: "/build-log",
-    cta: "See Recent Changes",
+    eyebrow: "Current Work",
+    title: "Projects",
+    text: "A visible workbench of active, shipped, paused, and becoming projects so you can see what I actually build.",
+    href: "/#projects",
+    cta: "Open The Workbench",
   },
   {
     eyebrow: "Next Step",
@@ -19,11 +19,11 @@ const aboutTrustCards = [
     cta: "See The Work Path",
   },
   {
-    eyebrow: "Current Work",
-    title: "Projects",
-    text: "Active, shipped, paused, and becoming: the workbench view of what I am building right now.",
-    href: "/#projects",
-    cta: "Open The Workbench",
+    eyebrow: "Voice",
+    title: "Writings",
+    text: "A quieter room for longer thoughts on technology, identity, grief, attention, and the suspiciously brave act of trying again.",
+    href: "/writings",
+    cta: "Read A Few Signals",
   },
 ];
 
@@ -91,14 +91,14 @@ function AboutCardLink({
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Who Jason Pollard is, how he thinks, and the strange combination of software, music, arcades, cats, and ideas behind ArcadeGhosts.",
+    "Who Jason Pollard is, how he thinks, and the curious combination of software, music, arcades, cats, and ideas behind ArcadeGhosts.",
   alternates: {
     canonical: "/about",
   },
   openGraph: {
     title: "About Jason Pollard",
     description:
-      "Software developer, cat dad, music enthusiast, arcade wanderer, and collector of strange ideas.",
+      "Software developer, cat dad, music enthusiast, arcade wanderer, and collector of curious ideas.",
     url: "/about",
   },
 };
@@ -115,7 +115,7 @@ export default function AboutPage() {
           <h1>Who I am and how I think.</h1>
           <p>
             I&apos;m Jason Pollard, a software developer, cat dad, music
-            enthusiast, arcade wanderer, and lifelong collector of strange
+            enthusiast, arcade wanderer, and lifelong collector of curious
             ideas. I build tools and experiments that are practical enough to
             use and personal enough to remember, which is also the shortest
             explanation of what this site is trying to prove.
@@ -137,7 +137,7 @@ export default function AboutPage() {
             both the person and the builder.
           </p>
           <p>
-            If you want the stranger version of that same truth, <Link href="/agents">The Five Agents</Link>{" "}
+            If you want the more curious version of that same truth, <Link href="/agents">The Five Agents</Link>{" "}
             is the closest thing this site has to a field guide for how I make decisions.
           </p>
           <h3>If you want the practical trail first:</h3>
@@ -154,11 +154,11 @@ export default function AboutPage() {
             ))}
           </div>
           <p>
-            <Link href="/build-log">Build Log</Link> is the proof-of-active-work
-            path. <Link href={businessPaths.workWithMe}>Work With Me</Link> is the
-            practical next step if you think I might be able to help. This
-            page is the human context that connects those two, and Projects
-            helps show the current workbench in motion.
+            <Link href="/#projects">Projects</Link> is the clearest proof-of-work
+            path on the public site right now. <Link href={businessPaths.workWithMe}>Work With Me</Link>{" "}
+            is the practical next step if you think I might be able to help.
+            This page is the human context that connects those two, and
+            Writings adds the longer-form version of how I think.
           </p>
 
           <h3>If you&apos;re the type of person who enjoys:</h3>

@@ -7,9 +7,9 @@ export const contentType = ogImageContentType;
 export default function Image() {
   return createOgImage({
     eyebrow: "ArcadeGhosts",
-    title: "Useful tools with a strange little heartbeat.",
+    title: "Useful tools with a curious little heartbeat.",
     description:
-      "Projects, writing, cats, music, arcade nostalgia, and strange little experiments from the neon forest.",
+      "Projects, writing, cats, music, arcade nostalgia, and curious little experiments from the neon forest.",
     footer: ["Projects", "Writing", "Arcades", "Cats"],
     glow: "#29f0d4",
   });

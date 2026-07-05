@@ -42,7 +42,7 @@ const relatedSignals = [
     href: "/movies-tv",
     title: "Movies & TV",
     description:
-      "A parallel taste map full of atmospheric favorites, strange comedies, and recurring emotional weather.",
+      "A parallel taste map full of atmospheric favorites, curious comedies, and recurring emotional weather.",
     reason: "Because the same sensibility shaping this listening room also shapes the screen obsessions.",
     cta: "Browse the taste map",
   },

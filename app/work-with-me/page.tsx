@@ -173,18 +173,18 @@ const trustClusterCards = [
     cta: "Meet Jason",
   },
   {
-    eyebrow: "Proof Of Life",
-    title: "Build Log",
-    text: "A public record of recent shipped improvements, structural changes, editorial cleanup, and the ongoing tuning behind ArcadeGhosts.",
-    href: "/build-log",
-    cta: "See Recent Changes",
-  },
-  {
     eyebrow: "Current Work",
     title: "Projects",
     text: "A visible workbench of shipped, active, paused, and becoming projects so you do not have to guess what kind of builder I am.",
     href: "/#projects",
     cta: "Open The Workbench",
+  },
+  {
+    eyebrow: "Voice",
+    title: "Writings",
+    text: "Longer thoughts on technology, attention, identity, and trying again that help explain the judgment behind the implementation.",
+    href: "/writings",
+    cta: "Read A Few Signals",
   },
 ];
 
@@ -212,6 +212,9 @@ export default function WorkWithMePage() {
       />
       <section className="work-hero">
         <div className="work-hero-copy">
+          <Link className="back-link" href="/">
+            Back Home
+          </Link>
           <p className="eyebrow">Work With Me</p>
           <h1>Small projects. Clear problems. Personal attention.</h1>
           <p className="work-lead">
@@ -390,7 +393,7 @@ export default function WorkWithMePage() {
         <p className="work-hero-note work-section-note">
           If you&apos;re not sure where your project fits, email me the problem
           and I&apos;ll tell you honestly whether it sounds like a fit. If the
-          work turns out to be larger, stranger, or more tangled than these
+          work turns out to be larger, more unusual, or more tangled than these
           ranges, I&apos;ll say that up front.
         </p>
       </section>

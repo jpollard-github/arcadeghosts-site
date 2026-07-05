@@ -106,8 +106,8 @@ export const metadata: Metadata = {
 export default function AgentsPage() {
   return (
     <PageShell className="agents-page">
-      <Link className="back-link agents-back-link" href="/about">
-        Back to About
+      <Link className="back-link agents-back-link" href="/">
+        Back Home
       </Link>
 
       <section className="agents-hero">

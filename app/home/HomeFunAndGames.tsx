@@ -1,13 +1,12 @@
 import { SectionHeading } from "../SectionHeading";
-import { SignalBooth } from "../SignalBooth";
 import { funAndGamesCards } from "./data";
 
 export function HomeFunAndGames() {
   return (
     <section className="content-section fun-games-section" id="fun-and-games">
-      <SectionHeading eyebrow="Fun and Games" title="Oracles, rooms, and playable static.">
-        The playful side of the site: interactive toys, symbolic journeys, and
-        game-shaped paths through the neon forest.
+      <SectionHeading eyebrow="Fun and Games" title="Games, rooms, and playable static.">
+        The playful side of the site: arcade glow, Twin Peaks-shaped detours,
+        and one green terminal room with its own old-screen pulse.
       </SectionHeading>
       <div className="section-link-grid fun-games-grid">
         {funAndGamesCards.map((card) => (
@@ -19,14 +18,6 @@ export function HomeFunAndGames() {
           </a>
         ))}
       </div>
-      <section className="signal-booth-section" id="signal-booth">
-        <SectionHeading eyebrow="Signal Booth" title="A random oracle for your people.">
-          Two hundred signals pulled from the site&apos;s obsessions: arcade
-          glow, cats, songs, road trips, comeback stories, weird films, AI
-          tools, and late-night notes that might know where they belong.
-        </SectionHeading>
-        <SignalBooth />
-      </section>
     </section>
   );
 }

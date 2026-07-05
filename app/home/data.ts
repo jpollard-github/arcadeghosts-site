@@ -4,7 +4,7 @@ import {
   thomasJonesMissyCassPhotos,
   visualMedia,
 } from "../site-data";
-import { businessLinks, businessPaths } from "../lib/business-config";
+import { businessContact, businessLinks } from "../lib/business-config";
 
 type HomeNavItem = {
   label: string;
@@ -17,24 +17,28 @@ type HomeNavItem = {
 
 export const navItems: readonly HomeNavItem[] = [
   { label: "Start Here", mobileLabel: "Start", href: "#start-here", mobilePriority: "primary" },
-  {
-    label: "First Glow",
-    mobileLabel: "Glow",
-    href: "/ambient",
-    mobilePriority: "secondary",
-    ariaLabel: "Open the Ambient display",
-    title: "Ambient display",
-  },
-  { label: "Now", mobileLabel: "Now", href: "#now", mobilePriority: "supporting" },
   { label: "Projects", mobileLabel: "Build", href: "#projects", mobilePriority: "primary" },
   { label: "Writing", mobileLabel: "Essays", href: "#writing", mobilePriority: "primary" },
-  { label: "Search", mobileLabel: "Search", href: "/search", mobilePriority: "supporting" },
-  { label: "Fun & Games", mobileLabel: "Fun", href: "#fun-and-games", mobilePriority: "secondary" },
+  { label: "Fun & Games", mobileLabel: "Fun", href: "#fun-and-games", mobilePriority: "primary" },
+  {
+    label: "Screening",
+    mobileLabel: "Screen",
+    href: "/movies-tv",
+    mobilePriority: "primary",
+    ariaLabel: "Open the favorite movies and TV page",
+    title: "Favorite movies and TV",
+  },
+  { label: "Music", mobileLabel: "Music", href: "/music", mobilePriority: "primary" },
+  { label: "Cats", mobileLabel: "Cats", href: "#cats", mobilePriority: "primary" },
   { label: "About", mobileLabel: "About", href: "#about", mobilePriority: "primary" },
-  { label: "Work With Me", mobileLabel: "Work", href: businessPaths.workWithMe, mobilePriority: "primary" },
-  { label: "Music", mobileLabel: "Music", href: "/music", mobilePriority: "secondary" },
-  { label: "Cats", mobileLabel: "Cats", href: "#cats", mobilePriority: "secondary" },
-  { label: "Guestbook", mobileLabel: "Guestbook", href: "#guestbook", mobilePriority: "secondary" },
+  {
+    label: "Contact",
+    mobileLabel: "Contact",
+    href: businessContact.emailHref,
+    mobilePriority: "primary",
+    ariaLabel: "Email Jason",
+    title: "Email Jason",
+  },
 ] as const;
 
 export const githubRepoUrl = businessLinks.github;
@@ -49,8 +53,7 @@ export const surpriseMeLinks = [
   { href: "/arcade" },
   { href: "/cats/beverly-and-lucinda" },
   { href: "/cats/thomas-jones-missy-cass" },
-  { href: "/updates" },
-  { href: "/#signal-booth" },
+  { href: "/terminal" },
 ];
 
 export const startHereCards = [
@@ -59,7 +62,7 @@ export const startHereCards = [
     glyph: "::",
     eyebrow: "Personal",
     title: "I want to know Jason",
-    text: "Start with the human context: who I am, how I think, and why software, music, cats, stories, and strange little experiments all belong on the same site.",
+    text: "Start with the human context: who I am, how I think, and why software, music, cats, stories, and curious little experiments all belong on the same site.",
     audience: "You want the person before the projects.",
     href: "/about",
     cta: "Meet Jason First",
@@ -69,20 +72,10 @@ export const startHereCards = [
     glyph: "[_]",
     eyebrow: "Projects",
     title: "I’m here for projects",
-    text: "Go straight to the build log if you want proof of active work fast, then move outward into the broader projects and experiments still humming behind the site.",
-    audience: "You want proof and shipped work first.",
-    href: "/build-log",
-    cta: "Start With Proof",
-  },
-  {
-    variant: "workbench",
-    glyph: ">>",
-    eyebrow: "Professional",
-    title: "I’m thinking about working with you",
-    text: "If you are evaluating whether I can help, start with the practical path: what I do, how I work, and where to find proof of active building without digging through Search.",
-    audience: "You want the trust path and next step.",
-    href: businessPaths.workWithMe,
-    cta: "See The Work Path",
+    text: "Go straight to the workbench if you want the active, shipped, paused, and becoming view first, then wander outward into the rest of the site from there.",
+    audience: "You want current work and practical signal first.",
+    href: "/#projects",
+    cta: "Open The Workbench",
   },
   {
     variant: "static",
@@ -92,31 +85,48 @@ export const startHereCards = [
     text: "Take the warmer route through essays, songs, cat rooms, Twin Peaks atmosphere, arcade glow, and the parts of the site that make ArcadeGhosts feel haunted in a friendly way.",
     audience: "You want the site's odd little heartbeat.",
     href: "#writing",
-    cta: "Follow The Strange Signal",
+    cta: "Follow The Curious Signal",
+  },
+  {
+    variant: "workbench",
+    glyph: ">>",
+    eyebrow: "Contact",
+    title: "I want a direct line to Jason",
+    text: "If the site already feels like your kind of signal, skip the hallway and send a note directly instead of wandering through a business pitch room.",
+    audience: "You want the simplest way to reach out.",
+    href: businessContact.emailHref,
+    cta: "Email Jason",
   },
 ];
 
 export const funAndGamesCards = [
   {
-    eyebrow: "Interactive",
-    title: "Signal Booth",
-    text: "A random oracle for people who communicate through arcade glow, cats, songs, road trips, odd films, and late-night notes.",
-    href: "#signal-booth",
-    cta: "Try it",
+    eyebrow: "Arcade Games",
+    title: "Arcade games",
+    text: "Favorite cabinets, quarter-light nostalgia, and the old machines that still hum behind the rest of the site.",
+    href: "/arcade",
+    cta: "Open arcade room",
   },
   {
-    eyebrow: "Reflection",
-    title: "The Lodges Within",
+    eyebrow: "Twin Peaks Game",
+    title: "Twin Peaks game #1",
     text: "A Twin Peaks-inspired self-guided journey for naming the room you are in and leaving with one usable next step.",
     href: "/twin-peaks-self",
-    cta: "Enter",
+    cta: "Enter the lodges",
   },
   {
-    eyebrow: "Game",
-    title: "Between Two Lodges",
+    eyebrow: "Twin Peaks Game",
+    title: "Twin Peaks game #2",
     text: "A browser text adventure about coffee, woods, clues, dreams, recurring witnesses, and alternate endings.",
     href: "/games/between-two-lodges/",
-    cta: "Play",
+    cta: "Play the game",
+  },
+  {
+    eyebrow: "Terminal",
+    title: "Terminal",
+    text: "The green command line has its own room now if you want the old-screen version of the site&apos;s personal signal.",
+    href: "/terminal",
+    cta: "Open terminal",
   },
 ];
 
@@ -131,7 +141,7 @@ export const aboutCards = [
   {
     eyebrow: "Taste Map",
     title: "Movies & TV",
-    text: `${visualMedia.length} screen signals: Twin Peaks, Severance, horror, memory loops, strange comedies, and other resonant static.`,
+    text: `${visualMedia.length} screen signals: Twin Peaks, Severance, horror, curious comedies, and other resonant static.`,
     href: "/movies-tv",
     cta: "Browse",
   },
@@ -143,11 +153,11 @@ export const aboutCards = [
     cta: "Listen",
   },
   {
-    eyebrow: "Side Projects",
-    title: "Work With Me",
-    text: "I occasionally take on small fixed-price projects involving web apps, automation, AI workflows, developer tooling, and practical problem solving.",
-    href: businessPaths.workWithMe,
-    cta: "Inquire",
+    eyebrow: "Ambient",
+    title: "First Glow",
+    text: "A quieter personal/tablet feature: drifting signals, neon atmosphere, and a softer mode for the same haunted house.",
+    href: "/ambient",
+    cta: "Drift",
   },
 ];
 

@@ -28,7 +28,7 @@ export const terminalCommands: TerminalCommandDefinition[] = [
     description: "View shipped, active, paused, and becoming projects.",
     responseLines: [
       "Project archive loaded.",
-      "Shipped experiments, active builds, and strange little works-in-progress are ready.",
+      "Shipped experiments, active builds, and curious little works-in-progress are ready.",
     ],
     href: "/#projects",
     linkLabel: "Open projects in a new tab",

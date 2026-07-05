@@ -36,9 +36,6 @@ export default function WritingsIndexPage() {
             <a className="feed-link" href="/writings/rss.xml">
               Subscribe via RSS
             </a>
-            <Link className="feed-link" href="/updates">
-              See recent updates
-            </Link>
           </div>
         </div>
         <div className="writing-index-grid">

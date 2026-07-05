@@ -7,13 +7,13 @@ export function HomeStartHere() {
     <section className="content-section start-here-section" id="start-here">
       <SectionHeading eyebrow="New Here?" title="Start with one good door into ArcadeGhosts.">
         ArcadeGhosts is my personal site for software projects, writing,
-        music, cats, and strange little experiments. If we just met, choose
+        music, cats, and curious little experiments. If we just met, choose
         the path that sounds most like your kind of conversation and start
         there.
       </SectionHeading>
       <p className="start-here-kicker">
         Choose a lane: personal context, proof of active work, practical next
-        step, or the warmer strange stuff.
+        step, or the warmer curious stuff.
       </p>
       <div className="start-here-grid" aria-label="Recommended first paths">
         {startHereCards.map((card) => (

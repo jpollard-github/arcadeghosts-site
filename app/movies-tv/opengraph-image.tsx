@@ -8,7 +8,7 @@ export default function Image() {
   return createOgImage({
     eyebrow: "Movies & TV",
     title: "Screen signals that stuck around.",
-    description: "Twin Peaks, Severance, horror, strange comedies, memory loops, and other resonant static.",
+    description: "Twin Peaks, Severance, horror, curious comedies, memory loops, and other resonant static.",
     footer: ["Twin Peaks", "Severance", "Horror", "ArcadeGhosts"],
     glow: "#ffcf6e",
   });
