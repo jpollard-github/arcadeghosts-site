@@ -25,7 +25,6 @@ const footerGroups = [
       { href: "/tiny-thoughts", label: "Tiny Thoughts" },
       { href: "/writings/rss.xml", label: "Writing RSS" },
       { href: "/tiny-thoughts/rss.xml", label: "Tiny Thoughts RSS" },
-      { href: "/work-with-me", label: "Work With Me" },
     ],
   },
 ] as const;

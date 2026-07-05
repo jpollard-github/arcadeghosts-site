@@ -38,6 +38,7 @@
     "playwright-report",
     "test-results",
     "persona-results",
+    "archived-routes",
     "reports",
     "dist",
     "out"

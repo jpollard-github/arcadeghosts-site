@@ -93,8 +93,8 @@ test("combined packet keeps a legacy audit summary when journeys rerun", () => {
         contextInfluences: ["Busy or time-pressured context pushes direct orientation and shorter routes."],
         targetPageCount: 5,
         maxPageCount: 7,
-        visitedRoutes: ["/", "/work-with-me", "/search", "/build-log"],
-        expectedRoutes: ["/about", "/work-with-me", "/build-log"],
+        visitedRoutes: ["/", "/search", "/build-log"],
+        expectedRoutes: ["/about", "/search", "/build-log"],
         missingExpectedRoutes: ["/about"],
         expectedRouteWarnings: [
           "Journey missed expected routes: /about.",
@@ -127,7 +127,7 @@ test("combined packet keeps a legacy audit summary when journeys rerun", () => {
         outcomeReasons: ["Trust-focused journey succeeded weakly without visiting `/about`."],
         success: true,
         successBoolean: true,
-        matchedSuccessConditionLabels: ["Build log plus work-with-me visited"],
+        matchedSuccessConditionLabels: ["Build log or search visited"],
         trustSignalHits: [
           {
             surfaceId: "build-log",
@@ -141,7 +141,7 @@ test("combined packet keeps a legacy audit summary when journeys rerun", () => {
             surfaceId: "build-log",
             label: "Build Log",
             route: "/build-log",
-            reason: "Helped satisfy the scenario goal \"Build confidence\" via success condition \"Build log plus work-with-me visited\".",
+            reason: "Helped satisfy the scenario goal \"Build confidence\" via success condition \"Build log or search visited\".",
           },
         ],
         routeCatalogWarnings: [],
@@ -152,8 +152,8 @@ test("combined packet keeps a legacy audit summary when journeys rerun", () => {
           totalJourneyEligibleRoutes: 10,
           selectedJourneyEligibleRoutes: 4,
           coverageRatio: 0.4,
-          journeyEligibleRoutes: ["/", "/about", "/work-with-me", "/search", "/updates", "/build-log"],
-          selectedRoutes: ["/", "/work-with-me", "/search", "/build-log"],
+          journeyEligibleRoutes: ["/", "/about", "/search", "/updates", "/build-log"],
+          selectedRoutes: ["/", "/search", "/build-log"],
         },
       },
     ];

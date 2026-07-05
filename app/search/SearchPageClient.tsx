@@ -4,19 +4,18 @@ import Link from "next/link";
 import { useDeferredValue, useEffect, useRef, useState } from "react";
 import { TrackedLink } from "../TrackedLink";
 import { trackEvent } from "../lib/analytics";
-import { businessPaths } from "../lib/business-config";
 import type { SearchEntry } from "../lib/search-shared";
 import { searchEntries } from "../lib/search-shared";
 
 const quickLinks = [
   {
-    eyebrow: "Professional",
-    title: "Proof, trust, and next step",
-    text: "If you are here with practical intent, skip the hallway and go straight to the trust path.",
+    eyebrow: "Orientation",
+    title: "A faster way through the house",
+    text: "If you want a quick feel for the site before wandering, these are the rooms that explain the place best.",
     links: [
       { href: "/#projects", label: "Projects" },
-      { href: businessPaths.workWithMe, label: "Work With Me" },
       { href: "/about", label: "About" },
+      { href: "/writings", label: "Writings" },
     ],
   },
   {

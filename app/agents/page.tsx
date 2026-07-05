@@ -91,7 +91,7 @@ const usageExamples = [
 export const metadata: Metadata = {
   title: "The Five Agents",
   description:
-    "A public introduction to Jason Pollard's five recurring advisory personas for projects, writing, consulting work, and long-term direction.",
+    "A public introduction to Jason Pollard's five recurring advisory personas for projects, writing, and long-term direction.",
   alternates: {
     canonical: "/agents",
   },
@@ -142,7 +142,7 @@ export default function AgentsPage() {
           </ResponsiveCard>
           <ResponsiveCard className="agents-intro-card" variant="quiet">
             <p className="card-eyebrow">What They Improve</p>
-            <p>Software, writing, consulting work, personal decisions, and long-range direction.</p>
+            <p>Software, writing, personal decisions, and long-range direction.</p>
           </ResponsiveCard>
           <ResponsiveCard className="agents-intro-card" variant="quiet">
             <p className="card-eyebrow">Why They Matter</p>

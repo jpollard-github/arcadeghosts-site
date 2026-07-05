@@ -60,7 +60,7 @@ type JourneyConfidenceSettings = {
   easyAction: boolean;
 };
 
-const trustSignalSurfaceIds = ["home", "about", "work-with-me", "build-log", "writings", "updates"];
+const trustSignalSurfaceIds = ["home", "about", "build-log", "writings", "updates", "search"];
 const noveltySurfaceIds = [
   "music",
   "arcade",
@@ -525,7 +525,7 @@ function scoreSurfaceForJourney(
   }
 
   if (normalizedArchetype.includes("hunter")) {
-    score += boostIf(surface.id, ["home", "search", "work-with-me", "build-log", "updates"], 35);
+    score += boostIf(surface.id, ["home", "search", "build-log", "updates"], 35);
     score += boostIfTag(surface.tags, ["find", "orientation", "projects", "software"], 8);
   }
 
@@ -535,7 +535,7 @@ function scoreSurfaceForJourney(
   }
 
   if (normalizedArchetype.includes("scanner")) {
-    score += boostIf(surface.id, ["home", "about", "search", "updates", "work-with-me"], 25);
+    score += boostIf(surface.id, ["home", "about", "search", "updates"], 25);
     score -= boostIfTag(surface.tags, ["detail"], 4);
   }
 
@@ -545,26 +545,26 @@ function scoreSurfaceForJourney(
   }
 
   if (normalizedArchetype.includes("builder")) {
-    score += boostIf(surface.id, ["build-log", "work-with-me", "search", "updates"], 30);
+    score += boostIf(surface.id, ["build-log", "search", "updates"], 30);
     score += boostIfTag(surface.tags, ["projects", "software", "discovery"], 8);
   }
 
   if (normalizedArchetype.includes("romantic")) {
     score += boostIf(surface.id, ["about", "cats-beverly", "cats-thomas", "writings", "music", "tiny-thoughts"], 25);
-    score -= boostIf(surface.id, ["search", "work-with-me", "build-log"], 20);
+    score -= boostIf(surface.id, ["search", "build-log"], 20);
   }
 
   if (["potential-client", "hiring-manager"].includes(definition.slug) && scenario.trustFocused) {
-    score += boostIf(surface.id, ["about", "work-with-me", "build-log", "updates"], 26);
+    score += boostIf(surface.id, ["about", "build-log", "updates", "search"], 26);
     score -= boostIf(surface.id, ["search"], 10);
   }
 
   if (scenario.id === "looking-for-trust") {
-    score += boostIf(surface.id, ["about", "work-with-me", "build-log", "writings", "updates"], 36);
+    score += boostIf(surface.id, ["about", "build-log", "writings", "updates", "search"], 36);
   }
 
   if (scenario.id === "looking-for-something-specific") {
-    score += boostIf(surface.id, ["search", "work-with-me", "build-log"], 44);
+    score += boostIf(surface.id, ["search", "build-log"], 44);
   }
 
   if (scenario.id === "deciding-whether-to-return" || scenario.id === "returning-after-time-away") {
@@ -572,7 +572,7 @@ function scoreSurfaceForJourney(
   }
 
   if (scenario.id === "low-attention-visit") {
-    score += boostIf(surface.id, ["home", "about", "search", "work-with-me"], 34);
+    score += boostIf(surface.id, ["home", "about", "search"], 34);
     if (surface.id.startsWith("writing-") || surface.id.startsWith("project-")) {
       score -= 24;
     }
@@ -584,7 +584,7 @@ function scoreSurfaceForJourney(
   }
 
   if (contextModifiers.trustBias > 0) {
-    score += boostIf(surface.id, ["about", "build-log", "work-with-me", "writings", "updates"], contextModifiers.trustBias * 8);
+    score += boostIf(surface.id, ["about", "build-log", "writings", "updates", "search"], contextModifiers.trustBias * 8);
   }
 
   if (contextModifiers.noveltyBias > 0) {
@@ -592,7 +592,7 @@ function scoreSurfaceForJourney(
   }
 
   if (confidence.threshold === "high") {
-    score += boostIf(surface.id, ["about", "build-log", "work-with-me", "writings", "updates"], 10);
+    score += boostIf(surface.id, ["about", "build-log", "writings", "updates", "search"], 10);
   }
 
   if (confidence.threshold === "low" && normalizedArchetype.includes("wanderer")) {
@@ -803,7 +803,7 @@ function getArchetypeScenarioModifiers(archetype: string): ArchetypeScenarioModi
 
   if (normalizedArchetype.includes("hunter")) {
     modifiers.searchBias += 2;
-    modifiers.preferredSurfaceIds.push("search", "work-with-me", "build-log");
+    modifiers.preferredSurfaceIds.push("search", "build-log");
     modifiers.deEmphasizedSurfaceIds.push("cats-beverly", "cats-thomas", "twin-peaks-self");
     modifiers.influenceNotes.push("Hunter behavior pulls direct-finding rooms like Search and proof rooms earlier.");
   }
@@ -825,7 +825,7 @@ function getArchetypeScenarioModifiers(archetype: string): ArchetypeScenarioModi
   if (normalizedArchetype.includes("builder")) {
     modifiers.searchBias += 1;
     modifiers.technicalRooms += 1;
-    modifiers.preferredSurfaceIds.push("build-log", "work-with-me", "search");
+    modifiers.preferredSurfaceIds.push("build-log", "search");
     modifiers.deEmphasizedSurfaceIds.push("movies-tv", "cats-beverly", "cats-thomas");
     modifiers.influenceNotes.push("Builder behavior inserts technical proof rooms even when softer pages are available.");
   }
@@ -834,7 +834,7 @@ function getArchetypeScenarioModifiers(archetype: string): ArchetypeScenarioModi
     modifiers.pageDelta += 1;
     modifiers.searchBias -= 2;
     modifiers.preferredSurfaceIds.push("about", "cats-beverly", "cats-thomas", "music", "tiny-thoughts", "writings");
-    modifiers.deEmphasizedSurfaceIds.push("search", "work-with-me", "build-log");
+    modifiers.deEmphasizedSurfaceIds.push("search", "build-log");
     modifiers.influenceNotes.push("Romantic behavior prioritizes warmth, atmosphere, and human texture.");
   }
 
@@ -858,7 +858,7 @@ function getJourneyContextModifiers(context: string): JourneyContextModifiers {
   ) {
     modifiers.pageDelta -= 1;
     modifiers.searchBias += 2;
-    modifiers.preferredSurfaceIds.push("search", "work-with-me", "about", "updates");
+    modifiers.preferredSurfaceIds.push("search", "about", "updates");
     modifiers.deEmphasizedSurfaceIds.push("writings", "tiny-thoughts", "cats-beverly", "cats-thomas");
     modifiers.influenceNotes.push("Busy or time-pressured context pushes direct orientation and shorter routes.");
   }
@@ -872,7 +872,7 @@ function getJourneyContextModifiers(context: string): JourneyContextModifiers {
 
   if (/(skeptical|skeptic|cautious|reduce risk|risk|unwilling to waste time)/.test(normalized)) {
     modifiers.trustBias += 2;
-    modifiers.preferredSurfaceIds.push("about", "build-log", "work-with-me", "updates", "writings");
+    modifiers.preferredSurfaceIds.push("about", "build-log", "updates", "writings");
     modifiers.deEmphasizedSurfaceIds.push("arcade", "twin-peaks-self", "games-between-two-lodges");
     modifiers.influenceNotes.push("Cautious context pulls trust-building rooms forward and delays novelty.");
   }
@@ -885,7 +885,7 @@ function getJourneyContextModifiers(context: string): JourneyContextModifiers {
 
   if (/(calm|quiet|low appetite for chaos|warm|human|connection)/.test(normalized)) {
     modifiers.preferredSurfaceIds.push("about", "writings", "cats-beverly", "cats-thomas", "tiny-thoughts");
-    modifiers.deEmphasizedSurfaceIds.push("search", "work-with-me");
+    modifiers.deEmphasizedSurfaceIds.push("search");
     modifiers.influenceNotes.push("Calm or connection-seeking context leans toward gentler, more human rooms.");
   }
 
@@ -958,7 +958,6 @@ function includeArchetypeDetours(args: {
       (entry) =>
         !selected.has(entry.surface.id) &&
         (entry.surface.id === "build-log" ||
-          entry.surface.id === "work-with-me" ||
           entry.surface.id === "search" ||
           entry.surface.id.startsWith("project-") ||
           entry.surface.tags.some((tag) => ["software", "projects", "building", "discovery"].includes(tag))),
@@ -984,7 +983,7 @@ function getExpectedRouteSurfaceIds(
   const expected = new Set<string>();
 
   if (scenario.trustFocused) {
-    ["about", "work-with-me", "build-log"].forEach((surfaceId) => expected.add(surfaceId));
+    ["about", "build-log", "search"].forEach((surfaceId) => expected.add(surfaceId));
   }
 
   if (scenario.returnFocused) {
@@ -992,7 +991,7 @@ function getExpectedRouteSurfaceIds(
   }
 
   if (scenario.id === "looking-for-something-specific") {
-    ["search", "work-with-me", "build-log"].forEach((surfaceId) => expected.add(surfaceId));
+    ["search", "build-log"].forEach((surfaceId) => expected.add(surfaceId));
   }
 
   if (scenario.id === "first-visit") {
@@ -1010,11 +1009,11 @@ function getExpectedRouteSurfaceIds(
   }
 
   if (normalizedArchetype.includes("builder")) {
-    ["build-log", "search", "work-with-me", "updates"].forEach((surfaceId) => expected.add(surfaceId));
+    ["build-log", "search", "updates"].forEach((surfaceId) => expected.add(surfaceId));
   }
 
   if (normalizedArchetype.includes("hunter")) {
-    ["search", "work-with-me"].forEach((surfaceId) => expected.add(surfaceId));
+    ["search"].forEach((surfaceId) => expected.add(surfaceId));
   }
 
   if (definition.preferredSurfaceIds?.length) {
@@ -1097,12 +1096,6 @@ function trustSignalReason(surfaceId: string, scenario: JourneyScenarioDefinitio
     return "Provided proof of active building and visible iteration over time.";
   }
 
-  if (surfaceId === "work-with-me") {
-    return scenario.trustFocused
-      ? "Turned general curiosity into a concrete sense of how working together might go."
-      : "Offered a clearer action path once enough confidence had formed.";
-  }
-
   if (surfaceId === "writings") {
     return "Added long-form voice and thoughtful proof that the tone is not manufactured.";
   }
@@ -1158,9 +1151,9 @@ function evaluateJourneyOutcome(args: {
   } = args;
   const reasons: string[] = [];
   const normalizedArchetype = archetype.toLowerCase();
-  const proofRouteIds = ["about", "work-with-me", "build-log", "updates", "writings"];
+  const proofRouteIds = ["about", "build-log", "updates", "writings", "search"];
   const warmthRouteIds = ["about", "writings", "tiny-thoughts", "music", "cats-beverly", "cats-thomas", "twin-peaks-self"];
-  const professionalRouteIds = ["work-with-me", "build-log", "about", "updates", "search"];
+  const professionalRouteIds = ["build-log", "about", "updates", "search"];
   let outcome: JourneyOutcome = successEvaluation.success ? "success" : "failed";
 
   if (adminRouteLeaks.length > 0) {
@@ -1181,7 +1174,7 @@ function evaluateJourneyOutcome(args: {
   if (
     scenario.trustFocused &&
     !visitedSurfaceIds.includes("about") &&
-    !visitedSurfaceIds.some((surfaceId) => ["build-log", "work-with-me", "writings", "updates"].includes(surfaceId))
+    !visitedSurfaceIds.some((surfaceId) => ["build-log", "writings", "updates", "search"].includes(surfaceId))
   ) {
     outcome = "failed";
     reasons.push("Trust-focused journey missed both About and all proof rooms.");
@@ -1399,11 +1392,11 @@ function decideJourneyExitState(args: {
 
   if (journeyOutcome === "partial") {
     if (scenario.successExitState === "contact") {
-      return visitedSurfaceIds.includes("work-with-me") ? "continue-exploring" : "leave";
+      return visitedSurfaceIds.includes("search") ? "continue-exploring" : "leave";
     }
 
     if (scenario.trustFocused) {
-      return visitedSurfaceIds.some((surfaceId) => ["about", "build-log", "work-with-me", "writings", "updates"].includes(surfaceId))
+      return visitedSurfaceIds.some((surfaceId) => ["about", "build-log", "writings", "updates", "search"].includes(surfaceId))
         ? "continue-exploring"
         : "leave";
     }
@@ -1415,7 +1408,7 @@ function decideJourneyExitState(args: {
     return bounceRisk === "high" ? "leave" : scenario.fallbackExitState;
   }
 
-  if (scenario.successExitState === "contact" && !visitedSurfaceIds.includes("work-with-me")) {
+  if (scenario.successExitState === "contact" && !visitedSurfaceIds.includes("search")) {
     return "continue-exploring";
   }
 
@@ -1480,7 +1473,7 @@ function getActionSurfaceIdForScenario(scenario: JourneyScenarioDefinition) {
   }
 
   if (scenario.trustFocused || scenario.id === "looking-for-something-specific") {
-    return "work-with-me";
+    return "search";
   }
 
   return null;
@@ -1767,7 +1760,7 @@ function explainSkippedRoute(
     return "Skipped because this archetype was optimizing for the shortest path to useful proof.";
   }
 
-  if (normalizedArchetype.includes("reader") && ["search", "work-with-me"].includes(surfaceId) && !scenario.trustFocused) {
+  if (normalizedArchetype.includes("reader") && ["search"].includes(surfaceId) && !scenario.trustFocused) {
     return "Skipped because this reader-leaning visit favored reflective rooms over direct action paths.";
   }
 

@@ -36,7 +36,6 @@ export const basePublicRouteCatalog: RouteCatalogEntry[] = [
   // Legacy persona-test alias preserved after the public Updates route removal.
   { id: "updates", label: "Tiny Thoughts", path: "/tiny-thoughts#latest", area: "public", tags: ["writing", "fresh", "signals"], category: "writing", journeyEligible: true },
   { id: "about", label: "About", path: "/about", area: "public", tags: ["thoughtful", "identity", "curious"], category: "identity", journeyEligible: true },
-  { id: "work-with-me", label: "Work With Me", path: "/work-with-me", area: "public", tags: ["software", "clear", "trust", "projects"], category: "business", journeyEligible: true },
   { id: "music", label: "Music", path: "/music", area: "public", tags: ["music", "concerts", "listening"], category: "media", journeyEligible: true },
   { id: "arcade", label: "Arcade", path: "/arcade", area: "public", tags: ["retro", "arcades", "games"], category: "play", journeyEligible: true },
   { id: "movies-tv", label: "Movies & TV", path: "/movies-tv", area: "public", tags: ["movies", "television", "weird"], category: "media", journeyEligible: true },

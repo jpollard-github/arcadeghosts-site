@@ -18,27 +18,6 @@ test("music page renders curated listening content", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("work-with-me page exposes contact and examples", async ({ page }) => {
-  await page.goto("/work-with-me");
-
-  await expect(
-    page.getByRole("heading", {
-      name: "Small projects. Clear problems. Personal attention.",
-    }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", {
-      name: "A few things that reflect how I build.",
-    }),
-  ).toBeVisible();
-  await expect(
-    page.getByLabel("Work with me links").getByRole("link", { name: "Email Jason" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Book a Discovery Session" }).first(),
-  ).toHaveAttribute("href", /stripe\.com/);
-});
-
 test("arcade page renders cabinet favorites", async ({ page }) => {
   await page.goto("/arcade");
 
@@ -61,7 +40,7 @@ test("about page renders identity and resonance sections", async ({ page }) => {
   ).toBeVisible();
   await expect(page.getByText("Some places on the internet that resonate with me:")).toBeVisible();
   await expect(
-    page.getByRole("link", { name: /I occasionally take on small side projects too\./ }),
+    page.getByRole("link", { name: "The Five Agents" }),
   ).toBeVisible();
 });
 
@@ -136,8 +115,8 @@ test("tiny thoughts archive exposes rss", async ({ page }) => {
   ).toHaveAttribute("href", "/tiny-thoughts/rss.xml");
 });
 
-test("removed build log and updates routes return not found", async ({ page }) => {
-  for (const route of ["/build-log", "/updates"]) {
+test("removed public routes return not found", async ({ page }) => {
+  for (const route of ["/build-log", "/updates", "/work-with-me"]) {
     await page.goto(route);
     await expect(
       page.getByRole("heading", {

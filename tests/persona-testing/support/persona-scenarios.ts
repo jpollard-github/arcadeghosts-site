@@ -66,7 +66,7 @@ export const journeyScenarioDefinitions: JourneyScenarioDefinition[] = [
       {
         label: "Orientation established",
         allOf: ["home"],
-        anyOf: ["about", "updates", "search", "writings", "work-with-me"],
+        anyOf: ["about", "updates", "search", "writings"],
       },
     ],
     successExitState: "continue-exploring",
@@ -89,11 +89,11 @@ export const journeyScenarioDefinitions: JourneyScenarioDefinition[] = [
       {
         label: "About plus proof visited",
         allOf: ["about"],
-        anyOf: ["build-log", "work-with-me", "writings", "updates"],
+        anyOf: ["build-log", "writings", "updates", "search"],
       },
       {
-        label: "Build log plus work-with-me visited",
-        allOf: ["build-log", "work-with-me"],
+        label: "Build log plus search visited",
+        allOf: ["build-log", "search"],
       },
     ],
     successExitState: "bookmark",
@@ -115,7 +115,7 @@ export const journeyScenarioDefinitions: JourneyScenarioDefinition[] = [
     successConditions: [
       {
         label: "Search or direct proof path reached",
-        anyOf: ["search", "work-with-me", "build-log"],
+        anyOf: ["search", "build-log"],
       },
     ],
     successExitState: "contact",
@@ -160,7 +160,7 @@ export const journeyScenarioDefinitions: JourneyScenarioDefinition[] = [
     successConditions: [
       {
         label: "Fast orientation path found",
-        anyOf: ["about", "search", "work-with-me", "updates"],
+        anyOf: ["about", "search", "updates"],
       },
     ],
     successExitState: "bookmark",

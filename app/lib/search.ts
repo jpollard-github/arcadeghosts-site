@@ -1,7 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { arcadeGames, beverlyAndLucindaPhotos, thomasJonesMissyCassPhotos, visualMedia } from "../site-data";
-import { businessPaths } from "./business-config";
 import { getPublicProjects } from "./projects";
 import type { SearchEntry } from "./search-shared";
 import { getPublicTinyThoughts } from "./tiny-thoughts";
@@ -79,18 +78,6 @@ const staticEntries: SearchEntry[] = [
     priority: 90,
     searchText:
       "twin peaks reflection self reflection symbolic rooms black lodge white lodge prompts mythology psyche",
-  },
-  {
-    id: "page-work-with-me",
-    type: "page",
-    title: "Work With Me",
-    description: "Small software, automation, AI workflow, and technical problem-solving projects.",
-    href: businessPaths.workWithMe,
-    eyebrow: "Services",
-    cta: "View work page",
-    priority: 76,
-    searchText:
-      "work with me freelance consulting side projects automation ai workflow developer tooling web applications technical problem solving",
   },
   {
     id: "page-terminal",

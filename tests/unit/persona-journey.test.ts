@@ -9,7 +9,6 @@ import type { SiteSurface } from "../persona-testing/support/site-surfaces";
 const publicSurfaces: SiteSurface[] = [
   { id: "home", label: "Homepage", path: "/", area: "public", tags: ["projects", "curious"] },
   { id: "about", label: "About", path: "/about", area: "public", tags: ["thoughtful", "identity"] },
-  { id: "work-with-me", label: "Work With Me", path: "/work-with-me", area: "public", tags: ["software", "trust"] },
   { id: "search", label: "Search", path: "/search", area: "public", tags: ["find", "orientation"] },
   { id: "updates", label: "Updates", path: "/updates", area: "public", tags: ["recent", "changes"] },
   { id: "build-log", label: "Build Log", path: "/build-log", area: "public", tags: ["software", "projects"] },
@@ -38,7 +37,7 @@ test("hunter-like trust journey stays short and excludes admin/error pages", () 
   assert.ok(plan.visitedSurfaceIds.length <= 5);
   assert.ok(!plan.visitedSurfaceIds.includes("admin-home"));
   assert.ok(!plan.visitedSurfaceIds.includes("error-preview-not-found"));
-  assert.ok(plan.visitedSurfaceIds.includes("work-with-me"));
+  assert.ok(plan.visitedSurfaceIds.includes("search"));
   assert.ok(plan.bounceRisk === "medium" || plan.bounceRisk === "high");
   assert.equal(plan.success, true);
   assert.equal(plan.journeyOutcome, "partial");
@@ -95,7 +94,7 @@ test("confidence threshold changes page count, search use, and bounce tolerance"
     preferredTags: ["software", "projects", "trust"],
     confidenceThreshold: "high" as const,
     defaultArchetype: "Builder -> Hunter",
-    preferredSurfaceIds: ["work-with-me", "build-log", "about", "search", "updates"],
+    preferredSurfaceIds: ["build-log", "about", "search", "updates"],
   };
 
   const lowProfile = parsePersonaMarkdown(`# Low Confidence Wanderer\n\n## Behavior Fields\n\n### Search Behavior\n\nLikely searches:\n\n- music\n- weird\n`);
@@ -139,13 +138,13 @@ test("high-confidence trust journey reaches proof before action", () => {
     scenario: getJourneyScenarioDefinition("looking-for-trust"),
   });
 
-  const workWithMeIndex = plan.visitedSurfaceIds.indexOf("work-with-me");
+  const searchIndex = plan.visitedSurfaceIds.indexOf("search");
   const trustPagesBeforeAction = plan.visitedSurfaceIds.filter((surfaceId) =>
     ["home", "about", "build-log", "writings", "updates"].includes(surfaceId),
   ).length;
 
   assert.ok(trustPagesBeforeAction >= 2);
-  assert.ok(workWithMeIndex === -1 || workWithMeIndex > 0);
+  assert.ok(searchIndex === -1 || searchIndex > 0);
   assert.ok(plan.bounceRisk === "medium" || plan.bounceRisk === "high");
   assert.ok(["success", "partial"].includes(plan.journeyOutcome));
 });

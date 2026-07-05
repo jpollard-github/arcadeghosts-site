@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { aboutCards, resonanceLinks } from "../home/data";
-import { businessPaths } from "../lib/business-config";
 
 const aboutTrustCards = [
   {
@@ -12,11 +11,11 @@ const aboutTrustCards = [
     cta: "Open The Workbench",
   },
   {
-    eyebrow: "Next Step",
-    title: "Work With Me",
-    text: "If you are wondering whether I can help with a software problem, this is the practical path from personality into scope, proof, and contact.",
-    href: businessPaths.workWithMe,
-    cta: "See The Work Path",
+    eyebrow: "Orientation",
+    title: "Search",
+    text: "If you already know the signal you want, Search is the quickest way to jump rooms without walking the whole hallway.",
+    href: "/search",
+    cta: "Use Search",
   },
   {
     eyebrow: "Voice",
@@ -155,10 +154,9 @@ export default function AboutPage() {
           </div>
           <p>
             <Link href="/#projects">Projects</Link> is the clearest proof-of-work
-            path on the public site right now. <Link href={businessPaths.workWithMe}>Work With Me</Link>{" "}
-            is the practical next step if you think I might be able to help.
-            This page is the human context that connects those two, and
-            Writings adds the longer-form version of how I think.
+            path on the public site right now. This page is the human context
+            that connects the workbench, the writing, and the stranger rooms
+            around it.
           </p>
 
           <h3>If you&apos;re the type of person who enjoys:</h3>
@@ -186,7 +184,7 @@ export default function AboutPage() {
             ArcadeGhosts is ultimately an experiment in whether a collection of
             interests, stories, projects, music, photos, and ideas can attract
             the right conversations. If something here feels familiar, reach
-            out. <Link href={businessPaths.workWithMe}>I occasionally take on small side projects too.</Link>
+            out.
           </p>
 
           <h3>If you want the warmer rooms first:</h3>
