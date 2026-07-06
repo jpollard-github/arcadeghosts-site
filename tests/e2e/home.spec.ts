@@ -5,11 +5,11 @@ test("homepage renders the hero and key sections", async ({ page }) => {
   const mainNav = page.getByRole("navigation", { name: "Main navigation" });
 
   await expect(
-    page.getByText("A living portfolio for software, writing, and who is Jason."),
+    page.getByText("A personal site for writing, cats, software, music, and finding the right people."),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {
-      name: "Useful tools with a curious little heartbeat.",
+      name: "A signal flare for curious people.",
     }),
   ).toBeVisible();
   await expect(
@@ -38,10 +38,13 @@ test("homepage renders the hero and key sections", async ({ page }) => {
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Start Here", exact: true }).first(),
-  ).toHaveAttribute("href", "#start-here");
+    ).toHaveAttribute("href", "#start-here");
   await expect(
-    page.locator(".hero-actions"),
-  ).toHaveCount(0);
+    page.getByRole("link", { name: "Read the Writing", exact: true }),
+  ).toHaveAttribute("href", "/writings");
+  await expect(
+    page.getByRole("link", { name: "Say Hello", exact: true }),
+  ).toHaveAttribute("href", "mailto:jason@arcadeghosts.org");
   await expect(page.getByText("80s Dev Terminal")).toHaveCount(0);
 });
 

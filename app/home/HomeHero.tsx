@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { businessContact } from "../lib/business-config";
+import { TrackedLink } from "../TrackedLink";
 import { githubRepoUrl, navItems } from "./data";
 
 export function HomeHero() {
@@ -46,14 +48,47 @@ export function HomeHero() {
       </a>
 
       <div className="hero-content">
-        <p className="eyebrow">Jason Pollard / living portfolio</p>
-        <h1>Useful tools with a curious little heartbeat.</h1>
-        <p className="hero-copy">
-          ArcadeGhosts is my personal site for software projects, writing,
-          music, cats, and curious little experiments. I&apos;m a software
-          developer building thoughtful products and leaving the warmer,
-          more curious context attached.
-        </p>
+        <p className="eyebrow">Jason Pollard / ArcadeGhosts</p>
+        <h1>A signal flare for curious people.</h1>
+        <div className="hero-copy">
+          <p>
+            ArcadeGhosts is my personal corner of the internet: writing, cats,
+            software experiments, music, old arcade ghosts, and pieces of
+            whatever I&apos;m trying to understand.
+          </p>
+          <p>
+            It&apos;s less a portfolio than a way of saying: this is what I
+            care about, this is what I make, and this is the kind of
+            conversation I&apos;m hoping to find.
+          </p>
+          <p>If something here resonates, feel free to connect.</p>
+        </div>
+        <div className="hero-actions" aria-label="Hero actions">
+          <TrackedLink
+            className="button primary"
+            href="#start-here"
+            trackingEvent="Hero CTA Clicked"
+            trackingProperties={{ label: "Start Here", destination: "#start-here" }}
+          >
+            Start Here
+          </TrackedLink>
+          <TrackedLink
+            className="button secondary"
+            href="/writings"
+            trackingEvent="Hero CTA Clicked"
+            trackingProperties={{ label: "Read the Writing", destination: "/writings" }}
+          >
+            Read the Writing
+          </TrackedLink>
+          <TrackedLink
+            className="button tertiary"
+            href={businessContact.emailHref}
+            trackingEvent="Hero CTA Clicked"
+            trackingProperties={{ label: "Say Hello", destination: businessContact.emailHref }}
+          >
+            Say Hello
+          </TrackedLink>
+        </div>
       </div>
     </section>
   );

@@ -23,6 +23,8 @@
     "site:review-packet:timed": "node scripts/run-npm-script-with-timing.mjs site:review-packet",
     "zip:chatgpt": "node --import tsx tools/zip-chatgpt-repo.ts",
     "zip:chatgpt:repo": "node --import tsx tools/zip-chatgpt-repo.ts",
+    "zip:repo-review": "node --import tsx tools/zip-repo-review.ts",
+    "zip:repo-review:timed": "node scripts/run-npm-script-with-timing.mjs zip:repo-review",
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "node --import tsx --test tests/unit/*.test.ts",
     "test:unit:timed": "node scripts/run-npm-script-with-timing.mjs test:unit",
