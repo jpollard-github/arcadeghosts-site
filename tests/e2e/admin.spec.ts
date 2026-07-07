@@ -19,15 +19,6 @@ async function loginAsAdmin(page: Page) {
   ).toBeVisible();
 }
 
-async function seedSessionDraft(page: Page, key: string, value: unknown) {
-  await page.addInitScript(
-    ({ draftKey, draftValue }) => {
-      window.sessionStorage.setItem(draftKey, JSON.stringify(draftValue));
-    },
-    { draftKey: key, draftValue: value },
-  );
-}
-
 test("admin dashboard supports sign in and sign out", async ({ page }) => {
   await page.goto("/admin");
 
@@ -40,15 +31,25 @@ test("admin dashboard supports sign in and sign out", async ({ page }) => {
 
   await loginAsAdmin(page);
 
-  await expect(
-    page.getByRole("link", { name: "Open Guestbook Review" }),
-  ).toBeVisible();
+  await expect(page.locator(".admin-dashboard-grid .admin-action-link")).toHaveCount(3);
   await expect(
     page.getByRole("link", { name: "Open Tiny Thoughts" }),
   ).toBeVisible();
   await expect(
+    page.getByRole("link", { name: "Open Edit Projects" }),
+  ).toBeVisible();
+  await expect(
     page.getByRole("link", { name: "Open Error Previews" }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Open Guestbook Review" }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("link", { name: "Open Edit Now" }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("link", { name: "Open Content Inbox" }),
+  ).toHaveCount(0);
 
   await page.getByRole("button", { name: "Log Out" }).click();
 
@@ -56,158 +57,106 @@ test("admin dashboard supports sign in and sign out", async ({ page }) => {
   await expect(page.getByText("Signed out.")).toBeVisible();
 });
 
-test("authenticated admin can open guestbook review", async ({ page }) => {
-  await loginAsAdmin(page);
-
-  await page.goto("/admin/guestbook");
-
-  await expect(
-    page.getByRole("heading", { name: "Guestbook Review" }),
-  ).toBeVisible();
-  await expect(page.getByRole("button", { name: "Refresh" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Log Out" })).toBeVisible();
-});
-
-test("authenticated admin can open projects editor", async ({ page }) => {
-  await loginAsAdmin(page);
-
-  await page.goto("/admin/projects");
-
-  await expect(
-    page.getByRole("heading", { name: "Edit Projects" }),
-  ).toBeVisible();
-  await expect(page.getByRole("button", { name: "Refresh" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Add Project" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Expand" }).first()).toBeVisible();
-  await expect(
-    page.getByText(/^Projects loaded\.$|^No projects yet\.$/),
-  ).toBeVisible();
-
-  const firstExpandButton = page.getByRole("button", { name: "Expand" }).first();
-  await firstExpandButton.click();
-  await expect(page.getByLabel("Title").first()).toBeVisible();
-  await expect(page.getByRole("button", { name: "Save Project" }).first()).toBeVisible();
-});
-
-test("authenticated admin can open now editor", async ({ page }) => {
-  await loginAsAdmin(page);
-
-  await page.goto("/admin/now");
-
-  await expect(
-    page.getByRole("heading", { name: "Edit Now" }),
-  ).toBeVisible();
-  await expect(page.getByRole("button", { name: "Refresh" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Add Now Card" })).toBeVisible();
-  await expect(page.getByLabel("Title").first()).toBeVisible();
-  await expect(
-    page.getByText(/^Now cards loaded\.$|^No Now cards yet\.$/),
-  ).toBeVisible();
-});
-
-test("content inbox now drafts import into the now editor", async ({ page }) => {
-  await seedSessionDraft(page, "arcadeghosts-now-draft", {
-    label: "Current",
-    title: "AI Connections",
-    text: "A note about how AI tools connect ideas.",
-  });
-  await loginAsAdmin(page);
-
-  await page.goto("/admin/now");
-
-  await expect(page.getByLabel("Title").last()).toHaveValue("AI Connections");
-  await expect(page.getByLabel("Text").last()).toHaveValue("A note about how AI tools connect ideas.");
-  await expect(
-    page.getByText("Imported draft from Content Inbox. Save changes when you're ready."),
-  ).toBeVisible();
-  await expect(page.getByRole("button", { name: "Save Changes" })).toBeVisible();
-});
-
-test("content inbox project drafts import into the projects editor", async ({ page }) => {
-  await seedSessionDraft(page, "arcadeghosts-project-draft", {
-    title: "Imported Project Draft",
-    type: "Project update",
-    description: "Imported from Content Inbox.",
-    phase: "Phase 0",
-  });
-  await loginAsAdmin(page);
-
-  await page.goto("/admin/projects");
-
-  await expect(page.getByRole("button", { name: "Collapse" })).toBeVisible();
-  await expect(page.getByLabel("Title").last()).toHaveValue("Imported Project Draft");
-  await expect(
-    page.getByText("Imported draft from Content Inbox. Refine it, then save when ready."),
-  ).toBeVisible();
-});
-
-test("content inbox tiny thought drafts import into the tiny thoughts editor", async ({ page }) => {
-  await seedSessionDraft(page, "arcadeghosts-tiny-thought-draft", {
-    content: "AI connections keep turning into site ideas.",
-    category: "other",
-    inspiredByCategory: "conversation",
-    inspiredBy: "ChatGPT",
-  });
+test("authenticated admin can create, update, and delete a tiny thought", async ({ page }) => {
   await loginAsAdmin(page);
 
   await page.goto("/admin/tiny-thoughts");
 
-  await expect(page.getByLabel("Thought")).toHaveValue("AI connections keep turning into site ideas.");
-  await expect(
-    page.getByText("Imported draft from Content Inbox. Edit it, then save when it feels right."),
-  ).toBeVisible();
-});
+  const token = Date.now().toString();
+  const initialText = `Tiny thought e2e ${token}`;
+  const updatedText = `Tiny thought updated ${token}`;
 
-test("content inbox writing drafts import into the writing drafts editor", async ({ page }) => {
-  await seedSessionDraft(page, "arcadeghosts-writing-draft", {
-    title: "AI Connections",
-    slug: "ai-connections",
-    summary: "A note about how AI tools connect ideas.",
-    body: "Longer-form draft body.",
-    status: "draft",
+  await expect(
+    page.getByRole("heading", { name: "Tiny Thoughts" }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Refresh" })).toBeVisible();
+  await page.getByLabel("Thought").fill(initialText);
+  await page.getByRole("button", { name: "Create Thought" }).click();
+
+  const thoughtCard = page.locator("article.admin-entry").filter({
+    hasText: initialText,
   });
-  await loginAsAdmin(page);
+  await expect(thoughtCard).toBeVisible();
 
-  await page.goto("/admin/writing-drafts");
+  await thoughtCard.getByRole("button", { name: "Edit" }).click();
+  await expect(page.getByText("Editing tiny thought.")).toBeVisible();
+  await expect(page.getByLabel("Thought")).toHaveValue(initialText);
 
-  await expect(page.getByLabel("Title")).toHaveValue("AI Connections");
-  await expect(page.getByLabel("Slug")).toHaveValue("ai-connections");
-  await expect(page.getByLabel("Body")).toHaveValue("Longer-form draft body.");
+  await page.getByLabel("Thought").fill(updatedText);
+  await page.getByRole("button", { name: "Update Thought" }).click();
+
+  await expect(page.getByText("Tiny thought updated.")).toBeVisible();
+
+  const updatedThoughtCard = page.locator("article.admin-entry").filter({
+    hasText: updatedText,
+  });
+  await expect(updatedThoughtCard).toBeVisible();
+
+  page.once("dialog", (dialog) => dialog.accept());
+  await updatedThoughtCard.getByRole("button", { name: "Delete" }).click();
+
+  await expect(page.getByText("Tiny thought deleted.")).toBeVisible();
   await expect(
-    page.getByText("Imported draft from Content Inbox. Shape it, then save when ready."),
-  ).toBeVisible();
+    page.locator("article.admin-entry").filter({ hasText: updatedText }),
+  ).toHaveCount(0);
 });
 
-test("authenticated admin can create a context refresh export", async ({ page }) => {
+test("authenticated admin can create, update, and delete a project", async ({ page }) => {
   await loginAsAdmin(page);
 
-  await page.goto("/admin/context-refresh");
+  await page.goto("/admin/projects");
+
+  const token = Date.now().toString();
+  const title = `Project e2e ${token}`;
+  const updatedTitle = `Project e2e updated ${token}`;
+  const description = `Initial project description ${token}`;
+  const updatedDescription = `Updated project description ${token}`;
 
   await expect(
-    page.getByRole("heading", { name: "Context Refresh Export" }),
+    page.getByRole("heading", { name: "Edit Projects" }),
   ).toBeVisible();
-  await expect(page.getByRole("button", { name: "Log Out" })).toBeVisible();
-  await expect(
-    page.getByLabel("Redact sensitive fields"),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("button", {
-      name: /Save Static Profile|Static Profile Saved/,
-    }),
-  ).toBeVisible();
-  await expect(page.getByText("Memory Core")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Add Project" })).toBeVisible();
 
-  await page
-    .getByRole("button", { name: "Create ChatGPT Context Refresh File" })
-    .click();
+  await page.getByRole("button", { name: "Add Project" }).click();
+  await expect(page.getByText("New project draft added. Save it when you're ready.")).toBeVisible();
 
+  const draftProjectCard = page
+    .locator("article.admin-entry")
+    .filter({ has: page.getByRole("button", { name: "Create Project" }) })
+    .last();
+
+  await draftProjectCard.getByLabel("Type").fill("E2E Project");
+  await draftProjectCard.getByLabel("Title").fill(title);
+  await draftProjectCard.getByLabel("Description").fill(description);
+  await expect(draftProjectCard.getByLabel("Description")).toHaveValue(description);
   await expect(
-    page.getByText("Context refresh export created from the saved static profile and site data."),
-  ).toBeVisible();
-  await expect(
-    page.getByLabel("Markdown + YAML front matter"),
-  ).toBeVisible();
-  await expect(page.getByRole("button", { name: "Export" })).toBeVisible();
+    draftProjectCard.getByRole("button", { name: "Create Project" }),
+  ).toBeEnabled();
+  await draftProjectCard.getByRole("button", { name: "Create Project" }).click({ force: true });
+
+  await expect(page.getByText("Project created.")).toBeVisible();
+  await expect(page.locator(`input[value="${title}"]`)).toBeVisible();
+
+  const savedProjectCard = page
+    .locator("article.admin-entry")
+    .filter({ has: page.locator(`input[value="${title}"]`) });
+
+  await savedProjectCard.getByLabel("Title").fill(updatedTitle);
+  await savedProjectCard.getByLabel("Description").fill(updatedDescription);
+  await savedProjectCard.getByRole("button", { name: "Save Project" }).click();
+
+  await expect(page.getByText("Project saved.")).toBeVisible();
+  await expect(page.locator(`input[value="${updatedTitle}"]`)).toBeVisible();
+
+  const updatedProjectCard = page
+    .locator("article.admin-entry")
+    .filter({ has: page.locator(`input[value="${updatedTitle}"]`) });
+
+  page.once("dialog", (dialog) => dialog.accept());
+  await updatedProjectCard.getByRole("button", { name: "Delete" }).click();
+
+  await expect(page.getByText("Project deleted.")).toBeVisible();
+  await expect(updatedProjectCard).toHaveCount(0);
 });
 
 test("authenticated admin can open error previews", async ({ page }) => {

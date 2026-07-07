@@ -106,46 +106,6 @@ export function AdminDashboard() {
             <div className="admin-entry-list admin-dashboard-grid">
               <article className="admin-entry">
                 <div className="admin-entry-meta">
-                  <span>Curate</span>
-                </div>
-                <h2>Homepage Spotlight</h2>
-                <p>Edit the curated spotlight near the top of the homepage.</p>
-                <Link className="admin-action-link" href="/admin/home-spotlight">
-                  Open Homepage Spotlight
-                </Link>
-              </article>
-              <article className="admin-entry">
-                <div className="admin-entry-meta">
-                  <span>Capture</span>
-                </div>
-                <h2>Content Inbox</h2>
-                <p>Paste fragments, bucket ideas, and turn the promising ones into Tiny Thoughts later.</p>
-                <Link className="admin-action-link" href="/admin/content-inbox">
-                  Open Content Inbox
-                </Link>
-              </article>
-              <article className="admin-entry">
-                <div className="admin-entry-meta">
-                  <span>Draft</span>
-                </div>
-                <h2>Writing Drafts</h2>
-                <p>Shape longer-form pieces before they become public writing rooms.</p>
-                <Link className="admin-action-link" href="/admin/writing-drafts">
-                  Open Writing Drafts
-                </Link>
-              </article>
-              <article className="admin-entry">
-                <div className="admin-entry-meta">
-                  <span>Review</span>
-                </div>
-                <h2>Guestbook</h2>
-                <p>Approve, reject, or delete submitted guestbook signals.</p>
-                <Link className="admin-action-link" href="/admin/guestbook">
-                  Open Guestbook Review
-                </Link>
-              </article>
-              <article className="admin-entry">
-                <div className="admin-entry-meta">
                   <span>Publish</span>
                 </div>
                 <h2>Tiny Thoughts</h2>
@@ -158,50 +118,10 @@ export function AdminDashboard() {
                 <div className="admin-entry-meta">
                   <span>Edit</span>
                 </div>
-                <h2>Now</h2>
-                <p>Create, edit, delete, and save homepage Now cards.</p>
-                <Link className="admin-action-link" href="/admin/now">
-                  Open Edit Now
-                </Link>
-              </article>
-              <article className="admin-entry">
-                <div className="admin-entry-meta">
-                  <span>Edit</span>
-                </div>
                 <h2>Projects</h2>
                 <p>Create, edit, delete, and save homepage project cards.</p>
                 <Link className="admin-action-link" href="/admin/projects">
                   Open Edit Projects
-                </Link>
-              </article>
-              <article className="admin-entry">
-                <div className="admin-entry-meta">
-                  <span>Reflect</span>
-                </div>
-                <h2>Social Quest Log</h2>
-                <p>Track social reps, lessons, and next experiments without turning it into a people database.</p>
-                <Link className="admin-action-link" href="/admin/social-quest-log">
-                  Open Social Quest Log
-                </Link>
-              </article>
-              <article className="admin-entry">
-                <div className="admin-entry-meta">
-                  <span>Scope</span>
-                </div>
-                <h2>Side Hustle</h2>
-                <p>Open the fixed-price inquiry helper and copy the ChatGPT scope document prompt.</p>
-                <Link className="admin-action-link" href="/admin/side-hustle">
-                  Open Side Hustle
-                </Link>
-              </article>
-              <article className="admin-entry">
-                <div className="admin-entry-meta">
-                  <span>Export</span>
-                </div>
-                <h2>Context Refresh Export</h2>
-                <p>Create, edit, save, and download Markdown context refresh files for ChatGPT.</p>
-                <Link className="admin-action-link" href="/admin/context-refresh">
-                  Open Context Refresh Export
                 </Link>
               </article>
               <article className="admin-entry">

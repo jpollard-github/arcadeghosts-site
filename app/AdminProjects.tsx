@@ -251,8 +251,9 @@ export function AdminProjects() {
         throw new Error(data.error ?? "Unable to save project.");
       }
 
-      setProjects((currentProjects) => replaceProject(currentProjects, data.project!));
+      setProjects(data.projects);
       setSavedProjects(data.projects);
+      setExpandedProjectIds((currentIds) => addId(currentIds, data.project!.id));
       setStatus(isNewProject ? "Project created." : "Project saved.");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Unable to save project.");
