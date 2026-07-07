@@ -160,13 +160,6 @@ Optional rate-limit salt:
 GUESTBOOK_RATE_LIMIT_SECRET=
 ```
 
-Analytics:
-
-```bash
-NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=
-NEXT_PUBLIC_POSTHOG_HOST=
-```
-
 ## Run Locally
 
 Install dependencies:

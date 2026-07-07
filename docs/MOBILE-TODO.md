@@ -29,6 +29,7 @@ Recurring issues from multiple mobile passes should live here once they stop bei
 - [x] `[P1]` Revisit the homepage nav strip on very small screens and confirm it still feels comfortable at the right edge on real devices.
 - [ ] `[P1]` Keep checking desktop after each mobile pass because many layout primitives and spacing rules are still shared.
 - [x] `[P1]` Manually verify changed visual routes even when automated overflow tests pass.
+- [ ] `[P1]` Recheck the live homepage hero after the 2026-07-07 mobile LCP pass and decide whether it needs a dedicated mobile image variant in production.
 - [ ] `[P2]` Revisit very tall pages and trim or compress sections that add more scroll cost than decision value.
 - [x] `[P2]` Decide whether fixed decorative chrome should be reduced further for mobile review clarity or real-device comfort.
 - [ ] `[P2]` Improve screenshot reliability where full-page capture or fixed chrome makes review evidence noisy.

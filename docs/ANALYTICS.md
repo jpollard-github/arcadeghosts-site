@@ -79,28 +79,9 @@ This means we get route and CTA insight without turning the site into a surveill
 
 ## Vercel Setup
 
-You do need a small amount of Vercel setup before PostHog will do anything in deployed environments.
+No extra analytics environment variables are currently required beyond the normal Vercel project setup.
 
-Add these environment variables in Vercel Project Settings for `Production`, `Preview`, and `Development`:
-
-- `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`
-- `NEXT_PUBLIC_POSTHOG_HOST`
-
-Typical host values:
-
-- US PostHog Cloud: `https://us.i.posthog.com`
-- EU PostHog Cloud: `https://eu.i.posthog.com`
-
-Also add the same values to local development in `.env.local` if you want local verification.
-
-If these env vars are missing, the site safely falls back to Vercel Analytics only.
-
-## Recommended PostHog Project Settings
-
-- Keep session recording off unless there is a later explicit privacy review.
-- Review IP capture settings in PostHog and choose the stricter option that fits your needs.
-- If most visitors are in the EU or you want stricter data locality, consider EU cloud hosting.
-- Consider a reverse proxy later only if blockers make data noticeably incomplete. It is not required for this first pass.
+The site now relies on Vercel Analytics for its lightweight client analytics path.
 
 ## How This Should Guide Decisions
 
