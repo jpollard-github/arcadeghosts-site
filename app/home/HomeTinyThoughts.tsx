@@ -32,14 +32,16 @@ export function HomeTinyThoughts() {
         </TrackedLink>
       </div>
       <TinyThoughts limit={4} />
-      <TrackedLink
-        className="list-panel-more"
-        href="/tiny-thoughts"
-        trackingEvent="Tiny Thoughts Link Clicked"
-        trackingProperties={{ destination: "/tiny-thoughts", source: "homepage-more-link" }}
-      >
-        Browse the full Tiny Thoughts archive
-      </TrackedLink>
+      <div className="feed-links tiny-thought-archive-link-row">
+        <TrackedLink
+          className="feed-link"
+          href="/tiny-thoughts"
+          trackingEvent="Tiny Thoughts Link Clicked"
+          trackingProperties={{ destination: "/tiny-thoughts", source: "homepage-more-link" }}
+        >
+          Browse the Full Tiny Thoughts Archive
+        </TrackedLink>
+      </div>
     </section>
   );
 }

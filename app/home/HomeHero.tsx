@@ -11,6 +11,8 @@ export function HomeHero() {
         alt="A neon-lit diner at the edge of a misty evergreen forest at night"
         fill
         priority
+        fetchPriority="high"
+        quality={70}
         sizes="100vw"
         className="hero-image"
       />

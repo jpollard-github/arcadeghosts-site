@@ -1,6 +1,4 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import Image from "next/image";
 import { SectionHeading } from "../SectionHeading";
 import { TrackedLink } from "../TrackedLink";
 import type { SiteProject } from "../lib/projects";
@@ -34,32 +32,6 @@ function blockerLines(value: string) {
 }
 
 export function HomeProjects({ projects }: { projects: SiteProject[] }) {
-  const [liveProjects, setLiveProjects] = useState(projects);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadProjects() {
-      const response = await fetch("/api/projects", { cache: "no-store" });
-
-      if (!response.ok) {
-        throw new Error("Unable to load projects.");
-      }
-
-      const data = (await response.json()) as { projects: SiteProject[] };
-
-      if (isMounted) {
-        setLiveProjects(data.projects);
-      }
-    }
-
-    loadProjects().catch(() => undefined);
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
   return (
     <section className="content-section" id="projects">
       <SectionHeading eyebrow="Projects" title="Shipped, active, paused, and becoming.">
@@ -67,14 +39,15 @@ export function HomeProjects({ projects }: { projects: SiteProject[] }) {
         status so the site feels current instead of frozen in amber.
       </SectionHeading>
       <div className="card-grid">
-        {liveProjects.map((project) => (
+        {projects.map((project) => (
           <article className="project-card" key={project.title}>
             {project.imageUrl ? (
               <div className="project-image-wrap">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={project.imageUrl}
                   alt={`${project.title} project image`}
+                  fill
+                  sizes="(max-width: 700px) calc(100vw - 3rem), (max-width: 1120px) calc(50vw - 2.25rem), calc((100vw - 4rem) / 3)"
                   className="project-image"
                 />
               </div>

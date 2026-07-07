@@ -7,9 +7,8 @@ export function SiteLogo() {
       <Image
         src="/images/logo.webp"
         alt="ArcadeGhosts"
-        width={1536}
-        height={1024}
-        priority
+        width={132}
+        height={88}
         sizes="(max-width: 560px) 96px, 132px"
         className="site-logo-image"
       />

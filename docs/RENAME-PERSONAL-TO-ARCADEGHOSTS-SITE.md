@@ -54,7 +54,7 @@ Embedded path examples point at `/Users/jasonp/repos/personal/...`.
 - `tests/persona-testing/support/persona-report.ts`
   - uses `process.cwd()`
   - writes result paths derived from current repo path
-- `tools/zip-chatgpt-repo.ts`
+- `scripts/zip-chatgpt-repo.ts`
   - uses `process.cwd()`
 
 These are path-relative and should continue working after a folder rename, but any generated output created before the rename will still contain the old absolute path.

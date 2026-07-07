@@ -46,8 +46,6 @@ export function HomeScreening() {
                 src={item.image}
                 alt={`${item.title} poster or key art`}
                 fill
-                priority={index < 2}
-                unoptimized
                 sizes="(max-width: 430px) 100vw, (max-width: 860px) 50vw, 25vw"
                 className={`media-image${item.fit === "contain" ? " contain" : ""}`}
               />

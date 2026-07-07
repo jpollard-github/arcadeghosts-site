@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { trackEvent } from "./lib/analytics";
 
 type TrackedLinkProps = {
   children: ReactNode;
@@ -32,7 +31,11 @@ export function TrackedLink({
   title,
 }: TrackedLinkProps) {
   const handleClick = () => {
-    trackEvent(trackingEvent, trackingProperties);
+    void import("./lib/analytics")
+      .then(({ trackEvent }) => {
+        trackEvent(trackingEvent, trackingProperties);
+      })
+      .catch(() => undefined);
   };
 
   if (isInternalHref(href)) {

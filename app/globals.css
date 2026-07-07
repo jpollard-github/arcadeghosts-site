@@ -1813,6 +1813,7 @@ p {
 }
 
 .project-image-wrap {
+  position: relative;
   width: 100%;
   margin-bottom: 1rem;
   overflow: hidden;
@@ -1827,6 +1828,14 @@ p {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.card-grid,
+.media-grid,
+.tiny-thought-grid,
+.section-link-grid {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1000px;
 }
 
 .project-link {
@@ -2627,6 +2636,10 @@ p {
 
 .tiny-thought-section {
   position: relative;
+}
+
+.tiny-thought-archive-link-row {
+  margin-top: clamp(1.35rem, 2vw, 1.8rem);
 }
 
 .tiny-thought-grid {
