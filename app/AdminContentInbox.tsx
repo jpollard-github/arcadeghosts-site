@@ -62,13 +62,7 @@ function fingerprint(item: ContentInboxItem) {
   return JSON.stringify(item);
 }
 
-export function AdminContentInbox({
-  instructionsMarkdown = "",
-  editorialGuideMarkdown = "",
-}: {
-  instructionsMarkdown?: string;
-  editorialGuideMarkdown?: string;
-}) {
+export function AdminContentInbox() {
   const [authenticated, setAuthenticated] = useState(false);
   const [configured, setConfigured] = useState(true);
   const [items, setItems] = useState<ContentInboxItem[]>([]);
@@ -335,33 +329,6 @@ export function AdminContentInbox({
                 Log Out
               </button>
             </div>
-
-            <details className="content-inbox-instructions admin-entry">
-              <summary>
-                <span>Instructions</span>
-                <strong>Low-friction publishing flow</strong>
-              </summary>
-              <p className="content-inbox-instructions-note">
-                This panel is sourced from <code>docs/low-friction-content-flow.md</code>, so updating that file updates the guidance shown here.
-              </p>
-              <pre className="content-inbox-instructions-body">
-                {instructionsMarkdown.trim() || "Instructions are temporarily unavailable."}
-              </pre>
-            </details>
-
-            <details className="content-inbox-instructions admin-entry">
-              <summary>
-                <span>Editorial Guide</span>
-                <strong>Voice, tone, and publishing philosophy</strong>
-              </summary>
-              <p className="content-inbox-instructions-note">
-                This panel is sourced from <code>docs/EDITORIAL-GUIDE.md</code>, so updating that
-                file updates the guidance shown here.
-              </p>
-              <pre className="content-inbox-instructions-body">
-                {editorialGuideMarkdown.trim() || "Editorial guide is temporarily unavailable."}
-              </pre>
-            </details>
 
             <div className="content-inbox-stats">
               <span>{inboxCount} inbox</span>

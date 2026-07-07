@@ -31,14 +31,13 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
+    "archive",
     "node_modules",
     "review-packets",
     "repo-reviews",
-    "chatgpt-zip-packets",
     "playwright-report",
     "test-results",
     "persona-results",
-    "archived-routes",
     "reports",
     "dist",
     "out"

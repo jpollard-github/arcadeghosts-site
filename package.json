@@ -1,6 +1,6 @@
 {
   "name": "arcadeghosts-site",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "engines": {
     "node": "24.x"
@@ -19,11 +19,7 @@
     "verify:fast": "npm run lint:timed && npm run typecheck:timed",
     "verify": "npm run verify:fast && npm run test:unit:timed",
     "verify:full": "npm run verify && npm run build:timed",
-    "site:review-packet": "node --import tsx scripts/create-review-packet.ts",
-    "site:review-packet:timed": "node scripts/run-npm-script-with-timing.mjs site:review-packet",
     "website:audit": "node --import tsx scripts/website-audit.ts",
-    "zip:chatgpt": "node --import tsx scripts/zip-chatgpt-repo.ts",
-    "zip:chatgpt:repo": "node --import tsx scripts/zip-chatgpt-repo.ts",
     "zip:repo-review": "node --import tsx scripts/zip-repo-review.ts",
     "zip:repo-review:timed": "node scripts/run-npm-script-with-timing.mjs zip:repo-review",
     "test": "npm run test:unit && npm run test:e2e",
@@ -31,12 +27,6 @@
     "test:unit:timed": "node scripts/run-npm-script-with-timing.mjs test:unit",
     "test:e2e": "playwright test",
     "test:mobile-safety": "playwright test tests/e2e/mobile-safety.spec.ts",
-    "test:personas": "playwright test -c playwright.personas.config.ts tests/persona-testing/all-personas.spec.ts",
-    "test:personas:fast": "PERSONA_INCLUDE_ADMIN=0 playwright test -c playwright.personas.config.ts tests/persona-testing/all-personas.spec.ts",
-    "test:journeys": "playwright test -c playwright.personas.config.ts tests/persona-testing/journey-mode.spec.ts",
-    "test:users": "npm run test:personas && npm run test:journeys",
-    "test:users:fast": "PERSONA_INCLUDE_ADMIN=0 npm run test:personas && npm run test:journeys",
-    "test:persona:ideal-partner": "playwright test -c playwright.personas.config.ts tests/persona-testing/all-personas.spec.ts -g \"persona: ideal-partner\"",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:install": "playwright install chromium"
   },

@@ -2,6 +2,11 @@
 
 `public/ambient/scenes/` is the canonical repo location for reusable Ambient scene imagery.
 
+Sibling docs that travel with this scene library:
+
+- `AMBIENT.md`
+- `AMBIENT-TODO.md`
+
 These are not throwaway placeholders.
 
 They are reusable `Ambient Scenes`: calm, dark, warm, slightly haunted images that can sit beside text-heavy Ambient cards without making the display feel like software.
@@ -286,7 +291,6 @@ After dropping in the first images and updating the manifest:
 ```bash
 npm run ambient:scenes:validate
 npm run verify
-npm run site:review-packet:timed -- --mobile --viewport-only --skip-tests --include-script --focus ambient --include docs/AMBIENT.md,docs/AMBIENT-TODO.md,public/ambient/scenes --routes '/ambient,/ambient?type=now&signal=0,/ambient?type=tiny-thought&signal=0,/ambient?type=cat&signal=0,/ambient?type=project&signal=0,/ambient?type=writing&signal=0'
 ```
 
 ## Validation

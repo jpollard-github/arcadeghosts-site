@@ -49,9 +49,6 @@ test("admin dashboard supports sign in and sign out", async ({ page }) => {
   await expect(
     page.getByRole("link", { name: "Open Error Previews" }),
   ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Open Vercel Control Room" }),
-  ).toBeVisible();
 
   await page.getByRole("button", { name: "Log Out" }).click();
 
@@ -226,21 +223,5 @@ test("authenticated admin can open error previews", async ({ page }) => {
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Open 500 Preview" }),
-  ).toBeVisible();
-});
-
-test("authenticated admin can open vercel control room", async ({ page }) => {
-  await loginAsAdmin(page);
-
-  await page.goto("/admin/vercel");
-
-  await expect(
-    page.getByRole("heading", { name: "Vercel Control Room" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Open Analytics", exact: true }),
-  ).toHaveAttribute("href", "https://vercel.com/jpollardgithubs-projects/arcadeghosts-site/analytics");
-  await expect(
-    page.getByText("What to look at in analytics"),
   ).toBeVisible();
 });

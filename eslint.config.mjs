@@ -13,7 +13,6 @@ const config = [
       "reports/**",
       "review-packets/**",
       "repo-reviews/**",
-      "chatgpt-zip-packets/**",
     ],
   },
   ...nextVitals,

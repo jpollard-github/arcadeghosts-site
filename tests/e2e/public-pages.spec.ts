@@ -67,19 +67,6 @@ test("legacy movies and tv route redirects to screening", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("terminal page renders the standalone green terminal", async ({ page }) => {
-  await page.goto("/terminal");
-
-  await expect(
-    page.getByRole("heading", { name: "The green-screen room has its own door now." }),
-  ).toBeVisible();
-  await expect(page.getByText("80s Dev Terminal")).toBeVisible();
-  await expect(page.getByRole("link", { name: "Back Home" })).toHaveAttribute(
-    "href",
-    "/#fun-and-games",
-  );
-});
-
 test("search page can find twin peaks rooms and public writings", async ({ page }) => {
   await page.goto("/search");
 
@@ -97,6 +84,26 @@ test("search page can find twin peaks rooms and public writings", async ({ page 
       .filter({ has: page.getByRole("link", { name: "Enter the lodges" }) })
       .getByRole("heading", { name: "The Lodges Within" }),
   ).toBeVisible();
+});
+
+test("search page handles empty results and restores featured routes when cleared", async ({ page }) => {
+  await page.goto("/search");
+
+  const searchBox = page.getByRole("searchbox");
+
+  await searchBox.fill("zzzz-no-match-arcadeghosts");
+
+  await expect(page.getByRole("heading", { name: "No exact signal match yet." })).toBeVisible();
+  await expect(page.getByText('0 results for "zzzz-no-match-arcadeghosts".')).toBeVisible();
+  await expect(page.getByRole("link", { name: "Twin Peaks Self" })).toBeVisible();
+
+  await searchBox.clear();
+
+  await expect(page.getByText("Showing a featured mix of places to start.")).toBeVisible();
+  const quickRoutes = page.getByLabel("Quick routes");
+  await expect(quickRoutes.getByRole("link", { name: "Projects" })).toBeVisible();
+  await expect(quickRoutes.getByRole("link", { name: "About" })).toBeVisible();
+  await expect(quickRoutes.getByRole("link", { name: "Tiny Thoughts" })).toBeVisible();
 });
 
 test("writings index and a writing detail page render correctly", async ({ page }) => {
