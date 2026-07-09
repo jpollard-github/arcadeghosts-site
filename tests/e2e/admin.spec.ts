@@ -27,6 +27,59 @@ async function authenticateAdmin(page: Page) {
   ).toBeTruthy();
 }
 
+async function cleanupProjectTestData(page: Page, token: string) {
+  const listResponse = await page.request.get("/api/admin/projects");
+
+  expect(
+    listResponse.ok(),
+    `Project cleanup could not list projects (status ${listResponse.status()})`,
+  ).toBeTruthy();
+
+  const { projects } = (await listResponse.json()) as {
+    projects: Array<{ id: string; title: string; description: string }>;
+  };
+  const testProjects = projects.filter(
+    (project) =>
+      project.title.includes(token) || project.description.includes(token),
+  );
+
+  for (const project of testProjects) {
+    const deleteResponse = await page.request.delete("/api/admin/projects", {
+      data: { id: project.id },
+    });
+
+    expect(
+      deleteResponse.ok(),
+      `Project cleanup failed for ${project.id} (status ${deleteResponse.status()})`,
+    ).toBeTruthy();
+  }
+}
+
+async function cleanupTinyThoughtTestData(page: Page, token: string) {
+  const listResponse = await page.request.get("/api/admin/tiny-thoughts");
+
+  expect(
+    listResponse.ok(),
+    `Tiny Thought cleanup could not list thoughts (status ${listResponse.status()})`,
+  ).toBeTruthy();
+
+  const { thoughts } = (await listResponse.json()) as {
+    thoughts: Array<{ id: string; content: string }>;
+  };
+  const testThoughts = thoughts.filter((thought) => thought.content.includes(token));
+
+  for (const thought of testThoughts) {
+    const deleteResponse = await page.request.delete("/api/admin/tiny-thoughts", {
+      data: { id: thought.id },
+    });
+
+    expect(
+      deleteResponse.ok(),
+      `Tiny Thought cleanup failed for ${thought.id} (status ${deleteResponse.status()})`,
+    ).toBeTruthy();
+  }
+}
+
 test.describe("admin", () => {
   test.describe.configure({ mode: "serial" });
 
@@ -80,50 +133,54 @@ test.describe("admin", () => {
     page,
   }) => {
     await authenticateAdmin(page);
-    await page.goto("/admin/tiny-thoughts");
 
     const token = Date.now().toString();
     const initialText = `Tiny thought e2e ${token}`;
     const updatedText = `Tiny thought updated ${token}`;
 
-    await expect(
-      page.getByRole("heading", { name: "Tiny Thoughts" }),
-    ).toBeVisible();
-    await expect(page.getByRole("button", { name: "Refresh" })).toBeVisible();
-    await page.getByLabel("Thought").fill(initialText);
-    await page.getByRole("button", { name: "Create Thought" }).click();
+    try {
+      await page.goto("/admin/tiny-thoughts");
 
-    const thoughtCard = page.locator("article.admin-entry").filter({
-      hasText: initialText,
-    });
-    await expect(thoughtCard).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: "Tiny Thoughts" }),
+      ).toBeVisible();
+      await expect(page.getByRole("button", { name: "Refresh" })).toBeVisible();
+      await page.getByLabel("Thought").fill(initialText);
+      await page.getByRole("button", { name: "Create Thought" }).click();
 
-    await thoughtCard.getByRole("button", { name: "Edit" }).click();
-    await expect(page.getByText("Editing tiny thought.")).toBeVisible();
-    await expect(page.getByLabel("Thought")).toHaveValue(initialText);
+      const thoughtCard = page.locator("article.admin-entry").filter({
+        hasText: initialText,
+      });
+      await expect(thoughtCard).toBeVisible();
 
-    await page.getByLabel("Thought").fill(updatedText);
-    await page.getByRole("button", { name: "Update Thought" }).click();
+      await thoughtCard.getByRole("button", { name: "Edit" }).click();
+      await expect(page.getByText("Editing tiny thought.")).toBeVisible();
+      await expect(page.getByLabel("Thought")).toHaveValue(initialText);
 
-    await expect(page.getByText("Tiny thought updated.")).toBeVisible();
+      await page.getByLabel("Thought").fill(updatedText);
+      await page.getByRole("button", { name: "Update Thought" }).click();
 
-    const updatedThoughtCard = page.locator("article.admin-entry").filter({
-      hasText: updatedText,
-    });
-    await expect(updatedThoughtCard).toBeVisible();
+      await expect(page.getByText("Tiny thought updated.")).toBeVisible();
 
-    page.once("dialog", (dialog) => dialog.accept());
-    await updatedThoughtCard.getByRole("button", { name: "Delete" }).click();
+      const updatedThoughtCard = page.locator("article.admin-entry").filter({
+        hasText: updatedText,
+      });
+      await expect(updatedThoughtCard).toBeVisible();
 
-    await expect(page.getByText("Tiny thought deleted.")).toBeVisible();
-    await expect(
-      page.locator("article.admin-entry").filter({ hasText: updatedText }),
-    ).toHaveCount(0);
+      page.once("dialog", (dialog) => dialog.accept());
+      await updatedThoughtCard.getByRole("button", { name: "Delete" }).click();
+
+      await expect(page.getByText("Tiny thought deleted.")).toBeVisible();
+      await expect(
+        page.locator("article.admin-entry").filter({ hasText: updatedText }),
+      ).toHaveCount(0);
+    } finally {
+      await cleanupTinyThoughtTestData(page, token);
+    }
   });
 
   test("authenticated admin can create, update, and delete a project", async ({ page }) => {
     await authenticateAdmin(page);
-    await page.goto("/admin/projects");
 
     const token = Date.now().toString();
     const title = `Project e2e ${token}`;
@@ -131,48 +188,56 @@ test.describe("admin", () => {
     const description = `Initial project description ${token}`;
     const updatedDescription = `Updated project description ${token}`;
 
-    await expect(
-      page.getByRole("heading", { name: "Edit Projects" }),
-    ).toBeVisible();
-    await expect(page.getByRole("button", { name: "Add Project" })).toBeVisible();
+    try {
+      await page.goto("/admin/projects");
 
-    await page.getByRole("button", { name: "Add Project" }).click();
-    await expect(
-      page.getByText("New project draft added. Save it when you're ready."),
-    ).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: "Edit Projects" }),
+      ).toBeVisible();
+      await expect(page.getByRole("button", { name: "Add Project" })).toBeVisible();
 
-    const draftProjectCard = page
-      .locator("article.admin-entry")
-      .filter({ has: page.getByRole("button", { name: "Create Project" }) })
-      .last();
+      await page.getByRole("button", { name: "Add Project" }).click();
+      await expect(
+        page.getByText("New project draft added. Save it when you're ready."),
+      ).toBeVisible();
 
-    await draftProjectCard.getByLabel("Type").fill("E2E Project");
-    await draftProjectCard.getByLabel("Title").fill(title);
-    await draftProjectCard.getByLabel("Description").fill(description);
-    await expect(draftProjectCard.getByLabel("Description")).toHaveValue(description);
-    await expect(
-      draftProjectCard.getByRole("button", { name: "Create Project" }),
-    ).toBeEnabled();
-    await draftProjectCard.getByRole("button", { name: "Create Project" }).click({ force: true });
+      const draftProjectCard = page
+        .locator("article.admin-entry")
+        .filter({ has: page.getByRole("button", { name: "Create Project" }) })
+        .last();
 
-    await expect(page.getByText("Project created.")).toBeVisible();
+      await draftProjectCard.getByLabel("Type").fill("E2E Project");
+      await draftProjectCard.getByLabel("Title").fill(title);
+      await draftProjectCard.getByLabel("Description").fill(description);
+      await expect(draftProjectCard.getByLabel("Description")).toHaveValue(description);
+      await expect(
+        draftProjectCard.getByRole("button", { name: "Create Project" }),
+      ).toBeEnabled();
+      await draftProjectCard
+        .getByRole("button", { name: "Create Project" })
+        .click({ force: true });
 
-    const projectCard = () =>
-      page.locator("article.admin-entry").filter({ hasText: token });
+      await expect(page.getByText("Project created.")).toBeVisible();
 
-    await expect(projectCard()).toBeVisible();
-    await projectCard().getByLabel("Description").fill(updatedDescription);
-    await projectCard().getByLabel("Title").fill(updatedTitle);
-    await projectCard().getByRole("button", { name: "Save Project" }).click();
+      const projectCard = () =>
+        page.locator("article.admin-entry").filter({ hasText: token });
 
-    await expect(page.getByText("Project saved.")).toBeVisible();
-    await expect(projectCard().getByLabel("Title")).toHaveValue(updatedTitle);
+      await expect(projectCard()).toBeVisible();
+      await projectCard().getByLabel("Description").fill(updatedDescription);
+      await projectCard().getByLabel("Title").fill(updatedTitle);
+      await projectCard().getByRole("button", { name: "Save Project" }).click();
 
-    page.once("dialog", (dialog) => dialog.accept());
-    await projectCard().getByRole("button", { name: "Delete" }).click();
+      await expect(page.getByText("Project saved.")).toBeVisible();
+      await expect(projectCard().getByLabel("Title")).toHaveValue(updatedTitle);
 
-    await expect(page.getByText("Project deleted.")).toBeVisible();
-    await expect(projectCard()).toHaveCount(0);
+      page.once("dialog", (dialog) => dialog.accept());
+      await projectCard().getByRole("button", { name: "Delete" }).click();
+
+      await expect(page.getByText("Project deleted.")).toBeVisible();
+      await expect(projectCard()).toHaveCount(0);
+    } finally {
+      await cleanupProjectTestData(page, token);
+    }
   });
 
   test("authenticated admin can open error previews", async ({ page }) => {
