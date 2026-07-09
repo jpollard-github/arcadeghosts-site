@@ -23,6 +23,19 @@ test("validateImageUpload rejects unsupported image types", () => {
   });
 });
 
+test("validateImageUpload rejects files larger than the configured limit", () => {
+  const maxBytes = 2 * 1024 * 1024;
+  const file = new File([new Uint8Array(maxBytes + 1)], "signal.png", {
+    type: "image/png",
+  });
+
+  const result = validateImageUpload(file, { label: "Project images", maxBytes });
+  assert.deepEqual(result, {
+    ok: false,
+    error: "Project images must be 2 MB or smaller.",
+  });
+});
+
 test("createImageUploadPath keeps the file extension and scope", () => {
   const file = new File([new Uint8Array([1])], "signal.webp", {
     type: "image/webp",

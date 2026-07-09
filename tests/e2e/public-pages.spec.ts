@@ -183,20 +183,21 @@ test("public feed, sitemap, robots, and json endpoints respond with expected sha
       request.get("/api/tiny-thoughts?limit=3"),
     ]);
 
-  assertStatusOk(tinyThoughtsRss);
-  assertStatusOk(writingsRss);
-  assertStatusOk(robots);
-  assertStatusOk(sitemap);
-  assertStatusOk(projects);
-  assertStatusOk(now);
-  assertStatusOk(guestbook);
-  assertStatusOk(tinyThoughts);
+  assertStatusOk(tinyThoughtsRss, "/tiny-thoughts/rss.xml");
+  assertStatusOk(writingsRss, "/writings/rss.xml");
+  assertStatusOk(robots, "/robots.txt");
+  assertStatusOk(sitemap, "/sitemap.xml");
+  assertStatusOk(projects, "/api/projects");
+  assertStatusOk(now, "/api/now");
+  assertStatusOk(guestbook, "/api/guestbook");
+  assertStatusOk(tinyThoughts, "/api/tiny-thoughts?limit=3");
 
   expect(tinyThoughtsRss.headers()["content-type"]).toMatch(/application\/rss\+xml/);
   expect(writingsRss.headers()["content-type"]).toMatch(/application\/rss\+xml/);
 
   expect(await robots.text()).toContain("Sitemap:");
   const sitemapText = await sitemap.text();
+  expect(sitemapText).toContain("/ambient");
   expect(sitemapText).toContain("/tiny-thoughts");
   expect(sitemapText).not.toContain("/build-log");
   expect(sitemapText).not.toContain("/updates");
@@ -213,6 +214,6 @@ test("public feed, sitemap, robots, and json endpoints respond with expected sha
   expect(tinyThoughtsJson.thoughts.length).toBeLessThanOrEqual(3);
 });
 
-function assertStatusOk(response: { ok(): boolean; status(): number }) {
-  expect(response.ok(), `expected ${response.status()} to be ok`).toBeTruthy();
+function assertStatusOk(response: { ok(): boolean; status(): number }, label: string) {
+  expect(response.ok(), `${label} returned ${response.status()}`).toBeTruthy();
 }

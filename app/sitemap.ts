@@ -4,6 +4,7 @@ import { absoluteUrl } from "./seo";
 
 const staticRoutes = [
   "",
+  "/ambient",
   "/arcade",
   "/music",
   "/screening",
@@ -17,7 +18,7 @@ const staticRoutes = [
   "/twin-peaks-self",
   "/cats/beverly-and-lucinda",
   "/cats/thomas-jones-missy-cass",
-  "/games/between-two-lodges/",
+  "/games/between-two-lodges",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

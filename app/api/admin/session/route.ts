@@ -5,6 +5,7 @@ import {
   setAdminSession,
   verifyAdminCredentials,
 } from "../../../lib/admin-auth";
+import { parseJsonBody } from "../../../lib/admin-route";
 
 export const runtime = "nodejs";
 
@@ -16,7 +17,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const body = await request.json().catch(() => ({}));
+  const body = await parseJsonBody(request);
   const username = typeof body.username === "string" ? body.username : "";
   const password = typeof body.password === "string" ? body.password : "";
 

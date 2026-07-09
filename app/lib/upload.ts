@@ -14,6 +14,14 @@ type ValidateImageUploadOptions = {
   maxBytes?: number;
 };
 
+function formatUploadSizeLimit(maxBytes: number) {
+  const megabytes = maxBytes / (1024 * 1024);
+  const rounded = Math.round(megabytes * 10) / 10;
+  const label = Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+
+  return `${label} MB`;
+}
+
 export function fileExtension(file: File) {
   const extension = file.name.split(".").pop()?.toLowerCase();
 
@@ -56,7 +64,7 @@ export function validateImageUpload(
   if (file.size > maxBytes) {
     return {
       ok: false,
-      error: `${label} must be 5 MB or smaller.`,
+      error: `${label} must be ${formatUploadSizeLimit(maxBytes)} or smaller.`,
     };
   }
 

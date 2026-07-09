@@ -1,4 +1,5 @@
 import { isAdminAuthenticated } from "../../../lib/admin-auth";
+import { parseJsonBody } from "../../../lib/admin-route";
 import { getGuestbookSql } from "../../../lib/guestbook";
 import {
   contextRefreshVariants,
@@ -75,7 +76,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+    const body = await parseJsonBody(request);
     const variant =
       typeof body.variant === "string" && isContextRefreshVariant(body.variant)
         ? body.variant
@@ -103,7 +104,7 @@ export async function PUT(request: Request) {
   }
 
   try {
-    const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+    const body = await parseJsonBody(request);
     const id = typeof body.id === "string" ? body.id : "";
     const content = normalizeContextRefreshContent(body.content);
 
@@ -165,7 +166,7 @@ export async function PATCH(request: Request) {
   }
 
   try {
-    const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+    const body = await parseJsonBody(request);
     const profile = await saveContextRefreshProfile(body);
 
     return Response.json({ ok: true, profile });

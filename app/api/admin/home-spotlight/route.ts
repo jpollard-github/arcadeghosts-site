@@ -1,4 +1,5 @@
 import { isAdminAuthenticated } from "../../../lib/admin-auth";
+import { parseJsonBody } from "../../../lib/admin-route";
 import { revalidatePath } from "next/cache";
 import { getGuestbookSql } from "../../../lib/guestbook";
 import {
@@ -93,7 +94,7 @@ export async function PUT(request: Request) {
   }
 
   try {
-    const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+    const body = await parseJsonBody(request);
     const spotlight = normalizeHomeSpotlight(body.spotlight);
     const rawQueue = Array.isArray(body.queue) ? body.queue : [];
     const queue = rawQueue

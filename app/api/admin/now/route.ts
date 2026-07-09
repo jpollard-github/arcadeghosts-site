@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import { isAdminAuthenticated } from "../../../lib/admin-auth";
+import { parseJsonBody } from "../../../lib/admin-route";
 import { revalidateNowViews } from "../../../lib/admin-revalidation";
 import { getGuestbookSql } from "../../../lib/guestbook";
 import {
@@ -66,7 +67,7 @@ export async function PUT(request: Request) {
   }
 
   try {
-    const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+    const body = await parseJsonBody(request);
     const rawItems = Array.isArray(body.items) ? body.items : [];
     const items = rawItems
       .map(normalizeNowItem)
