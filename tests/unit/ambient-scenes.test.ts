@@ -76,8 +76,8 @@ test("selectAmbientSceneForSignal prefers overlay-friendly category matches", ()
 
   const selected = selectAmbientSceneForSignal(
     {
-      id: "now-123",
-      kind: "now",
+      id: "project-123",
+      kind: "project",
     },
     scenes,
   );

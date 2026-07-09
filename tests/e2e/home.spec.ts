@@ -5,12 +5,12 @@ test("homepage renders the hero and key sections", async ({ page }) => {
   const mainNav = page.getByRole("navigation", { name: "Main navigation" });
 
   await expect(
-    page.getByText("A personal site for writing, cats, software, music, and finding the right people."),
+    page.getByRole("heading", {
+      name: "A personal signal from the neon woods.",
+    }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", {
-      name: "A signal flare for curious people.",
-    }),
+    page.getByText("It's a place for things I make, things I love, and the strange connections between them."),
   ).toBeVisible();
   await expect(
     mainNav.locator('a[href="#screening"]'),
@@ -33,15 +33,10 @@ test("homepage renders the hero and key sections", async ({ page }) => {
       name: "Who I am and how I think.",
     }),
   ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Start Here", exact: true }).first(),
-    ).toHaveAttribute("href", "#start-here");
-  await expect(
-    page.getByRole("link", { name: "Read the Writing", exact: true }),
-  ).toHaveAttribute("href", "/writings");
-  await expect(
-    page.getByRole("link", { name: "Say Hello", exact: true }),
-  ).toHaveAttribute("href", "mailto:jason@arcadeghosts.org");
+  await expect(mainNav.locator('a[href="#start-here"]')).toHaveCount(0);
+  await expect(page.locator("#start-here")).toHaveCount(0);
+  await expect(page.locator("main > section").nth(0)).toHaveClass(/hero/);
+  await expect(page.locator("main > section").nth(1)).toHaveAttribute("id", "projects");
   await expect(page.getByText("80s Dev Terminal")).toHaveCount(0);
 });
 

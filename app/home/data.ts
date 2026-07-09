@@ -4,7 +4,7 @@ import {
   thomasJonesMissyCassPhotos,
   visualMedia,
 } from "../site-data";
-import { businessContact, businessLinks } from "../lib/business-config";
+import { businessLinks } from "../lib/business-config";
 
 type HomeNavItem = {
   label: string;
@@ -16,7 +16,6 @@ type HomeNavItem = {
 };
 
 export const navItems: readonly HomeNavItem[] = [
-  { label: "Start Here", mobileLabel: "Start", href: "#start-here", mobilePriority: "primary" },
   { label: "Projects", mobileLabel: "Build", href: "#projects", mobilePriority: "primary" },
   { label: "Writing", mobileLabel: "Essays", href: "#writing", mobilePriority: "primary" },
   { label: "Tiny Thoughts", mobileLabel: "Tiny", href: "#tiny-thoughts", mobilePriority: "primary" },
@@ -46,49 +45,6 @@ export const surpriseMeLinks = [
   { href: "/cats/beverly-and-lucinda" },
   { href: "/cats/thomas-jones-missy-cass" },
   { href: "/terminal" },
-];
-
-export const startHereCards = [
-  {
-    variant: "voice",
-    glyph: "::",
-    eyebrow: "Personal",
-    title: "I want to know Jason",
-    text: "Start with the human context: who I am, how I think, and why software, music, cats, stories, and curious little experiments all belong on the same site.",
-    audience: "You want the person before the projects.",
-    href: "/about",
-    cta: "Meet Jason First",
-  },
-  {
-    variant: "workbench",
-    glyph: "[_]",
-    eyebrow: "Projects",
-    title: "I’m here for projects",
-    text: "Go straight to the workbench if you want the active, shipped, paused, and becoming view first, then wander outward into the rest of the site from there.",
-    audience: "You want current work and practical signal first.",
-    href: "/#projects",
-    cta: "Open The Workbench",
-  },
-  {
-    variant: "static",
-    glyph: "~*",
-    eyebrow: "Creative",
-    title: "I want writing, music, cats, or weird rooms",
-    text: "Take the warmer route through essays, songs, cat rooms, Twin Peaks atmosphere, arcade glow, and the parts of the site that make ArcadeGhosts feel haunted in a friendly way.",
-    audience: "You want the site's odd little heartbeat.",
-    href: "#writing",
-    cta: "Follow The Curious Signal",
-  },
-  {
-    variant: "workbench",
-    glyph: ">>",
-    eyebrow: "Contact",
-    title: "I want a direct line to Jason",
-    text: "If the site already feels like your kind of signal, skip the hallway and send a note directly instead of wandering through a business pitch room.",
-    audience: "You want the simplest way to reach out.",
-    href: businessContact.emailHref,
-    cta: "Email Jason",
-  },
 ];
 
 export const funAndGamesCards = [

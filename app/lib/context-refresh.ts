@@ -877,7 +877,7 @@ export async function buildContextRefreshContent({
       "## Technical Context",
       `- Main repo: ${profile.githubRepo}`,
       "- Stack: Next.js App Router, React, TypeScript, Neon Postgres, Vercel Blob, Resend, and Vercel hosting.",
-      "- Admin-managed content includes projects, Now cards, Tiny Thoughts, guestbook moderation, and context-refresh exports.",
+      "- Active admin-managed public content includes projects and Tiny Thoughts.",
       "- Preferred implementation style: pragmatic changes, close fit with the existing repo, careful verification, and useful automation without overbuilding.",
       "",
     );

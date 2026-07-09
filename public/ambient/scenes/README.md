@@ -20,7 +20,7 @@ Use this library for:
 ## Goals
 
 - replace repeated placeholder imagery with a diverse reusable scene library
-- support text-heavy `Now`, `Tiny Thought`, `Project`, `Writing`, and future `Guestbook` cards
+- support text-heavy `Tiny Thought`, `Project`, and `Writing` cards
 - keep images calm, dark, warm, slightly haunted, and non-distracting
 - make the library safe to expand over time without changing Ambient route code
 
@@ -57,7 +57,7 @@ Current eventual target:
 - no recognizable copyrighted characters
 - no busy focal points that fight with text
 - favor calm atmosphere over spectacle
-- images should work beside `Now`, `Tiny Thought`, `Project`, `Writing`, and `Guestbook` cards
+- images should work beside `Tiny Thought`, `Project`, and `Writing` cards
 - production scene batches should use separate first-class `16:9` images, not collage panels
 
 ## Mood Notes
@@ -250,7 +250,7 @@ Example starter batch entry set:
       "textOverlaySuitability": "excellent",
       "preferredUse": "side-panel",
       "weight": 4,
-      "notes": "Good right-side breathing room for project and now cards."
+      "notes": "Good right-side breathing room for project cards."
     },
     {
       "id": "night-sky-01",

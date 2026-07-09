@@ -51,19 +51,17 @@ export type AmbientSceneManifest = {
 
 export type AmbientSceneCapableSignal = {
   id: string;
-  kind: "now" | "thought" | "cat" | "project" | "writing" | "guestbook";
+  kind: "thought" | "cat" | "project" | "writing";
   imageSrc?: string;
 };
 
 const ambientSceneManifestPath = path.join(process.cwd(), "public", "ambient", "scenes", "manifest.json");
 
 const signalCategoryPreferences: Record<AmbientSceneCapableSignal["kind"], AmbientSceneCategory[]> = {
-  now: ["cozy-desks", "arcade-glow", "crt-reflections", "rain-on-windows"],
   thought: ["misty-forests", "moonlit-lakes", "night-skies", "warm-lamps-shadows", "rain-on-windows"],
   cat: ["cat-silhouettes", "warm-lamps-shadows"],
   project: ["cozy-desks", "arcade-glow", "crt-reflections", "city-streets", "books-notebooks"],
   writing: ["books-notebooks", "warm-lamps-shadows", "moonlit-lakes", "rain-on-windows", "night-skies"],
-  guestbook: ["warm-lamps-shadows", "rain-on-windows", "books-notebooks", "moonlit-lakes"],
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -266,7 +264,7 @@ const defaultAmbientSceneCategories: AmbientSceneCategorySummary[] = [
     id: "cozy-desks",
     title: "Cozy Desks",
     targetCount: 4,
-    description: "Coffee, keyboards, lamps, and notebook corners that pair well with active project and now cards.",
+    description: "Coffee, keyboards, lamps, and notebook corners that pair well with active project cards.",
   },
   {
     id: "arcade-glow",

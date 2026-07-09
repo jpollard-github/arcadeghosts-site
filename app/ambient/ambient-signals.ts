@@ -1,4 +1,4 @@
-export type AmbientSignalKind = "now" | "thought" | "cat" | "project" | "writing" | "guestbook";
+export type AmbientSignalKind = "thought" | "cat" | "project" | "writing";
 
 export type AmbientSignal = {
   id: string;
@@ -15,12 +15,10 @@ export type AmbientSignal = {
 };
 
 const ambientSignalBaseDwellMs: Record<AmbientSignalKind, number> = {
-  now: 15000,
   thought: 17000,
   cat: 22000,
   project: 21000,
   writing: 23000,
-  guestbook: 19500,
 };
 
 function normalizeAmbientTextLength(value: string) {

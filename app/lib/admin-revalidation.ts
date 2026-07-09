@@ -5,17 +5,9 @@ export function revalidateProjectViews() {
   revalidatePath("/search");
 }
 
-export function revalidateNowViews() {
-  revalidatePath("/");
-}
-
 export function revalidateTinyThoughtViews() {
   revalidatePath("/");
   revalidatePath("/tiny-thoughts");
   revalidatePath("/search");
   revalidatePath("/tiny-thoughts/rss.xml");
-}
-
-export function revalidateGuestbookViews() {
-  revalidatePath("/");
 }

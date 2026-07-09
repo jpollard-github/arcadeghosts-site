@@ -1,6 +1,4 @@
 import Image from "next/image";
-import { businessContact } from "../lib/business-config";
-import { TrackedLink } from "../TrackedLink";
 import { githubRepoUrl, navItems } from "./data";
 
 export function HomeHero() {
@@ -51,7 +49,7 @@ export function HomeHero() {
 
       <div className="hero-content">
         <p className="eyebrow">Jason Pollard / ArcadeGhosts</p>
-        <h1>A signal flare for curious people.</h1>
+        <h1>A personal signal from the neon woods.</h1>
         <div className="hero-copy">
           <p>
             ArcadeGhosts is my personal corner of the internet: writing, cats,
@@ -59,37 +57,9 @@ export function HomeHero() {
             whatever I&apos;m trying to understand.
           </p>
           <p>
-            It&apos;s less a portfolio than a way of saying: this is what I
-            care about, this is what I make, and this is the kind of
-            conversation I&apos;m hoping to find.
+            It&apos;s a place for things I make, things I love, and the strange
+            connections between them.
           </p>
-          <p>If something here resonates, feel free to connect.</p>
-        </div>
-        <div className="hero-actions" aria-label="Hero actions">
-          <TrackedLink
-            className="button primary"
-            href="#start-here"
-            trackingEvent="Hero CTA Clicked"
-            trackingProperties={{ label: "Start Here", destination: "#start-here" }}
-          >
-            Start Here
-          </TrackedLink>
-          <TrackedLink
-            className="button secondary"
-            href="/writings"
-            trackingEvent="Hero CTA Clicked"
-            trackingProperties={{ label: "Read the Writing", destination: "/writings" }}
-          >
-            Read the Writing
-          </TrackedLink>
-          <TrackedLink
-            className="button tertiary"
-            href={businessContact.emailHref}
-            trackingEvent="Hero CTA Clicked"
-            trackingProperties={{ label: "Say Hello", destination: businessContact.emailHref }}
-          >
-            Say Hello
-          </TrackedLink>
         </div>
       </div>
     </section>

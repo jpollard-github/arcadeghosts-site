@@ -249,20 +249,6 @@
   box-shadow: 0 0 0 3px rgba(41, 240, 212, 0.1);
 }
 
-.side-hustle-prompt {
-  display: grid;
-  gap: 0.45rem;
-  margin-top: 1rem;
-}
-
-.side-hustle-prompt span {
-  color: var(--teal);
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
 .content-inbox-instructions {
   margin-bottom: 1rem;
 }
@@ -382,17 +368,6 @@
   background: rgba(255, 255, 255, 0.07);
   font-family: "Courier New", "SFMono-Regular", Consolas, monospace;
   line-height: 1.6;
-  resize: vertical;
-}
-
-.side-hustle-prompt textarea {
-  min-height: 22rem;
-  border: 1px solid rgba(248, 239, 227, 0.18);
-  border-radius: 8px;
-  padding: 0.9rem;
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.07);
-  line-height: 1.7;
   resize: vertical;
 }
 

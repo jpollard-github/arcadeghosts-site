@@ -68,10 +68,8 @@ The simplest useful architecture is:
 
 Use existing public sources first:
 
-- `/api/now`
 - `/api/tiny-thoughts`
 - `/api/projects`
-- `/api/guestbook`
 
 Use existing repo content directly when simpler:
 
@@ -112,12 +110,13 @@ Ambient already has a surprisingly rich library to borrow from:
 
 ### Strong first-wave sources
 
-- Now items
 - Tiny Thoughts
 - cat photo archives
 - projects
 - writings
-- guestbook excerpts
+
+`Now` and `Guestbook` are intentionally dormant and should not be reintroduced
+as Ambient sources merely because their retained admin/database code still exists.
 
 ### Strong second-wave sources
 
@@ -445,7 +444,6 @@ Even before implementation, a few things are already clear:
 - Should Ambient default to randomness, curation, or profile-specific weighting?
 - How much text is too much for a room-scale display?
 - Does live Spotify matter enough to justify the added fragility?
-- Should guestbook content appear as often as Tiny Thoughts, or much less often?
 - Which device deserves the first real hardware test?
 - Should settings stay local-only for a long time?
 - At what point does Ambient earn its own public-facing name?

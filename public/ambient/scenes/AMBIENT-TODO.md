@@ -17,12 +17,10 @@ Read with:
 
 1. `docs/AMBIENT.md`
 2. `docs/AMBIENT-TODO.md`
-3. `app/lib/now.ts`
-4. `app/lib/tiny-thoughts.ts`
-5. `app/lib/projects.ts`
-6. `app/lib/guestbook.ts`
-7. `app/writings.ts`
-8. `app/site-content/cats.ts`
+3. `app/lib/tiny-thoughts.ts`
+4. `app/lib/projects.ts`
+5. `app/writings.ts`
+6. `app/site-content/cats.ts`
 
 Guiding principles:
 
@@ -39,14 +37,15 @@ Guiding principles:
 
 Ambient should primarily consume content the site already knows about:
 
-- Now items
 - Tiny Thoughts
 - cat photos
 - projects
 - writings
-- guestbook signals
 - arcade and movie/music taste surfaces
 - Spotify-adjacent music surfaces already present on the site
+
+`Now` and `Guestbook` are intentionally quarantined from Ambient. Their retained
+admin/database code is not an invitation to reconnect them to the display.
 
 Ambient should not start by inventing:
 
@@ -109,7 +108,7 @@ Ship the first usable Ambient experience as a single full-screen page that alrea
 ### Progress Notes
 
 - `/ambient` now exists as a dedicated first-glow route.
-- The first pass uses a small real signal set only: public Now items, recent Tiny Thoughts, and cat-room photography.
+- The first pass used a small real signal set; the current active set begins with recent Tiny Thoughts and cat-room photography.
 - Rotation stays intentionally simple for now: one display stage, automatic cycling, and manual previous/next controls.
 - The route hides the normal fixed site chrome while Ambient is active so the screen feels more like an installation.
 - The first device-focused follow-up pass now treats landscape tablet review as a first-class proofing target inside the existing review-packet workflow.
@@ -151,7 +150,6 @@ Expand Ambient from a proof of concept into a real content-fed experience powere
 
 ### Checklist
 
-- [x] `[P0]` Pull in Now items as a dependable text-first source.
 - [x] `[P0]` Pull in Tiny Thoughts as short ambient text moments.
 - [x] `[P0]` Pull in cat photography as a warm visual source.
 - [x] `[P1]` Pull in projects and writings as slower, more reflective cards.
@@ -159,7 +157,6 @@ Expand Ambient from a proof of concept into a real content-fed experience powere
 - [x] `[P0]` Add gentle crossfades and transition polish for calmer signal changes.
 - [x] `[P1]` Create the `Ambient Scene Library` structure, manifest, docs, and integration points for reusable side imagery.
 - [x] `[P1]` Import the first real Ambient Scene batch into the new library.
-- [x] `[P1]` Pull in recent approved guestbook signals in a gentle, non-chatty way.
 - [ ] `[P2]` Decide which sources deserve images, text-only modes, or mixed layouts.
 
 ### Review Criteria
@@ -170,10 +167,8 @@ Expand Ambient from a proof of concept into a real content-fed experience powere
 
 ### Evidence / Sources
 
-- `/api/now`
 - `/api/tiny-thoughts`
 - `/api/projects`
-- `/api/guestbook`
 - `app/writings.ts`
 - `app/site-content/cats.ts`
 - `app/ambient/page.tsx`
@@ -184,14 +179,12 @@ Expand Ambient from a proof of concept into a real content-fed experience powere
 
 ### Progress Notes
 
-- Ambient now rotates across six existing site-connected signal families: `Now`, `Tiny Thoughts`, cat photography, projects, writings, and gentle guestbook notes.
+- Ambient now rotates across four site-connected signal families: `Tiny Thoughts`, cat photography, projects, and writings.
 - This first Phase 2 pass keeps the visual system intentionally narrow by reusing the existing Ambient text/image stage rather than inventing source-specific layouts.
 - `Tiny Thought` signals now render as fuller desk-distance reading moments instead of turning the thought text into the oversized title.
 - `Project` signals are derived from existing public project metadata and use trimmed descriptions plus `nextAction` when available to keep the cards alive without becoming task-manager UI.
 - `Writing` signals are derived from `app/writings.ts` and intentionally stay short, reflective, and linked back to the site’s writing pages.
-- `Guestbook` signals now draw only from approved public guestbook entries, stay intentionally rare, and render as a single calm note rather than a social feed.
 - Stable query-param review states now include `type=project` and `type=writing` alongside the earlier `now`, `tiny-thought`, and `cat` states.
-- Stable review states now also include `type=guestbook` so the guestbook treatment can be checked directly in tablet-landscape captures.
 - The repo now includes a dedicated `Ambient Scene Library` structure at `public/ambient/scenes/` with category folders, a manifest, import guidance, and a small validator script.
 - Ambient text-heavy signals can now draw from the scene library when real scene assets are imported, while cat cards keep their existing first-party imagery intact.
 - The empty-library case is deliberate and safe: no fake assets are assumed, and Ambient should continue to degrade gracefully until real scenes are added.
@@ -208,7 +201,6 @@ Expand Ambient from a proof of concept into a real content-fed experience powere
 - Scene-library growth remains ongoing content work, not a blocker for the next implementation pass.
 - Near-term display polish should prioritize smarter dwell timing by signal type before adding many more source families.
 - Near-term motion work should favor gentle crossfades and calmer signal handoffs over bigger visual system changes.
-- Guestbook should stay a low-frequency warmth signal, not a chatty primary source.
 - Real scene generation/import still happens outside the repo and needs a deliberate curation pass before the library becomes visually active.
 
 ### Future Scene Library Growth
@@ -494,7 +486,6 @@ Deepen Ambient with richer recurring moods: seasons, anniversaries, memories, qu
 - cat photo archives
 - music and movie pages
 - project timestamps
-- guestbook timestamps
 
 ### Known Constraints
 

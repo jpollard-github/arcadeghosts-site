@@ -4,10 +4,8 @@ import { HomeCats } from "./home/HomeCats";
 import { HomeFunAndGames } from "./home/HomeFunAndGames";
 import { HomeHero } from "./home/HomeHero";
 import { HomeHashScroller } from "./home/HomeHashScroller";
-import { HomeIntroBand } from "./home/HomeIntroBand";
 import { HomeProjects } from "./home/HomeProjects";
 import { HomeScreening } from "./home/HomeScreening";
-import { HomeStartHere } from "./home/HomeStartHere";
 import { HomeTinyThoughts } from "./home/HomeTinyThoughts";
 import { HomeWriting } from "./home/HomeWriting";
 import { getPublicProjects } from "./lib/projects";
@@ -103,9 +101,7 @@ export default async function Home() {
       <a className="back-up-top" href="#top">
         Back Up Top
       </a>
-      <HomeIntroBand />
       <HomeHero />
-      <HomeStartHere />
       <HomeProjects projects={projects} />
       <HomeWriting />
       <HomeTinyThoughts />

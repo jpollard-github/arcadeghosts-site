@@ -14,8 +14,8 @@ const emptySpotlight: HomeSpotlightRecord = {
   title: "",
   text: "",
   linkLabel: "",
-  linkHref: "#now",
-  enabled: true,
+  linkHref: "/",
+  enabled: false,
 };
 
 function fingerprint(value: HomeSpotlightRecord) {
@@ -162,7 +162,7 @@ export function AdminHomeSpotlight() {
         <div className="admin-heading">
           <p className="eyebrow">Admin</p>
           <h1>Homepage Spotlight</h1>
-          <p>Control the curated spotlight near the top of the homepage.</p>
+          <p>Dormant experiment retained for reference. It is not rendered on the public homepage.</p>
         </div>
 
         {!authenticated ? (
@@ -224,7 +224,7 @@ export function AdminHomeSpotlight() {
                   <input
                     type="text"
                     value={spotlight.linkHref}
-                    placeholder="#now or /writings/..."
+                    placeholder="/ or /writings/..."
                     onChange={(event) => updateField("linkHref", event.target.value)}
                   />
                 </label>

@@ -1,7 +1,6 @@
 import { randomUUID } from "crypto";
 import { isAdminAuthenticated } from "../../../lib/admin-auth";
 import { parseJsonBody } from "../../../lib/admin-route";
-import { revalidateNowViews } from "../../../lib/admin-revalidation";
 import { getGuestbookSql } from "../../../lib/guestbook";
 import {
   ensureNowItemsTable,
@@ -138,8 +137,6 @@ export async function PUT(request: Request) {
         `;
       }
     }
-
-    revalidateNowViews();
 
     const rows = await sql`
       SELECT

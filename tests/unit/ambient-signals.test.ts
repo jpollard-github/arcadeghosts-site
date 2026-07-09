@@ -2,13 +2,13 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { getAmbientSignalDwellMs } from "../../app/ambient/ambient-signals";
 
-test("cats and long-form signals dwell longer than now cards", () => {
+test("active Ambient signal kinds use deliberate dwell timing", () => {
   assert.equal(
     getAmbientSignalDwellMs({
-      kind: "now",
-      body: "A short now item.",
+      kind: "project",
+      body: "A project signal.",
     }),
-    15000,
+    21000,
   );
 
   assert.equal(
@@ -25,14 +25,6 @@ test("cats and long-form signals dwell longer than now cards", () => {
       body: "A writing signal.",
     }),
     23000,
-  );
-
-  assert.equal(
-    getAmbientSignalDwellMs({
-      kind: "guestbook",
-      body: "A guestbook signal.",
-    }),
-    19500,
   );
 });
 

@@ -626,206 +626,6 @@ p {
   background: rgba(255, 54, 95, 0.12);
 }
 
-.intro-band {
-  border-block: 1px solid var(--line);
-  background:
-    linear-gradient(90deg, rgba(255, 54, 95, 0.12), rgba(41, 240, 212, 0.1)),
-    rgba(8, 9, 12, 0.9);
-}
-
-.start-here-section {
-  position: relative;
-  padding-top: clamp(2.8rem, 5vw, 4.5rem);
-  padding-bottom: clamp(3.5rem, 6vw, 5.5rem);
-}
-
-.start-here-section:target {
-  animation: start-here-arrival 850ms ease-out;
-}
-
-.start-here-section::before {
-  position: absolute;
-  inset: 1.25rem 0 auto;
-  height: 1px;
-  content: "";
-  background: linear-gradient(90deg, transparent, rgba(255, 198, 109, 0.75), transparent);
-  box-shadow: 0 0 18px rgba(255, 198, 109, 0.22);
-}
-
-.start-here-section:target::before {
-  background: linear-gradient(90deg, transparent, rgba(41, 240, 212, 0.92), transparent);
-  box-shadow: 0 0 28px rgba(41, 240, 212, 0.34);
-}
-
-.start-here-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.start-here-kicker {
-  max-width: 42rem;
-  margin: 1.1rem 0 0;
-  color: var(--ink);
-  font-size: 0.96rem;
-  font-weight: 700;
-  line-height: 1.65;
-}
-
-.start-here-card {
-  position: relative;
-  display: grid;
-  gap: 0.95rem;
-  min-height: 18rem;
-  padding: 1.35rem;
-  border: 1px solid rgba(255, 198, 109, 0.22);
-  border-radius: 12px;
-  background:
-    radial-gradient(circle at top right, rgba(255, 198, 109, 0.12), transparent 34%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
-    rgba(8, 9, 12, 0.86);
-  box-shadow: 0 26px 78px rgba(0, 0, 0, 0.28);
-  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-}
-
-.start-here-card-topline {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.start-here-glyph {
-  display: inline-flex;
-  min-width: 2.8rem;
-  min-height: 2.2rem;
-  align-items: center;
-  justify-content: center;
-  padding: 0.2rem 0.55rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 999px;
-  color: var(--ink);
-  font-family: "Courier New", "SFMono-Regular", Consolas, monospace;
-  font-size: 0.9rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.start-here-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(41, 240, 212, 0.48);
-  background:
-    radial-gradient(circle at top right, rgba(41, 240, 212, 0.16), transparent 34%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)),
-    rgba(8, 9, 12, 0.9);
-}
-
-.start-here-card-workbench {
-  border-color: rgba(255, 198, 109, 0.26);
-  background:
-    radial-gradient(circle at top right, rgba(255, 198, 109, 0.14), transparent 34%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
-    rgba(8, 9, 12, 0.86);
-}
-
-.start-here-card-workbench .start-here-glyph {
-  color: #20140a;
-  border-color: rgba(255, 198, 109, 0.3);
-  background: rgba(255, 198, 109, 0.9);
-}
-
-.start-here-card-voice {
-  border-color: rgba(255, 54, 95, 0.24);
-  background:
-    radial-gradient(circle at top right, rgba(255, 54, 95, 0.14), transparent 34%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
-    rgba(8, 9, 12, 0.86);
-}
-
-.start-here-card-voice .start-here-glyph {
-  border-color: rgba(255, 54, 95, 0.28);
-  background: rgba(255, 54, 95, 0.18);
-}
-
-.start-here-card-static {
-  border-color: rgba(41, 240, 212, 0.24);
-  background:
-    radial-gradient(circle at top right, rgba(41, 240, 212, 0.15), transparent 34%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
-    rgba(8, 9, 12, 0.86);
-}
-
-.start-here-card-static .start-here-glyph {
-  border-color: rgba(41, 240, 212, 0.28);
-  background: rgba(41, 240, 212, 0.14);
-}
-
-.start-here-card h3,
-.start-here-card p,
-.start-here-card small,
-.start-here-card > span:last-child {
-  margin: 0;
-}
-
-.start-here-card h3 {
-  max-width: 16rem;
-  font-size: clamp(1.55rem, 2.6vw, 2.35rem);
-}
-
-.start-here-card p {
-  color: var(--ink);
-}
-
-.start-here-card small {
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.55;
-}
-
-.start-here-audience-label {
-  color: var(--ink);
-  font-weight: 800;
-}
-
-.start-here-card > span:last-child {
-  margin-top: auto;
-  color: var(--amber);
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-@keyframes start-here-arrival {
-  0% {
-    transform: translateY(18px);
-    filter: brightness(1);
-  }
-
-  40% {
-    transform: translateY(0);
-    filter: brightness(1.08);
-  }
-
-  100% {
-    transform: translateY(0);
-    filter: brightness(1);
-  }
-}
-
-.intro-band p {
-  width: min(var(--max), calc(100% - 2rem));
-  margin: 0 auto;
-  padding: 1.1rem 0;
-  color: var(--ink);
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  font-weight: 750;
-  line-height: 1.45;
-  text-align: center;
-  text-wrap: pretty;
-}
-
 .control-room-link {
   position: fixed;
   top: calc(1rem + clamp(5.8rem, 11vw, 8.25rem) + 0.35rem);
@@ -3818,7 +3618,6 @@ p {
   .recent-signals-grid,
   .related-signals-grid,
   .section-link-grid,
-  .start-here-grid,
   .tiny-thought-grid,
   .tape-row,
   .writing-index-grid,
@@ -3991,18 +3790,6 @@ p {
     letter-spacing: 0.09em;
   }
 
-  .intro-band {
-    display: block;
-  }
-
-  .intro-band p {
-    width: calc(100% - 1rem);
-    padding: 0.85rem 4rem 0.85rem 3.9rem;
-    font-size: 0.94rem;
-    line-height: 1.4;
-    text-align: center;
-  }
-
   .hero {
     min-height: auto;
     align-items: flex-start;
@@ -4159,18 +3946,6 @@ p {
     text-align: center;
   }
 
-  .start-here-section {
-    padding-top: 2.5rem;
-    padding-bottom: 2.9rem;
-  }
-
-  .start-here-kicker {
-    margin-top: 0.95rem;
-    font-size: 0.92rem;
-    line-height: 1.55;
-  }
-
-  .start-here-grid,
   .spotlight-grid,
   .recent-signals-grid,
   .now-grid,
@@ -4182,7 +3957,6 @@ p {
     margin-top: 1.25rem;
   }
 
-  .start-here-card,
   .spotlight-card,
   .recent-signal-card,
   .now-card,
@@ -4192,11 +3966,6 @@ p {
     padding: 1rem;
   }
 
-  .start-here-card {
-    gap: 0.75rem;
-  }
-
-  .start-here-card h3,
   .section-link-card h3,
   .spotlight-card h3,
   .now-card h3 {
@@ -4204,7 +3973,6 @@ p {
     line-height: 1.08;
   }
 
-  .start-here-card p,
   .spotlight-card p,
   .section-link-card p,
   .project-details p,
@@ -4214,7 +3982,6 @@ p {
     line-height: 1.58;
   }
 
-  .start-here-card small,
   .section-link-card > span:last-child,
   .spotlight-card a,
   .recent-signal-card a,

@@ -131,8 +131,16 @@ test("tiny thoughts archive exposes rss", async ({ page }) => {
   ).toHaveAttribute("href", "/tiny-thoughts/rss.xml");
 });
 
+test("Ambient renders active sources without dormant Now or Guestbook links", async ({ page }) => {
+  await page.goto("/ambient?type=cat");
+
+  await expect(page.getByRole("heading", { name: "First Glow" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Beverly and Lucinda" })).toBeVisible();
+  await expect(page.locator('a[href$="#now"], a[href$="#guestbook"]')).toHaveCount(0);
+});
+
 test("removed public routes return not found", async ({ page }) => {
-  for (const route of ["/build-log", "/updates", "/work-with-me"]) {
+  for (const route of ["/build-log", "/updates", "/work-with-me", "/admin/side-hustle"]) {
     await page.goto(route);
     await expect(
       page.getByRole("heading", {
@@ -188,8 +196,8 @@ test("public feed, sitemap, robots, and json endpoints respond with expected sha
   assertStatusOk(robots, "/robots.txt");
   assertStatusOk(sitemap, "/sitemap.xml");
   assertStatusOk(projects, "/api/projects");
-  assertStatusOk(now, "/api/now");
-  assertStatusOk(guestbook, "/api/guestbook");
+  expect(now.status()).toBe(404);
+  expect(guestbook.status()).toBe(404);
   assertStatusOk(tinyThoughts, "/api/tiny-thoughts?limit=3");
 
   expect(tinyThoughtsRss.headers()["content-type"]).toMatch(/application\/rss\+xml/);
@@ -203,13 +211,9 @@ test("public feed, sitemap, robots, and json endpoints respond with expected sha
   expect(sitemapText).not.toContain("/updates");
 
   const projectsJson = (await projects.json()) as { projects: unknown[] };
-  const nowJson = (await now.json()) as { items: unknown[] };
-  const guestbookJson = (await guestbook.json()) as { entries: unknown[] };
   const tinyThoughtsJson = (await tinyThoughts.json()) as { thoughts: unknown[] };
 
   expect(Array.isArray(projectsJson.projects)).toBeTruthy();
-  expect(Array.isArray(nowJson.items)).toBeTruthy();
-  expect(Array.isArray(guestbookJson.entries)).toBeTruthy();
   expect(Array.isArray(tinyThoughtsJson.thoughts)).toBeTruthy();
   expect(tinyThoughtsJson.thoughts.length).toBeLessThanOrEqual(3);
 });

@@ -1,5 +1,4 @@
 import { isAdminAuthenticated } from "../../../lib/admin-auth";
-import { revalidateGuestbookViews } from "../../../lib/admin-revalidation";
 import {
   ensureGuestbookTable,
   getGuestbookSql,
@@ -81,7 +80,6 @@ export async function POST(request: Request) {
         return Response.json({ error: "Entry was not found." }, { status: 404 });
       }
 
-      revalidateGuestbookViews();
 
       return Response.json({
         ok: true,
@@ -103,7 +101,6 @@ export async function POST(request: Request) {
         return Response.json({ error: "Entry was not pending." }, { status: 404 });
       }
 
-      revalidateGuestbookViews();
 
       return Response.json({
         ok: true,
@@ -141,7 +138,6 @@ export async function POST(request: Request) {
       RETURNING id, name, email, category, message, notify_owner, email_sent, status, created_at
     `;
 
-    revalidateGuestbookViews();
 
     return Response.json({
       ok: true,

@@ -31,10 +31,10 @@ type HomeSpotlightQueueRow = HomeSpotlightRow & {
 export const defaultHomeSpotlight: HomeSpotlightRecord = {
   id: "main",
   eyebrow: "Current Signal",
-  title: "Useful tools with a strange little heartbeat.",
-  text: "The site is getting larger, so this spotlight is here to point at whatever feels most worth your attention right now.",
-  linkLabel: "See what is active",
-  linkHref: "#now",
+  title: "A quiet card kept offstage.",
+  text: "The homepage spotlight is an intentionally dormant experiment and is not part of the public homepage.",
+  linkLabel: "Return home",
+  linkHref: "/",
   enabled: false,
 };
 
@@ -45,7 +45,7 @@ export function emptyHomeSpotlightQueueItem(index = 0): HomeSpotlightQueueItem {
     title: "",
     text: "",
     linkLabel: "",
-    linkHref: "#now",
+    linkHref: "/",
     enabled: true,
     displayOrder: index,
   };
