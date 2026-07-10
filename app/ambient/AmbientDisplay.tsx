@@ -8,8 +8,7 @@ import { getAmbientSignalDwellMs, type AmbientSignal } from "./ambient-signals";
 import { getAmbientTimeModeForHour, type AmbientTimeMode } from "./ambient-time";
 import styles from "./ambient.module.css";
 
-const signalTransitionMs = 1400;
-const signalTransitionCommitMs = 760;
+const signalTransitionMs = 700;
 
 function usePrefersReducedMotion() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -76,6 +75,8 @@ function AmbientStage({
         isLibraryCard ? styles.stageLibrary : ""
       } ${className ?? ""}`}
       aria-hidden={inert ? "true" : undefined}
+      data-ambient-stage
+      data-signal-kind={signal.kind}
     >
       <div className={styles.signalCopy}>
         <div className={styles.signalCopyInner}>
@@ -190,7 +191,7 @@ export function AmbientDisplay({
     const commit = window.setTimeout(() => {
       setDisplayIndex(queuedIndex);
       setQueuedIndex(null);
-    }, signalTransitionCommitMs);
+    }, signalTransitionMs);
 
     return () => window.clearTimeout(commit);
   }, [queuedIndex]);
@@ -229,11 +230,11 @@ export function AmbientDisplay({
   }
 
   function showPrevious() {
-    queueIndex(displayIndex - 1);
+    queueIndex((queuedIndex ?? displayIndex) - 1);
   }
 
   function showNext() {
-    queueIndex(displayIndex + 1);
+    queueIndex((queuedIndex ?? displayIndex) + 1);
   }
 
   return (
@@ -252,12 +253,13 @@ export function AmbientDisplay({
         </header>
 
         <div
-          className={`${styles.stageStack} ${queuedIndex !== null && !prefersReducedMotion ? styles.stageStackTransitioning : ""}`}
+          className={styles.stageStack}
           style={
             {
               "--ambient-transition-ms": `${signalTransitionMs}ms`,
             } as CSSProperties
           }
+          data-ambient-stage-stack
         >
           <AmbientStage
             signal={current}

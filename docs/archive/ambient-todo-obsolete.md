@@ -1,6 +1,8 @@
-# AMBIENT-TODO
+> **Archived and obsolete:** This file is preserved only as historical context. It must not be treated as an active backlog, roadmap, or source of current work. See `docs/ambient.md` for durable Ambient documentation.
 
-`docs/AMBIENT-TODO.md` is the single source of truth for Ambient roadmap work inside ArcadeGhosts.
+# AMBIENT-TODO (obsolete archive)
+
+This file once acted as the source of truth for Ambient roadmap work inside ArcadeGhosts.
 
 Ambient is a fun personal project.
 
@@ -15,8 +17,8 @@ Use it to decide:
 
 Read with:
 
-1. `docs/AMBIENT.md`
-2. `docs/AMBIENT-TODO.md`
+1. `docs/ambient.md`
+2. this archived file (historical context only)
 3. `app/lib/tiny-thoughts.ts`
 4. `app/lib/projects.ts`
 5. `app/writings.ts`
@@ -417,7 +419,7 @@ Turn Ambient into one reusable engine that can express multiple moods and rooms 
 
 ### Evidence / Sources
 
-- `docs/AMBIENT.md`
+- `docs/ambient.md`
 - existing site source inventory
 
 ### Known Constraints
@@ -572,7 +574,7 @@ Decide what Ambient becomes once it is mature enough to deserve a stronger ident
 ### Evidence / Sources
 
 - lived usage after earlier phases
-- `docs/AMBIENT.md`
+- `docs/ambient.md`
 
 ### Known Constraints
 
