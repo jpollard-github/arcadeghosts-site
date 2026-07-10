@@ -262,6 +262,46 @@ Ambient should aim at modest, realistic devices first:
 - a spare TV with a browser attached
 - a small mini PC or laptop in kiosk mode
 
+### Android tablet installation check
+
+Ambient ships with a small browser-standard PWA setup. It does not cache its
+dynamic signals; an installed display still expects a network connection.
+
+Test the production deployment on the Samsung tablet:
+
+1. Deploy ArcadeGhosts to its normal HTTPS URL.
+2. Open `/ambient` in Chrome on Android.
+3. Open Chrome's menu and choose **Install app** or **Add to Home screen**.
+4. Accept the ArcadeGhosts Ambient icon and name.
+5. Close the browser tab, rotate the tablet to landscape, and launch the new
+   icon from the Android home screen.
+6. Confirm the installed app opens directly at `/ambient`.
+7. Confirm Chrome's address and navigation bars are absent.
+8. Confirm the full Ambient stage, Previous and Next controls, and tablet safe
+   areas remain visible in landscape.
+9. Reload once, close the app completely, and relaunch it. Confirm both actions
+   return to a working `/ambient` display with fresh network-backed content.
+10. Follow a signal link and confirm Android hands out-of-scope pages back to
+    the browser rather than trapping the rest of ArcadeGhosts inside the
+    dedicated display.
+
+The manifest currently requests `fullscreen`. That is the best match for a
+tablet-on-a-stand display, but Android and Samsung launcher behavior must be
+judged on the physical device. If system navigation or app switching feels
+awkward, change `display` in `app/manifest.ts` to `standalone`, redeploy,
+uninstall the existing PWA, and reinstall it before comparing. Record the
+device/Chrome version and keep whichever mode is calmer in daily use.
+
+For local verification before deploying:
+
+```bash
+npm run build
+npm run start
+```
+
+Then inspect `/manifest.webmanifest`, `/sw.js`, and `/ambient` on localhost.
+The service worker intentionally registers only in production builds.
+
 Good early targets:
 
 - landscape tablet
@@ -286,7 +326,7 @@ Possible deployment modes:
 
 - a normal public or semi-private ArcadeGhosts route
 - a fullscreen browser tab in kiosk mode
-- a home-screen-installed PWA later, if it earns it
+- the current home-screen-installed Android PWA
 - a passwordless local display URL with profile query params
 - a device-specific shortcut like `/ambient?profile=living-room`
 

@@ -130,7 +130,7 @@ Ship the first usable Ambient experience as a single full-screen page that alrea
 ### Known Constraints
 
 - The first pass should stay visually rewarding even if only 3-5 source types are wired.
-- Avoid fullscreen and wake-lock complexity until the page itself earns it.
+- Keep fullscreen support browser-standard; avoid wake-lock complexity until real-device use asks for it.
 
 ### Exit Criteria
 
@@ -354,7 +354,7 @@ Make Ambient comfortable to leave running for long stretches on real hardware.
 
 ### Checklist
 
-- [ ] `[P0]` Support a clean fullscreen or near-fullscreen mode.
+- [x] `[P0]` Support a clean fullscreen or near-fullscreen mode.
 - [ ] `[P0]` Add tablet-friendly touch targets and gesture basics.
 - [ ] `[P1]` Add keyboard shortcuts for next, previous, pause, and fullscreen.
 - [ ] `[P1]` Hide cursor and reduce stray UI chrome where appropriate.
@@ -371,6 +371,16 @@ Make Ambient comfortable to leave running for long stretches on real hardware.
 
 - local device testing
 - fullscreen browser behavior on iPad, Android tablet, or desktop kiosk setups
+- `app/manifest.ts`
+- `app/ambient/AmbientPwaRegistration.tsx`
+- `public/sw.js`
+
+### Progress Notes
+
+- Android install metadata now launches directly into `/ambient`, requests landscape fullscreen display, and includes regular plus maskable install icons.
+- The minimal service worker exists for installation only and deliberately does not cache dynamic Ambient sources.
+- Ambient now accounts for dynamic viewport height, safe-area insets, installed display modes, and 1280×800 landscape tablet sizing.
+- Physical Samsung tablet comparison of `fullscreen` versus `standalone` remains required before declaring the display mode final.
 
 ### Known Constraints
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AmbientDisplay } from "./AmbientDisplay";
+import { AmbientPwaRegistration } from "./AmbientPwaRegistration";
 import type { AmbientSignal } from "./ambient-signals";
 import { normalizeAmbientTimeMode } from "./ambient-time";
 import { getAmbientSceneManifest, selectAmbientSceneForSignal } from "./ambient-scenes";
@@ -254,5 +255,10 @@ export default async function AmbientPage({
     query,
   );
 
-  return <AmbientDisplay signals={signals} forcedTimeMode={forcedTimeMode} />;
+  return (
+    <>
+      <AmbientPwaRegistration />
+      <AmbientDisplay signals={signals} forcedTimeMode={forcedTimeMode} />
+    </>
+  );
 }

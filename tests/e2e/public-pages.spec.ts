@@ -139,6 +139,47 @@ test("Ambient renders active sources without dormant Now or Guestbook links", as
   await expect(page.locator('a[href$="#now"], a[href$="#guestbook"]')).toHaveCount(0);
 });
 
+test("Ambient fits a landscape tablet and keeps display controls available", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/ambient?type=cat");
+
+  await expect(page.getByRole("button", { name: "Previous" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Next" })).toBeVisible();
+
+  const overflow = await page.evaluate(() => ({
+    horizontal: document.documentElement.scrollWidth - window.innerWidth,
+    vertical: document.documentElement.scrollHeight - window.innerHeight,
+  }));
+
+  expect(overflow.horizontal).toBeLessThanOrEqual(1);
+  expect(overflow.vertical).toBeLessThanOrEqual(1);
+});
+
+test("Ambient install resources expose the expected manifest and uncached worker", async ({
+  request,
+}) => {
+  const [manifestResponse, workerResponse] = await Promise.all([
+    request.get("/manifest.webmanifest"),
+    request.get("/sw.js"),
+  ]);
+
+  expect(manifestResponse.ok()).toBeTruthy();
+  expect(workerResponse.ok()).toBeTruthy();
+  expect(manifestResponse.headers()["content-type"]).toMatch(/application\/manifest\+json/);
+
+  const manifestJson = (await manifestResponse.json()) as {
+    start_url: string;
+    display: string;
+    orientation: string;
+  };
+  const workerText = await workerResponse.text();
+
+  expect(manifestJson.start_url).toBe("/ambient");
+  expect(manifestJson.display).toBe("fullscreen");
+  expect(manifestJson.orientation).toBe("landscape");
+  expect(workerText).not.toContain("caches.open");
+});
+
 test("removed public routes return not found", async ({ page }) => {
   for (const route of ["/build-log", "/updates", "/work-with-me", "/admin/side-hustle"]) {
     await page.goto(route);
