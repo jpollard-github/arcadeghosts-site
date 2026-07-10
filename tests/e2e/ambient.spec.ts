@@ -89,6 +89,72 @@ test("background grid does not paint a horizontal stripe at y=0", async ({ page 
   expect(gridStyles.maskImage).toContain("linear-gradient");
 });
 
+test("temporary diagnostic mode isolates visual layers without affecting normal Ambient", async ({ page }) => {
+  await page.goto("/ambient");
+  await expect(page.getByLabel("Temporary Ambient diagnostics")).toHaveCount(0);
+
+  await page.goto("/ambient?diagnostic=1&type=cat");
+  const panel = page.getByLabel("Temporary Ambient diagnostics");
+  const grid = page.locator('[class*="backgroundGrid"]');
+  const root = page.locator("[data-ambient-root]");
+
+  await expect(panel).toBeVisible();
+  await expect(panel.getByText("visual offset/page top")).toBeVisible();
+  await expect(panel.getByText("display mode")).toBeVisible();
+  await expect(panel.getByText("safe-area top")).toBeVisible();
+
+  await panel.getByLabel("1. Background grid").check();
+  await expect(grid).toHaveCSS("display", "none");
+  await panel.getByLabel("1. Background grid").uncheck();
+  await expect(grid).not.toHaveCSS("display", "none");
+
+  await panel.getByLabel("11. Solid Ambient canvas only").check();
+  await expect(root).toHaveCSS("background-color", "rgb(0, 0, 0)");
+  await expect(root.locator(":scope > *").first()).toHaveCSS("display", "none");
+  await panel.getByLabel("11. Solid Ambient canvas only").uncheck();
+
+  await panel.getByLabel("12. Solid document only").check();
+  await expect(root).toHaveCSS("display", "none");
+  await expect(panel).toBeVisible();
+  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(8, 9, 12)");
+});
+
+test("solid diagnostic route contains only a fixed black page-owned canvas", async ({ page }) => {
+  await page.goto("/ambient/diagnostic-solid");
+
+  const canvas = page.locator("[data-ambient-solid-diagnostic]");
+  await expect(canvas).toBeVisible();
+  await expect(canvas).toHaveCSS("position", "fixed");
+  await expect(canvas).toHaveCSS("background-color", "rgb(0, 0, 0)");
+  await expect(canvas).toHaveCSS("border-top-width", "0px");
+  await expect(canvas).toHaveCSS("box-shadow", "none");
+  await expect(page.locator(".site-logo")).toHaveCSS("display", "none");
+
+  const documentStyles = await page.evaluate(() => {
+    const body = getComputedStyle(document.body);
+    const before = getComputedStyle(document.body, "::before");
+
+    return {
+      htmlBackground: getComputedStyle(document.documentElement).backgroundColor,
+      bodyBackground: body.backgroundColor,
+      bodyMargin: body.margin,
+      bodyBeforeDisplay: before.display,
+      bodyBeforeContent: before.content,
+      manifestHref: document.querySelector<HTMLLinkElement>('link[rel="manifest"]')?.getAttribute("href") ?? null,
+    };
+  });
+
+  expect(documentStyles).toEqual({
+    htmlBackground: "rgb(0, 0, 0)",
+    bodyBackground: "rgb(0, 0, 0)",
+    bodyMargin: "0px",
+    bodyBeforeDisplay: "none",
+    bodyBeforeContent: "none",
+    manifestHref: "/manifest.webmanifest",
+  });
+  await expectNoPageOverflow(page);
+});
+
 test("media and text-only signals use explicit compositions without moving the frame", async ({ page }) => {
   await page.goto("/ambient?type=cat");
 

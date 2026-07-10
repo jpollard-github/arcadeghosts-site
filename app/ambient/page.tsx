@@ -28,6 +28,7 @@ export const metadata: Metadata = {
 };
 
 type AmbientQuery = {
+  diagnostic?: string;
   signal?: string;
   type?: string;
   time?: string;
@@ -248,6 +249,7 @@ export default async function AmbientPage({
   ]);
   const query = (await searchParams) ?? {};
   const forcedTimeMode = normalizeAmbientTimeMode(query.time ?? query.mood);
+  const diagnosticMode = query.diagnostic === "1";
 
   const signals = selectAmbientSignals(
     buildAmbientSignals({
@@ -262,7 +264,7 @@ export default async function AmbientPage({
   return (
     <>
       <AmbientPwaRegistration />
-      <AmbientDisplay signals={signals} forcedTimeMode={forcedTimeMode} />
+      <AmbientDisplay signals={signals} forcedTimeMode={forcedTimeMode} diagnosticMode={diagnosticMode} />
     </>
   );
 }
