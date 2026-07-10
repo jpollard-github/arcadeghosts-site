@@ -109,7 +109,13 @@
   z-index: 0;
   opacity: var(--ambient-grid-opacity);
   background-image:
-    linear-gradient(var(--ambient-grid-line) 1px, transparent 1px),
+    linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 47px,
+      var(--ambient-grid-line) 47px,
+      var(--ambient-grid-line) 48px
+    ),
     linear-gradient(90deg, var(--ambient-grid-line-vertical) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: linear-gradient(to bottom, transparent, black 16%, black 88%, transparent);

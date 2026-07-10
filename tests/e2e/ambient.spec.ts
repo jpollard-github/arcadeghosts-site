@@ -66,6 +66,29 @@ test("stage top edge has no light border or inset highlight", async ({ page }) =
   expect(edgeStyles.boxShadow).not.toMatch(/rgba\(255, 255, 255/);
 });
 
+test("background grid does not paint a horizontal stripe at y=0", async ({ page }) => {
+  await page.goto("/ambient?type=cat");
+
+  const gridStyles = await page.locator('[class*="backgroundGrid"]').evaluate((element) => {
+    const styles = getComputedStyle(element);
+
+    return {
+      backgroundImage: styles.backgroundImage,
+      backgroundSize: styles.backgroundSize,
+      display: styles.display,
+      maskImage: styles.maskImage,
+    };
+  });
+
+  expect(gridStyles.display).not.toBe("none");
+  expect(gridStyles.backgroundSize).toBe("48px 48px, 48px 48px");
+  expect(gridStyles.backgroundImage).toMatch(
+    /^linear-gradient\(rgba\(0, 0, 0, 0\) 0px, rgba\(0, 0, 0, 0\) 47px,/,
+  );
+  expect(gridStyles.backgroundImage).toContain("48px), linear-gradient(90deg");
+  expect(gridStyles.maskImage).toContain("linear-gradient");
+});
+
 test("media and text-only signals use explicit compositions without moving the frame", async ({ page }) => {
   await page.goto("/ambient?type=cat");
 
