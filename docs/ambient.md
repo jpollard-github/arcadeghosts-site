@@ -12,7 +12,7 @@ The installed Android PWA starts at `/ambient`, is scoped to that route, and req
 
 ## Signal model
 
-An `AmbientSignal` has a stable id and one of four kinds: `cat`, `thought`, `project`, or `writing`. Each signal supplies a source label, title, body, metadata, destination link, action label, and aside note. An optional image supplies the visual panel; signals without one use the built-in abstract visual or a selected scene-library asset.
+An `AmbientSignal` has a stable id and one of four kinds: `cat`, `thought`, `project`, or `writing`. Each signal supplies a source label, title, body, metadata, destination link, action label, and aside note. A usable first-party image or selected scene-library asset creates a media composition. Signals without usable media use a deliberate text-and-note composition and do not render an empty or synthetic image region.
 
 Signals share one stage component and one outer rectangle. Kind-specific styling may tune typography and column proportions, but it must never change the surrounding header, controls, or stage bounds. Dwell time may vary by kind and reading length.
 

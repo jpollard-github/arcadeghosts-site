@@ -102,6 +102,8 @@ function buildAmbientSignals(input: {
     aside: thought.inspiredBy
       ? `Inspired by ${thought.inspiredBy}. Tiny Thoughts are the quickest pulse in the site: small scraps of weather, feeling, humor, and overheard life that never needed to become essays.`
       : "Tiny Thoughts are the quickest pulse in the site: observations, feelings, little jokes, and scraps of weather that did not need to become essays.",
+    imageSrc: thought.imageUrl || undefined,
+    imageAlt: thought.imageUrl ? "Image attached to this Tiny Thought." : undefined,
   }));
 
   const catSignals = [
@@ -150,6 +152,8 @@ function buildAmbientSignals(input: {
       project.nextAction && project.nextAction.toLowerCase() !== "none"
         ? `Next move: ${trimAmbientText(project.nextAction, 110)}`
         : "Projects give Ambient a longer heartbeat: active experiments, half-built worlds, and useful work still in motion.",
+    imageSrc: project.imageUrl || undefined,
+    imageAlt: project.imageUrl ? `${project.title} project image.` : undefined,
   }));
 
   const writingSignals = input.writings.slice(0, 2).map((writing) => ({

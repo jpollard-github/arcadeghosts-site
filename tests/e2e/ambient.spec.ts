@@ -49,6 +49,49 @@ test("representative signal kinds share one stable 1280x800 stage rectangle", as
   }
 });
 
+test("stage top edge has no light border or inset highlight", async ({ page }) => {
+  await page.goto("/ambient?type=cat");
+
+  const edgeStyles = await page.locator("[data-ambient-stage]").evaluate((element) => {
+    const styles = getComputedStyle(element);
+
+    return {
+      borderTopColor: styles.borderTopColor,
+      boxShadow: styles.boxShadow,
+    };
+  });
+
+  expect(edgeStyles.borderTopColor).toBe("rgba(0, 0, 0, 0)");
+  expect(edgeStyles.boxShadow).not.toContain("inset");
+  expect(edgeStyles.boxShadow).not.toMatch(/rgba\(255, 255, 255/);
+});
+
+test("media and text-only signals use explicit compositions without moving the frame", async ({ page }) => {
+  await page.goto("/ambient?type=cat");
+
+  const mediaStage = page.locator('[data-ambient-stage][data-composition="media"]');
+  await expect(mediaStage).toBeVisible();
+  await expect(mediaStage.locator("[data-ambient-media] img")).toBeVisible();
+
+  const mediaRects = {
+    stage: await rect(page.locator("[data-ambient-stage-stack]")),
+    header: await rect(page.locator("main header")),
+    controls: await rect(page.locator("main footer")),
+  };
+
+  await page.goto("/ambient?type=writing");
+
+  const textStage = page.locator('[data-ambient-stage][data-composition="text-only"]');
+  await expect(textStage).toBeVisible();
+  await expect(textStage.locator("[data-ambient-media]")).toHaveCount(0);
+  await expect(textStage.locator("img")).toHaveCount(0);
+
+  expectSameRect(await rect(page.locator("[data-ambient-stage-stack]")), mediaRects.stage);
+  expectSameRect(await rect(page.locator("main header")), mediaRects.header);
+  expectSameRect(await rect(page.locator("main footer")), mediaRects.controls);
+  await expectNoPageOverflow(page);
+});
+
 test("transition layers overlap without moving stage, header, or controls", async ({ page }) => {
   await page.goto("/ambient");
 

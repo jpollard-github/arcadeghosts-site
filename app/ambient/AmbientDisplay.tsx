@@ -57,7 +57,6 @@ function AmbientStage({
   isThought,
   isCat,
   isLibraryCard,
-  isTextSignal,
   className,
   inert,
 }: {
@@ -65,18 +64,20 @@ function AmbientStage({
   isThought: boolean;
   isCat: boolean;
   isLibraryCard: boolean;
-  isTextSignal: boolean;
   className?: string;
   inert?: boolean;
 }) {
+  const hasMedia = Boolean(signal.imageSrc?.trim());
+
   return (
     <article
       className={`${styles.stage} ${isCat ? styles.stageCat : styles.stageText} ${isThought ? styles.stageThought : ""} ${
         isLibraryCard ? styles.stageLibrary : ""
-      } ${className ?? ""}`}
+      } ${hasMedia ? "" : styles.stageTextOnly} ${className ?? ""}`}
       aria-hidden={inert ? "true" : undefined}
       data-ambient-stage
       data-signal-kind={signal.kind}
+      data-composition={hasMedia ? "media" : "text-only"}
     >
       <div className={styles.signalCopy}>
         <div className={styles.signalCopyInner}>
@@ -102,12 +103,12 @@ function AmbientStage({
         </div>
       </div>
 
-      <aside className={styles.signalAside}>
-        <div className={`${styles.signalAsideVisual} ${isTextSignal ? styles.signalAsideVisualText : ""}`}>
-          {signal.imageSrc ? (
+      <aside className={`${styles.signalAside} ${hasMedia ? "" : styles.signalAsideTextOnly}`}>
+        {hasMedia ? (
+          <div className={styles.signalAsideVisual} data-ambient-media>
             <div className={styles.imageFrame}>
               <Image
-                src={signal.imageSrc}
+                src={signal.imageSrc!}
                 alt={signal.imageAlt ?? ""}
                 fill
                 unoptimized
@@ -116,14 +117,8 @@ function AmbientStage({
                 priority
               />
             </div>
-          ) : (
-            <div className={styles.orbField} aria-hidden="true">
-              <span className={styles.orb} />
-              <span className={styles.orbEcho} />
-              <span className={styles.orbLine} />
-            </div>
-          )}
-        </div>
+          </div>
+        ) : null}
         <div className={styles.asideCard}>
           <p className={styles.asideEyebrow}>{isCat ? "Room note" : "Signal note"}</p>
           <p className={styles.asideText}>{signal.aside}</p>
@@ -206,7 +201,6 @@ export function AmbientDisplay({
   const isThought = current.kind === "thought";
   const isCat = current.kind === "cat";
   const isLibraryCard = current.kind === "project" || current.kind === "writing";
-  const isTextSignal = !current.imageSrc;
   const currentDwellMs = getAmbientSignalDwellMs(current);
 
   function queueIndex(nextIndex: number) {
@@ -266,7 +260,6 @@ export function AmbientDisplay({
             isThought={isThought}
             isCat={isCat}
             isLibraryCard={isLibraryCard}
-            isTextSignal={isTextSignal}
             className={queuedIndex !== null && !prefersReducedMotion ? styles.stageLeaving : styles.stageStatic}
           />
           {upcoming ? (
@@ -275,7 +268,6 @@ export function AmbientDisplay({
               isThought={upcoming.kind === "thought"}
               isCat={upcoming.kind === "cat"}
               isLibraryCard={upcoming.kind === "project" || upcoming.kind === "writing"}
-              isTextSignal={!upcoming.imageSrc}
               className={styles.stageIncoming}
               inert
             />
