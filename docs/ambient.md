@@ -51,4 +51,8 @@ Confirm that the app opens directly into fullscreen `/ambient`; the top edge rem
 
 Automated Playwright coverage should run against a production server when checking fullscreen-adjacent layout. It must cover 1280×800 overflow, stable geometry across signal kinds and transitions, reduced motion, rapid controls, and a representative ordinary page.
 
+### Samsung Android top-edge finding
+
+Physical testing confirmed that a persistent one-pixel light line remains at the top of installed PWAs created from both Chrome and Edge, including on `/ambient/diagnostic-solid`, which renders only a fixed black page-owned canvas. The line is therefore treated as outside the Ambient rendering tree—most likely a browser, installed-PWA, Android system surface, or viewport boundary. Do not alter Ambient CSS, layout, safe-area handling, or viewport geometry to conceal it unless new evidence points back to application code. Keep `/ambient?diagnostic=1` and `/ambient/diagnostic-solid` available for comparison.
+
 Historical planning notes are retained only in `docs/archive/ambient-todo-obsolete.md` and are not active work.
