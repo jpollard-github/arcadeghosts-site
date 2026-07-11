@@ -34,7 +34,7 @@
     "@neondatabase/serverless": "^1.1.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/blob": "^2.6.1",
-    "next": "^16.2.9",
+    "next": "^16.2.10",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "resend": "^6.12.4"
@@ -45,7 +45,7 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.1",
-    "eslint-config-next": "^16.2.9",
+    "eslint-config-next": "^16.2.10",
     "lighthouse": "^13.4.0",
     "tsx": "^4.22.4",
     "typescript": "5.7.3"
