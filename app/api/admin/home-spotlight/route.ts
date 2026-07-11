@@ -2,6 +2,7 @@ import { isAdminAuthenticated } from "../../../lib/admin-auth";
 import { parseJsonBody } from "../../../lib/admin-route";
 import { revalidatePath } from "next/cache";
 import { getSiteSql } from "../../../lib/database";
+import { saveHomeSpotlight } from "../../../lib/home-spotlight-write-transactions";
 import {
   getAdminHomeSpotlight,
   emptyHomeSpotlightQueueItem,
@@ -119,70 +120,7 @@ export async function PUT(request: Request) {
 
     const sql = getSiteSql();
 
-    await sql`
-      INSERT INTO home_spotlight (
-        id,
-        eyebrow,
-        title,
-        body,
-        link_label,
-        link_href,
-        enabled,
-        updated_at
-      )
-      VALUES (
-        'main',
-        ${spotlight.eyebrow},
-        ${spotlight.title},
-        ${spotlight.text},
-        ${spotlight.linkLabel},
-        ${spotlight.linkHref},
-        ${spotlight.enabled},
-        now()
-      )
-      ON CONFLICT (id)
-      DO UPDATE SET
-        eyebrow = EXCLUDED.eyebrow,
-        title = EXCLUDED.title,
-        body = EXCLUDED.body,
-        link_label = EXCLUDED.link_label,
-        link_href = EXCLUDED.link_href,
-        enabled = EXCLUDED.enabled,
-        updated_at = now()
-    `;
-
-    await sql`
-      DELETE FROM home_spotlight_queue
-    `;
-
-    for (let index = 0; index < queue.length; index += 1) {
-      const item = queue[index];
-
-      await sql`
-        INSERT INTO home_spotlight_queue (
-          id,
-          eyebrow,
-          title,
-          body,
-          link_label,
-          link_href,
-          enabled,
-          display_order,
-          updated_at
-        )
-        VALUES (
-          ${item.id},
-          ${item.eyebrow},
-          ${item.title},
-          ${item.text},
-          ${item.linkLabel},
-          ${item.linkHref},
-          ${item.enabled},
-          ${index},
-          now()
-        )
-      `;
-    }
+    await saveHomeSpotlight(sql, spotlight, queue);
 
     revalidatePath("/");
 

@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { isAdminAuthenticated } from "../../../lib/admin-auth";
 import { parseJsonBody } from "../../../lib/admin-route";
 import { getSiteSql } from "../../../lib/database";
+import { saveNowItems } from "../../../lib/now-write-transactions";
 import {
   getAdminNowItems,
   normalizeNowText,
@@ -97,44 +98,11 @@ export async function PUT(request: Request) {
       SELECT id
       FROM site_now_items
     `;
-    const savedIds = new Set(items.map((item) => item.id));
-
-    for (let index = 0; index < items.length; index += 1) {
-      const item = items[index];
-
-      await sql`
-        INSERT INTO site_now_items (
-          id,
-          label,
-          title,
-          body,
-          display_order
-        )
-        VALUES (
-          ${item.id},
-          ${item.label},
-          ${item.title},
-          ${item.text},
-          ${index}
-        )
-        ON CONFLICT (id)
-        DO UPDATE SET
-          label = EXCLUDED.label,
-          title = EXCLUDED.title,
-          body = EXCLUDED.body,
-          display_order = EXCLUDED.display_order,
-          updated_at = now()
-      `;
-    }
-
-    for (const row of existingRows as { id: string }[]) {
-      if (!savedIds.has(row.id)) {
-        await sql`
-          DELETE FROM site_now_items
-          WHERE id = ${row.id}
-        `;
-      }
-    }
+    await saveNowItems(
+      sql,
+      items,
+      (existingRows as { id: string }[]).map((row) => row.id),
+    );
 
     const rows = await sql`
       SELECT

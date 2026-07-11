@@ -8,6 +8,12 @@ import {
 import { revalidateProjectViews } from "../../../lib/admin-revalidation";
 import { getSiteSql } from "../../../lib/database";
 import {
+  deleteProjectAndReorder,
+  saveProjectList,
+  saveProjectOrder,
+  type ProjectWrite,
+} from "../../../lib/project-write-transactions";
+import {
   getAdminProjects,
   isProjectStatus,
   normalizeProjectDate,
@@ -142,75 +148,19 @@ export async function PUT(request: Request) {
         row.last_updated_at,
       ]),
     );
-    const savedIds = new Set(projects.map((project) => project.id));
-
-    for (let index = 0; index < projects.length; index += 1) {
-      const project = projects[index];
+    const writes: ProjectWrite[] = projects.map((project, index) => {
       const resolvedLastUpdatedAt = resolveProjectLastUpdatedAt({
         incomingLastUpdatedAt: project.lastUpdatedAt,
         existingLastUpdatedAt: existingDatesById.get(project.id),
       });
 
-      await sql`
-        INSERT INTO site_projects (
-          id,
-          type,
-          title,
-          description,
-          href,
-          image_url,
-          status,
-          phase,
-          next_action,
-          blockers,
-          priority,
-          last_updated_at,
-          include_in_context_refresh,
-          display_order
-        )
-        VALUES (
-          ${project.id},
-          ${project.type},
-          ${project.title},
-          ${project.description},
-          ${project.href},
-          ${project.imageUrl},
-          ${project.status},
-          ${project.phase},
-          ${project.nextAction},
-          ${project.blockers},
-          ${project.priority},
-          ${resolvedLastUpdatedAt || null},
-          ${project.includeInContextRefresh},
-          ${index}
-        )
-        ON CONFLICT (id)
-        DO UPDATE SET
-          type = EXCLUDED.type,
-          title = EXCLUDED.title,
-          description = EXCLUDED.description,
-          href = EXCLUDED.href,
-          image_url = EXCLUDED.image_url,
-          status = EXCLUDED.status,
-          phase = EXCLUDED.phase,
-          next_action = EXCLUDED.next_action,
-          blockers = EXCLUDED.blockers,
-          priority = EXCLUDED.priority,
-          last_updated_at = EXCLUDED.last_updated_at,
-          include_in_context_refresh = EXCLUDED.include_in_context_refresh,
-          display_order = EXCLUDED.display_order,
-          updated_at = now()
-      `;
-    }
-
-    for (const row of existingRows as { id: string }[]) {
-      if (!savedIds.has(row.id)) {
-        await sql`
-          DELETE FROM site_projects
-          WHERE id = ${row.id}
-        `;
-      }
-    }
+      return { project, lastUpdatedAt: resolvedLastUpdatedAt, displayOrder: index };
+    });
+    await saveProjectList(
+      sql,
+      writes,
+      (existingRows as { id: string }[]).map((row) => row.id),
+    );
 
     revalidateProjectViews();
 
@@ -278,19 +228,8 @@ export async function PATCH(request: Request) {
       `;
       const existingIds = (existingRows as { id: string }[]).map((row) => row.id);
 
-      if (
-        existingIds.length !== orderedIds.length ||
-        existingIds.some((id) => !orderedIds.includes(id))
-      ) {
+      if (!(await saveProjectOrder(sql, orderedIds, existingIds))) {
         return jsonError("Project order does not match the saved project list.", 400);
-      }
-
-      for (let index = 0; index < orderedIds.length; index += 1) {
-        await sql`
-          UPDATE site_projects
-          SET display_order = ${index}, updated_at = now()
-          WHERE id = ${orderedIds[index]}
-        `;
       }
 
       revalidateProjectViews();
@@ -438,29 +377,15 @@ export async function DELETE(request: Request) {
 
     await seedDefaultProjectsIfEmpty();
     const sql = getSiteSql();
-    const countRows = await sql`
-      SELECT COUNT(*)::int AS count
+    const existingRows = await sql`
+      SELECT id
       FROM site_projects
+      ORDER BY display_order ASC, priority ASC, title ASC
     `;
-    const savedCount = Number((countRows as { count: number }[])[0]?.count ?? 0);
+    const existingIds = (existingRows as { id: string }[]).map((row) => row.id);
 
-    if (savedCount <= 1) {
+    if (!(await deleteProjectAndReorder(sql, id, existingIds))) {
       return jsonError("Keep at least one project in the list.", 400);
-    }
-
-    await sql`
-      DELETE FROM site_projects
-      WHERE id = ${id}
-    `;
-
-    const remainingRows = await selectProjectRows();
-
-    for (let index = 0; index < remainingRows.length; index += 1) {
-      await sql`
-        UPDATE site_projects
-        SET display_order = ${index}, updated_at = now()
-        WHERE id = ${remainingRows[index].id}
-      `;
     }
 
     revalidateProjectViews();

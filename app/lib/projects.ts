@@ -1,4 +1,5 @@
 import { getSiteSql } from "./database";
+import { seedProjectDefaults, type SiteSql } from "./project-write-transactions";
 
 export const projectStatuses = [
   "active",
@@ -248,8 +249,7 @@ export function toSiteProject(row: SiteProjectRow): SiteProject {
   };
 }
 
-export async function seedDefaultProjectsIfEmpty() {
-  const sql = getSiteSql();
+export async function seedDefaultProjectsIfEmpty(sql: SiteSql = getSiteSql()) {
   const countRows = await sql`
     SELECT COUNT(*)::int AS count
     FROM site_projects
@@ -260,44 +260,7 @@ export async function seedDefaultProjectsIfEmpty() {
     return;
   }
 
-  for (let index = 0; index < defaultProjects.length; index += 1) {
-    const project = defaultProjects[index];
-
-    await sql`
-      INSERT INTO site_projects (
-        id,
-        type,
-        title,
-        description,
-        href,
-        image_url,
-        status,
-        phase,
-        next_action,
-        blockers,
-        priority,
-        last_updated_at,
-        include_in_context_refresh,
-        display_order
-      )
-      VALUES (
-        ${project.id},
-        ${project.type},
-        ${project.title},
-        ${project.description},
-        ${project.href},
-        ${project.imageUrl},
-        ${project.status},
-        ${project.phase},
-        ${project.nextAction},
-        ${project.blockers},
-        ${project.priority},
-        ${project.lastUpdatedAt || null},
-        ${project.includeInContextRefresh},
-        ${index}
-      )
-    `;
-  }
+  await seedProjectDefaults(sql, defaultProjects);
 }
 
 export async function getPublicProjects() {
