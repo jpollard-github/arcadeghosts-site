@@ -68,7 +68,7 @@ export function TinyThoughtAttachmentEditor({
               accept="image/png,image/jpeg,image/gif,image/webp"
               onChange={(event) => onAttachmentFileChange(event.target.files?.[0] ?? null)}
             />
-            <small className="guestbook-help">PNG, JPG, GIF, or WebP. 5 MB max.</small>
+            <small className="admin-help">PNG, JPG, GIF, or WebP. 5 MB max.</small>
           </label>
         )}
         <button type="button" onClick={onAddAttachment} disabled={attachments.length >= 8 || uploadingAttachment}>

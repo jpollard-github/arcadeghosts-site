@@ -1,7 +1,7 @@
 import { isAdminAuthenticated } from "../../../lib/admin-auth";
 import { parseJsonBody } from "../../../lib/admin-route";
 import { revalidatePath } from "next/cache";
-import { getGuestbookSql } from "../../../lib/guestbook";
+import { getSiteSql } from "../../../lib/database";
 import {
   getAdminHomeSpotlight,
   emptyHomeSpotlightQueueItem,
@@ -119,7 +119,7 @@ export async function PUT(request: Request) {
     }
 
     await ensureHomeSpotlightTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
 
     await sql`
       INSERT INTO home_spotlight (

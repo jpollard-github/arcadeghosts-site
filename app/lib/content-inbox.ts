@@ -1,4 +1,4 @@
-import { getGuestbookSql } from "./guestbook";
+import { getSiteSql } from "./database";
 import { toContentInboxItem } from "./content-inbox-shared";
 export {
   contentInboxBuckets,
@@ -19,7 +19,7 @@ export {
 import type { ContentInboxRow } from "./content-inbox-shared";
 
 export async function ensureContentInboxTable() {
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
 
   await sql`
     CREATE TABLE IF NOT EXISTS content_inbox_items (
@@ -49,7 +49,7 @@ export async function ensureContentInboxTable() {
 
 export async function getAdminContentInboxItems() {
   await ensureContentInboxTable();
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
   const rows = await sql`
     SELECT
       id,

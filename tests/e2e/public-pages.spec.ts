@@ -155,7 +155,7 @@ test("tiny thoughts archive exposes rss", async ({ page }) => {
   ).toHaveAttribute("href", "/tiny-thoughts/rss.xml");
 });
 
-test("Ambient renders active sources without dormant Now or Guestbook links", async ({
+test("Ambient renders active sources without a dormant Now link", async ({
   page,
 }) => {
   await page.goto("/ambient?type=cat");
@@ -165,7 +165,7 @@ test("Ambient renders active sources without dormant Now or Guestbook links", as
     page.getByRole("heading", { name: "Beverly and Lucinda" }),
   ).toBeVisible();
   await expect(
-    page.locator('a[href$="#now"], a[href$="#guestbook"]'),
+    page.locator('a[href$="#now"]'),
   ).toHaveCount(0);
 });
 
@@ -269,7 +269,6 @@ test(
       sitemap,
       projects,
       now,
-      guestbook,
       tinyThoughts,
     ] = await Promise.all([
       request.get("/tiny-thoughts/rss.xml"),
@@ -278,7 +277,6 @@ test(
       request.get("/sitemap.xml"),
       request.get("/api/projects"),
       request.get("/api/now"),
-      request.get("/api/guestbook"),
       request.get("/api/tiny-thoughts?limit=3"),
     ]);
 
@@ -288,7 +286,6 @@ test(
     assertStatusOk(sitemap, "/sitemap.xml");
     assertStatusOk(projects, "/api/projects");
     expect(now.status()).toBe(404);
-    expect(guestbook.status()).toBe(404);
     assertStatusOk(tinyThoughts, "/api/tiny-thoughts?limit=3");
 
     expect(tinyThoughtsRss.headers()["content-type"]).toMatch(

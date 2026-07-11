@@ -2,7 +2,7 @@ import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
 
 const cookieName = "arcadeghosts_admin";
-const sessionValue = "guestbook-admin";
+const sessionValue = "site-admin";
 
 function getAdminUsername() {
   return process.env.ADMIN_USERNAME ?? "";

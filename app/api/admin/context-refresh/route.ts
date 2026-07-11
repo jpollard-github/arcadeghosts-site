@@ -1,6 +1,6 @@
 import { isAdminAuthenticated } from "../../../lib/admin-auth";
 import { parseJsonBody } from "../../../lib/admin-route";
-import { getGuestbookSql } from "../../../lib/guestbook";
+import { getSiteSql } from "../../../lib/database";
 import {
   contextRefreshVariants,
   countContextRefreshWords,
@@ -35,7 +35,7 @@ export async function GET() {
   try {
     await ensureContextRefreshExportsTable();
     await ensureContextRefreshProfileTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       SELECT
         id,
@@ -117,7 +117,7 @@ export async function PUT(request: Request) {
     }
 
     await ensureContextRefreshExportsTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       UPDATE context_refresh_exports
       SET

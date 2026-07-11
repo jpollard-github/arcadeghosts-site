@@ -4,7 +4,7 @@ import path from "path";
 import { musicInsights } from "../music-insights-data";
 import { arcadeGames, visualMedia } from "../site-data";
 import { writings } from "../writings";
-import { getGuestbookSql } from "./guestbook";
+import { getSiteSql } from "./database";
 import { getContextRefreshProjects, projectPriorityOptions } from "./projects";
 import {
   ensureTinyThoughtsTable,
@@ -314,7 +314,7 @@ export function contextRefreshFilename(date = new Date()) {
 }
 
 export async function ensureContextRefreshExportsTable() {
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
 
   await sql`
     CREATE TABLE IF NOT EXISTS context_refresh_exports (
@@ -339,7 +339,7 @@ export async function ensureContextRefreshExportsTable() {
 }
 
 export async function ensureContextRefreshProfileTable() {
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
 
   await sql`
     CREATE TABLE IF NOT EXISTS context_refresh_profiles (
@@ -416,7 +416,7 @@ export function toContextRefreshProfile(
 }
 
 async function seedDefaultContextRefreshProfile() {
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
   const profile = defaultContextRefreshProfile;
 
   await sql`
@@ -459,7 +459,7 @@ async function seedDefaultContextRefreshProfile() {
 export async function getContextRefreshProfile() {
   await ensureContextRefreshProfileTable();
   await seedDefaultContextRefreshProfile();
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
   const rows = await sql`
     SELECT
       id,
@@ -491,7 +491,7 @@ export async function getContextRefreshProfile() {
 
 export async function saveContextRefreshProfile(value: unknown) {
   await ensureContextRefreshProfileTable();
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
   const profile = normalizeContextRefreshProfileInput(value);
   const rows = await sql`
     INSERT INTO context_refresh_profiles (
@@ -591,7 +591,7 @@ async function loadWritingSummaries() {
 async function loadTinyThoughts() {
   try {
     await ensureTinyThoughtsTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       SELECT
         id,
@@ -876,7 +876,7 @@ export async function buildContextRefreshContent({
     lines.push(
       "## Technical Context",
       `- Main repo: ${profile.githubRepo}`,
-      "- Stack: Next.js App Router, React, TypeScript, Neon Postgres, Vercel Blob, Resend, and Vercel hosting.",
+      "- Stack: Next.js App Router, React, TypeScript, Neon Postgres, Vercel Blob, and Vercel hosting.",
       "- Active admin-managed public content includes projects and Tiny Thoughts.",
       "- Preferred implementation style: pragmatic changes, close fit with the existing repo, careful verification, and useful automation without overbuilding.",
       "",
@@ -952,7 +952,7 @@ export async function createContextRefreshExport({
   redacted: boolean;
 }) {
   const content = await buildContextRefreshContent({ variant, redacted });
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
   const rows = await sql`
     INSERT INTO context_refresh_exports (
       id,

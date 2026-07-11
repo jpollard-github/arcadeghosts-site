@@ -7,7 +7,7 @@ import {
   requireAdminJson,
   routeFailure,
 } from "../../../lib/admin-route";
-import { getGuestbookSql } from "../../../lib/guestbook";
+import { getSiteSql } from "../../../lib/database";
 import {
   isWritingDraftStatus,
   normalizeWritingDraftSlug,
@@ -98,7 +98,7 @@ export async function PATCH(request: Request) {
     }
 
     await ensureWritingDraftsTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       INSERT INTO writing_drafts (
         id,
@@ -169,7 +169,7 @@ export async function DELETE(request: Request) {
     }
 
     await ensureWritingDraftsTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       DELETE FROM writing_drafts
       WHERE id = ${id}

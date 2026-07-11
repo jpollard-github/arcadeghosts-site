@@ -114,9 +114,6 @@ test.describe("admin", () => {
       page.getByRole("link", { name: "Open Error Previews" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Open Guestbook Review" }),
-    ).toHaveCount(0);
-    await expect(
       page.getByRole("link", { name: "Open Edit Now" }),
     ).toHaveCount(0);
     await expect(

@@ -1,4 +1,4 @@
-import { getGuestbookSql } from "./guestbook";
+import { getSiteSql } from "./database";
 
 export type HomeSpotlightRecord = {
   id: string;
@@ -118,7 +118,7 @@ function getSpotlightRotationIndex(length: number) {
 }
 
 export async function ensureHomeSpotlightTable() {
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
 
   await sql`
     CREATE TABLE IF NOT EXISTS home_spotlight (
@@ -155,7 +155,7 @@ export async function ensureHomeSpotlightTable() {
 
 export async function getPublicHomeSpotlight() {
   await ensureHomeSpotlightTable();
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
   const queueRows = await sql`
     SELECT
       id,
@@ -192,7 +192,7 @@ export async function getPublicHomeSpotlight() {
 
 export async function getAdminHomeSpotlight() {
   await ensureHomeSpotlightTable();
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
   const queueRows = await sql`
     SELECT
       id,

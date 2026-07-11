@@ -1,4 +1,4 @@
-import { getGuestbookSql } from "./guestbook";
+import { getSiteSql } from "./database";
 
 export const tinyThoughtCategories = [
   "lesson",
@@ -149,7 +149,7 @@ function rowAttachments(row: TinyThoughtRow) {
 }
 
 export async function ensureTinyThoughtsTable() {
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
 
   await sql`
     CREATE TABLE IF NOT EXISTS tiny_thoughts (
@@ -249,7 +249,7 @@ export function toTinyThought(row: TinyThoughtRow): TinyThought {
 
 export async function getPublicTinyThoughts(limit = 24) {
   await ensureTinyThoughtsTable();
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
   const rows = await sql`
     SELECT
       id,

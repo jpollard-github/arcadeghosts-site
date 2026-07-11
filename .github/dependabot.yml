@@ -42,7 +42,6 @@ updates:
         patterns:
           - "@vercel/*"
           - "@neondatabase/*"
-          - resend
         update-types:
           - minor
           - patch
@@ -71,7 +70,6 @@ updates:
           - "@types/react-dom"
           - "@vercel/*"
           - "@neondatabase/*"
-          - resend
         dependency-type: production
         update-types:
           - minor

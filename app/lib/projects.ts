@@ -1,4 +1,4 @@
-import { getGuestbookSql } from "./guestbook";
+import { getSiteSql } from "./database";
 
 export const projectStatuses = [
   "active",
@@ -249,7 +249,7 @@ export function toSiteProject(row: SiteProjectRow): SiteProject {
 }
 
 export async function ensureProjectsTable() {
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
 
   await sql`
     CREATE TABLE IF NOT EXISTS site_projects (
@@ -302,7 +302,7 @@ export async function ensureProjectsTable() {
 
 export async function seedDefaultProjectsIfEmpty() {
   await ensureProjectsTable();
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
   const countRows = await sql`
     SELECT COUNT(*)::int AS count
     FROM site_projects
@@ -359,7 +359,7 @@ export async function getPublicProjects() {
 
 async function loadStoredPublicProjects() {
   await ensureProjectsTable();
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
   const rows = await sql`
     SELECT
       id,
@@ -389,7 +389,7 @@ async function loadStoredPublicProjects() {
 
 export async function getAdminProjects() {
   await ensureProjectsTable();
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
   const rows = await sql`
     SELECT
       id,

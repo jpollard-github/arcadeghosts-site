@@ -5,7 +5,7 @@ import {
   requireAdminJson,
   routeFailure,
 } from "../../../lib/admin-route";
-import { getGuestbookSql } from "../../../lib/guestbook";
+import { getSiteSql } from "../../../lib/database";
 import {
   ensureSocialQuestLogTable,
   isSocialQuestType,
@@ -111,7 +111,7 @@ export async function GET(request: Request) {
 
   try {
     await ensureSocialQuestLogTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const { searchParams } = new URL(request.url);
     const query = normalizeSocialQuestText(searchParams.get("q") ?? "", 80);
     const questType =
@@ -248,7 +248,7 @@ export async function POST(request: Request) {
     }
 
     await ensureSocialQuestLogTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       INSERT INTO social_quest_log_entries (
         id,
@@ -342,7 +342,7 @@ export async function PUT(request: Request) {
     }
 
     await ensureSocialQuestLogTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       UPDATE social_quest_log_entries
       SET
@@ -417,7 +417,7 @@ export async function DELETE(request: Request) {
     }
 
     await ensureSocialQuestLogTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       DELETE FROM social_quest_log_entries
       WHERE id = ${id}

@@ -6,7 +6,7 @@ import {
   routeFailure,
 } from "../../../lib/admin-route";
 import { revalidateProjectViews } from "../../../lib/admin-revalidation";
-import { getGuestbookSql } from "../../../lib/guestbook";
+import { getSiteSql } from "../../../lib/database";
 import {
   ensureProjectsTable,
   getAdminProjects,
@@ -66,7 +66,7 @@ function normalizeProject(value: unknown): SiteProject | null {
 
 async function selectProjectRows() {
   await ensureProjectsTable();
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
 
   const rows = await sql`
     SELECT
@@ -134,7 +134,7 @@ export async function PUT(request: Request) {
     }
 
     await ensureProjectsTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const existingRows = await sql`
       SELECT id, last_updated_at
       FROM site_projects
@@ -273,7 +273,7 @@ export async function PATCH(request: Request) {
         return jsonError("Project order must not contain duplicate ids.", 400);
       }
 
-      const sql = getGuestbookSql();
+      const sql = getSiteSql();
       const existingRows = await sql`
         SELECT id
         FROM site_projects
@@ -311,7 +311,7 @@ export async function PATCH(request: Request) {
     }
 
     await seedDefaultProjectsIfEmpty();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const existingRows = await sql`
       SELECT display_order, last_updated_at
       FROM site_projects
@@ -440,7 +440,7 @@ export async function DELETE(request: Request) {
     }
 
     await seedDefaultProjectsIfEmpty();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const countRows = await sql`
       SELECT COUNT(*)::int AS count
       FROM site_projects

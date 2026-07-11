@@ -37,7 +37,6 @@ Repository-specific skills live in `.agents/skills/`:
 - TypeScript
 - Neon Postgres via `@neondatabase/serverless`
 - Vercel Blob
-- Resend
 - Vercel Analytics
 - Playwright
 - Lighthouse for local and live website audits
@@ -142,25 +141,10 @@ ADMIN_USERNAME=
 ADMIN_PASSWORD=
 ```
 
-Guestbook email notifications:
-
-```bash
-RESEND_API_KEY=
-GUESTBOOK_EMAIL_FROM=
-GUESTBOOK_EMAIL_TO=
-ADMIN_LINK=
-```
-
 Blob uploads:
 
 ```bash
 BLOB_READ_WRITE_TOKEN=
-```
-
-Optional rate-limit secret:
-
-```bash
-GUESTBOOK_RATE_LIMIT_SECRET=
 ```
 
 ## Notes

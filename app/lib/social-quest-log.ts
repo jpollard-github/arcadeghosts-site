@@ -1,4 +1,4 @@
-import { getGuestbookSql } from "./guestbook";
+import { getSiteSql } from "./database";
 
 export const socialQuestTypes = [
   "singles-event",
@@ -147,7 +147,7 @@ export function normalizeSocialQuestTags(value: unknown) {
 }
 
 export async function ensureSocialQuestLogTable() {
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
 
   await sql`
     CREATE TABLE IF NOT EXISTS social_quest_log_entries (

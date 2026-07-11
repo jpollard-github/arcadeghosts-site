@@ -1,4 +1,4 @@
-import { getGuestbookSql } from "./guestbook";
+import { getSiteSql } from "./database";
 
 export type NowItem = {
   id: string;
@@ -61,7 +61,7 @@ export function toNowItem(row: NowItemRow): NowItem {
 }
 
 export async function ensureNowItemsTable() {
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
 
   await sql`
     CREATE TABLE IF NOT EXISTS site_now_items (
@@ -92,7 +92,7 @@ export async function getPublicNowItems() {
 
 async function loadStoredNowItems() {
   await ensureNowItemsTable();
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
   const rows = await sql`
     SELECT
       id,
@@ -113,7 +113,7 @@ async function loadStoredNowItems() {
 
 export async function getAdminNowItems() {
   await ensureNowItemsTable();
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
   const rows = await sql`
     SELECT
       id,

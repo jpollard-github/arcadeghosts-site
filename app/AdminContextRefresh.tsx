@@ -323,7 +323,7 @@ export function AdminContextRefresh() {
                   <span>Static profile</span>
                   <strong>{formatDate(currentProfile?.updatedAt ?? "")}</strong>
                 </div>
-                <p className="guestbook-help">
+                <p className="admin-help">
                   Save durable information about yourself here. New exports use this plus current
                   project and website data.
                 </p>
@@ -523,7 +523,7 @@ export function AdminContextRefresh() {
                 />
                 <span>Redact sensitive fields</span>
               </label>
-              <p className="guestbook-help">
+              <p className="admin-help">
                 Excludes or generalizes addresses, passwords, private names, financial details,
                 medical details, API keys, and anything that should not be pasted into a chat.
               </p>
@@ -603,7 +603,7 @@ export function AdminContextRefresh() {
           </div>
         ) : null}
 
-        <p className="guestbook-status" aria-live="polite">
+        <p className="admin-status" aria-live="polite">
           {status}
         </p>
       </section>

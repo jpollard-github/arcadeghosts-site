@@ -59,7 +59,7 @@ export function TinyThoughtForm({
       <label>
         <span>Thought</span>
         <textarea required value={form.content} onChange={(event) => onContentChange(event.target.value)} />
-        <small className="guestbook-help">{wordCount} words / 200 max. Emoji welcome.</small>
+        <small className="admin-help">{wordCount} words / 200 max. Emoji welcome.</small>
       </label>
       <label>
         <span>Inspired by category</span>

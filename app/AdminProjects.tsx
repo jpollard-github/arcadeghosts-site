@@ -433,7 +433,7 @@ export function AdminProjects() {
               </button>
             </div>
 
-            <p className="guestbook-help projects-admin-help">
+            <p className="admin-help projects-admin-help">
               Drag collapsed saved cards to reorder them. New drafts need to be saved
               before they can be moved.
             </p>
@@ -697,12 +697,12 @@ export function AdminProjects() {
                                 event.target.value = "";
                               }}
                             />
-                            <small className="guestbook-help">
+                            <small className="admin-help">
                               PNG, JPG, GIF, or WebP. 5 MB max.
                             </small>
                           </label>
                           {isUploading ? (
-                            <small className="guestbook-help">Uploading...</small>
+                            <small className="admin-help">Uploading...</small>
                           ) : null}
                         </div>
                         <label>
@@ -802,7 +802,7 @@ export function AdminProjects() {
           </>
         )}
 
-        <p className="guestbook-status" aria-live="polite">
+        <p className="admin-status" aria-live="polite">
           {status}
         </p>
       </section>

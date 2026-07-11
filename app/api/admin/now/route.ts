@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { isAdminAuthenticated } from "../../../lib/admin-auth";
 import { parseJsonBody } from "../../../lib/admin-route";
-import { getGuestbookSql } from "../../../lib/guestbook";
+import { getSiteSql } from "../../../lib/database";
 import {
   ensureNowItemsTable,
   getAdminNowItems,
@@ -94,7 +94,7 @@ export async function PUT(request: Request) {
     }
 
     await ensureNowItemsTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const existingRows = await sql`
       SELECT id
       FROM site_now_items

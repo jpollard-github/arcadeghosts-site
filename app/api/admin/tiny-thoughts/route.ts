@@ -7,7 +7,7 @@ import {
 } from "../../../lib/admin-route";
 import { revalidateTinyThoughtViews } from "../../../lib/admin-revalidation";
 import { deleteTinyThoughtBlobs } from "../../../lib/blob";
-import { getGuestbookSql } from "../../../lib/guestbook";
+import { getSiteSql } from "../../../lib/database";
 import {
   countWords,
   ensureTinyThoughtsTable,
@@ -119,7 +119,7 @@ export async function GET() {
 
   try {
     await ensureTinyThoughtsTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       SELECT
         id,
@@ -161,7 +161,7 @@ export async function POST(request: Request) {
     }
 
     await ensureTinyThoughtsTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       INSERT INTO tiny_thoughts (
         id,
@@ -226,7 +226,7 @@ export async function PUT(request: Request) {
     }
 
     await ensureTinyThoughtsTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const oldRows = await sql`
       SELECT
         id,
@@ -309,7 +309,7 @@ export async function DELETE(request: Request) {
     }
 
     await ensureTinyThoughtsTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       DELETE FROM tiny_thoughts
       WHERE id = ${id}

@@ -459,7 +459,7 @@ export function AdminWritingDrafts() {
           </>
         )}
 
-        <p className="guestbook-status" aria-live="polite">
+        <p className="admin-status" aria-live="polite">
           {status}
         </p>
 

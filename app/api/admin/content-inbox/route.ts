@@ -17,7 +17,7 @@ import {
   toContentInboxItem,
   type ContentInboxRow,
 } from "../../../lib/content-inbox-shared";
-import { getGuestbookSql } from "../../../lib/guestbook";
+import { getSiteSql } from "../../../lib/database";
 
 export const runtime = "nodejs";
 
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
     }
 
     await ensureContentInboxTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       INSERT INTO content_inbox_items (
         id,
@@ -143,7 +143,7 @@ export async function PUT(request: Request) {
     }
 
     await ensureContentInboxTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       UPDATE content_inbox_items
       SET
@@ -201,7 +201,7 @@ export async function PATCH(request: Request) {
     }
 
     await ensureContentInboxTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       UPDATE content_inbox_items
       SET status = ${status}, updated_at = now()
@@ -238,7 +238,7 @@ export async function DELETE(request: Request) {
     }
 
     await ensureContentInboxTable();
-    const sql = getGuestbookSql();
+    const sql = getSiteSql();
     const rows = await sql`
       DELETE FROM content_inbox_items
       WHERE id = ${id}

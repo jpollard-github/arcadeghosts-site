@@ -1,8 +1,8 @@
-import { getGuestbookSql } from "./guestbook";
+import { getSiteSql } from "./database";
 import { toWritingDraft, type WritingDraftRow } from "./writing-drafts";
 
 export async function ensureWritingDraftsTable() {
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
 
   await sql`
     CREATE TABLE IF NOT EXISTS writing_drafts (
@@ -28,7 +28,7 @@ export async function ensureWritingDraftsTable() {
 
 export async function getAdminWritingDrafts() {
   await ensureWritingDraftsTable();
-  const sql = getGuestbookSql();
+  const sql = getSiteSql();
   const rows = await sql`
     SELECT
       id,
