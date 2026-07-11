@@ -193,7 +193,7 @@ test("transition layers overlap without moving stage, header, or controls", asyn
     controls: await rect(controls),
   };
 
-  await page.getByRole("button", { name: "Next" }).click();
+  await page.getByRole("button", { name: "Next", exact: true }).click();
   await expect(page.locator("[data-ambient-stage]")).toHaveCount(2);
   expectSameRect(await rect(stack), before.stack);
   expectSameRect(await rect(header), before.header);
@@ -216,7 +216,7 @@ test("reduced-motion changes stay layout-neutral", async ({ page }) => {
   const controls = page.locator("main footer");
   const before = [await rect(stack), await rect(header), await rect(controls)];
 
-  await page.getByRole("button", { name: "Next" }).click();
+  await page.getByRole("button", { name: "Next", exact: true }).click();
 
   expectSameRect(await rect(stack), before[0]);
   expectSameRect(await rect(header), before[1]);
@@ -228,8 +228,8 @@ test("reduced-motion changes stay layout-neutral", async ({ page }) => {
 test("rapid Previous and Next input leaves one settled stage without overflow", async ({ page }) => {
   await page.goto("/ambient");
 
-  const previous = page.getByRole("button", { name: "Previous" });
-  const next = page.getByRole("button", { name: "Next" });
+  const previous = page.getByRole("button", { name: "Previous", exact: true });
+  const next = page.getByRole("button", { name: "Next", exact: true });
   const stackBefore = await rect(page.locator("[data-ambient-stage-stack]"));
 
   for (let index = 0; index < 5; index += 1) {

@@ -143,8 +143,12 @@ test("Ambient fits a landscape tablet and keeps display controls available", asy
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/ambient?type=cat");
 
-  await expect(page.getByRole("button", { name: "Previous" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Next" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Previous", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Next", exact: true }),
+  ).toBeVisible();
 
   const overflow = await page.evaluate(() => ({
     horizontal: document.documentElement.scrollWidth - window.innerWidth,
