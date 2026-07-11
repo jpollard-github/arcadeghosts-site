@@ -8,6 +8,7 @@ import { HomeProjects } from "./home/HomeProjects";
 import { HomeScreening } from "./home/HomeScreening";
 import { HomeTinyThoughts } from "./home/HomeTinyThoughts";
 import { HomeWriting } from "./home/HomeWriting";
+import { serializeJsonLd } from "./lib/json-ld";
 import { getPublicProjects } from "./lib/projects";
 import { absoluteUrl, siteConfig } from "./seo";
 import { writings } from "./writings";
@@ -96,7 +97,7 @@ export default async function Home() {
       <HomeHashScroller />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <a className="back-up-top" href="#top">
         Back Up Top

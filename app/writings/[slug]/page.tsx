@@ -3,6 +3,7 @@ import path from "node:path";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { serializeJsonLd } from "../../lib/json-ld";
 import { RelatedSignals } from "../../RelatedSignals";
 import { absoluteUrl } from "../../seo";
 import { writings } from "../../writings";
@@ -101,7 +102,7 @@ export default async function WritingPage({ params }: PageProps) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: serializeJsonLd({
               "@context": "https://schema.org",
               "@type": "BlogPosting",
               headline: writing.title,
