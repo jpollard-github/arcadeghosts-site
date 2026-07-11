@@ -117,44 +117,7 @@ function getSpotlightRotationIndex(length: number) {
   return Math.floor(Date.now() / 86_400_000) % length;
 }
 
-export async function ensureHomeSpotlightTable() {
-  const sql = getSiteSql();
-
-  await sql`
-    CREATE TABLE IF NOT EXISTS home_spotlight (
-      id TEXT PRIMARY KEY,
-      eyebrow TEXT NOT NULL,
-      title TEXT NOT NULL,
-      body TEXT NOT NULL,
-      link_label TEXT NOT NULL,
-      link_href TEXT NOT NULL,
-      enabled BOOLEAN NOT NULL DEFAULT false,
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-    )
-  `;
-
-  await sql`
-    CREATE TABLE IF NOT EXISTS home_spotlight_queue (
-      id TEXT PRIMARY KEY,
-      eyebrow TEXT NOT NULL,
-      title TEXT NOT NULL,
-      body TEXT NOT NULL,
-      link_label TEXT NOT NULL,
-      link_href TEXT NOT NULL,
-      enabled BOOLEAN NOT NULL DEFAULT true,
-      display_order INTEGER NOT NULL DEFAULT 0,
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-    )
-  `;
-
-  await sql`
-    CREATE INDEX IF NOT EXISTS home_spotlight_queue_display_order_idx
-    ON home_spotlight_queue (display_order ASC, updated_at DESC)
-  `;
-}
-
 export async function getPublicHomeSpotlight() {
-  await ensureHomeSpotlightTable();
   const sql = getSiteSql();
   const queueRows = await sql`
     SELECT
@@ -191,7 +154,6 @@ export async function getPublicHomeSpotlight() {
 }
 
 export async function getAdminHomeSpotlight() {
-  await ensureHomeSpotlightTable();
   const sql = getSiteSql();
   const queueRows = await sql`
     SELECT

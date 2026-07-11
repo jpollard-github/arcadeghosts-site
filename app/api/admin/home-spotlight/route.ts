@@ -7,7 +7,6 @@ import {
   emptyHomeSpotlightQueueItem,
   normalizeHomeSpotlightHref,
   normalizeHomeSpotlightText,
-  ensureHomeSpotlightTable,
   type HomeSpotlightQueueItem,
   type HomeSpotlightRecord,
 } from "../../../lib/home-spotlight";
@@ -118,7 +117,6 @@ export async function PUT(request: Request) {
       );
     }
 
-    await ensureHomeSpotlightTable();
     const sql = getSiteSql();
 
     await sql`

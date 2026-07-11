@@ -60,27 +60,6 @@ export function toNowItem(row: NowItemRow): NowItem {
   };
 }
 
-export async function ensureNowItemsTable() {
-  const sql = getSiteSql();
-
-  await sql`
-    CREATE TABLE IF NOT EXISTS site_now_items (
-      id TEXT PRIMARY KEY,
-      label TEXT NOT NULL,
-      title TEXT NOT NULL,
-      body TEXT NOT NULL,
-      display_order INTEGER NOT NULL DEFAULT 0,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-    )
-  `;
-
-  await sql`
-    CREATE INDEX IF NOT EXISTS site_now_items_display_order_idx
-    ON site_now_items (display_order ASC)
-  `;
-}
-
 export async function getPublicNowItems() {
   const storedItems = loadStoredNowItems().catch(() => defaultNowItems);
   const fallback = new Promise<NowItem[]>((resolve) => {
@@ -91,7 +70,6 @@ export async function getPublicNowItems() {
 }
 
 async function loadStoredNowItems() {
-  await ensureNowItemsTable();
   const sql = getSiteSql();
   const rows = await sql`
     SELECT
@@ -112,7 +90,6 @@ async function loadStoredNowItems() {
 }
 
 export async function getAdminNowItems() {
-  await ensureNowItemsTable();
   const sql = getSiteSql();
   const rows = await sql`
     SELECT

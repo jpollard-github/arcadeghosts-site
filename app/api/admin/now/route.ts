@@ -3,7 +3,6 @@ import { isAdminAuthenticated } from "../../../lib/admin-auth";
 import { parseJsonBody } from "../../../lib/admin-route";
 import { getSiteSql } from "../../../lib/database";
 import {
-  ensureNowItemsTable,
   getAdminNowItems,
   normalizeNowText,
   toNowItem,
@@ -93,7 +92,6 @@ export async function PUT(request: Request) {
       );
     }
 
-    await ensureNowItemsTable();
     const sql = getSiteSql();
     const existingRows = await sql`
       SELECT id

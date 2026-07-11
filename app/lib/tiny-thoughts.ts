@@ -148,88 +148,6 @@ function rowAttachments(row: TinyThoughtRow) {
   return imageUrl ? [{ type: "image" as const, url: imageUrl }] : [];
 }
 
-export async function ensureTinyThoughtsTable() {
-  const sql = getSiteSql();
-
-  await sql`
-    CREATE TABLE IF NOT EXISTS tiny_thoughts (
-      id TEXT PRIMARY KEY,
-      category TEXT NOT NULL CHECK (
-        category IN (
-          'lesson',
-          'observation',
-          'funny',
-          'opinion',
-          'arcade',
-          'music',
-          'cat',
-          'twin-peaks',
-          'other'
-        )
-      ),
-      content TEXT NOT NULL,
-      image_url TEXT,
-      attachments JSONB NOT NULL DEFAULT '[]'::jsonb,
-      inspired_by_category TEXT NOT NULL DEFAULT 'other' CHECK (
-        inspired_by_category IN (
-          'article-link',
-          'song',
-          'video',
-          'conversation',
-          'other'
-        )
-      ),
-      inspired_by TEXT NOT NULL DEFAULT '',
-      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-    )
-  `;
-
-  await sql`
-    ALTER TABLE tiny_thoughts
-    ADD COLUMN IF NOT EXISTS attachments JSONB NOT NULL DEFAULT '[]'::jsonb
-  `;
-
-  await sql`
-    ALTER TABLE tiny_thoughts
-    ADD COLUMN IF NOT EXISTS inspired_by_category TEXT NOT NULL DEFAULT 'other'
-  `;
-
-  await sql`
-    ALTER TABLE tiny_thoughts
-    ADD COLUMN IF NOT EXISTS inspired_by TEXT NOT NULL DEFAULT ''
-  `;
-
-  await sql`
-    DO $$
-    BEGIN
-      IF NOT EXISTS (
-        SELECT 1
-        FROM pg_constraint
-        WHERE conname = 'tiny_thoughts_inspired_by_category_check'
-      ) THEN
-        ALTER TABLE tiny_thoughts
-        ADD CONSTRAINT tiny_thoughts_inspired_by_category_check
-        CHECK (
-          inspired_by_category IN (
-            'article-link',
-            'song',
-            'video',
-            'conversation',
-            'other'
-          )
-        );
-      END IF;
-    END
-    $$
-  `;
-
-  await sql`
-    CREATE INDEX IF NOT EXISTS tiny_thoughts_created_at_idx
-    ON tiny_thoughts (created_at DESC)
-  `;
-}
-
 export function toTinyThought(row: TinyThoughtRow): TinyThought {
   const attachments = rowAttachments(row);
   const imageAttachment = attachments.find((attachment) => attachment.type === "image");
@@ -248,7 +166,6 @@ export function toTinyThought(row: TinyThoughtRow): TinyThought {
 }
 
 export async function getPublicTinyThoughts(limit = 24) {
-  await ensureTinyThoughtsTable();
   const sql = getSiteSql();
   const rows = await sql`
     SELECT

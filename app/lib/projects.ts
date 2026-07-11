@@ -248,60 +248,7 @@ export function toSiteProject(row: SiteProjectRow): SiteProject {
   };
 }
 
-export async function ensureProjectsTable() {
-  const sql = getSiteSql();
-
-  await sql`
-    CREATE TABLE IF NOT EXISTS site_projects (
-      id TEXT PRIMARY KEY,
-      type TEXT NOT NULL,
-      title TEXT NOT NULL,
-      description TEXT NOT NULL,
-      href TEXT NOT NULL DEFAULT '',
-      image_url TEXT NOT NULL DEFAULT '',
-      status TEXT NOT NULL DEFAULT 'active' CHECK (
-        status IN ('active', 'paused', 'planning', 'shipped', 'archived')
-      ),
-      phase TEXT NOT NULL DEFAULT '',
-      next_action TEXT NOT NULL DEFAULT 'None',
-      blockers TEXT NOT NULL DEFAULT '',
-      priority INTEGER NOT NULL DEFAULT 3,
-      last_updated_at DATE,
-      include_in_context_refresh BOOLEAN NOT NULL DEFAULT true,
-      display_order INTEGER NOT NULL DEFAULT 0,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-    )
-  `;
-
-  await sql`
-    ALTER TABLE site_projects
-    ADD COLUMN IF NOT EXISTS include_in_context_refresh BOOLEAN NOT NULL DEFAULT true
-  `;
-
-  await sql`
-    ALTER TABLE site_projects
-    ADD COLUMN IF NOT EXISTS image_url TEXT NOT NULL DEFAULT ''
-  `;
-
-  await sql`
-    ALTER TABLE site_projects
-    ALTER COLUMN next_action SET DEFAULT 'None'
-  `;
-
-  await sql`
-    ALTER TABLE site_projects
-    ALTER COLUMN priority SET DEFAULT 3
-  `;
-
-  await sql`
-    CREATE INDEX IF NOT EXISTS site_projects_display_order_idx
-    ON site_projects (display_order ASC)
-  `;
-}
-
 export async function seedDefaultProjectsIfEmpty() {
-  await ensureProjectsTable();
   const sql = getSiteSql();
   const countRows = await sql`
     SELECT COUNT(*)::int AS count
@@ -358,7 +305,6 @@ export async function getPublicProjects() {
 }
 
 async function loadStoredPublicProjects() {
-  await ensureProjectsTable();
   const sql = getSiteSql();
   const rows = await sql`
     SELECT
@@ -388,7 +334,6 @@ async function loadStoredPublicProjects() {
 }
 
 export async function getAdminProjects() {
-  await ensureProjectsTable();
   const sql = getSiteSql();
   const rows = await sql`
     SELECT

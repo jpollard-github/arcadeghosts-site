@@ -8,7 +8,6 @@ import {
 import { revalidateProjectViews } from "../../../lib/admin-revalidation";
 import { getSiteSql } from "../../../lib/database";
 import {
-  ensureProjectsTable,
   getAdminProjects,
   isProjectStatus,
   normalizeProjectDate,
@@ -65,7 +64,6 @@ function normalizeProject(value: unknown): SiteProject | null {
 }
 
 async function selectProjectRows() {
-  await ensureProjectsTable();
   const sql = getSiteSql();
 
   const rows = await sql`
@@ -133,7 +131,6 @@ export async function PUT(request: Request) {
       return jsonError("Project ids must be unique before saving.", 400);
     }
 
-    await ensureProjectsTable();
     const sql = getSiteSql();
     const existingRows = await sql`
       SELECT id, last_updated_at

@@ -146,58 +146,6 @@ export function normalizeSocialQuestTags(value: unknown) {
   return tags;
 }
 
-export async function ensureSocialQuestLogTable() {
-  const sql = getSiteSql();
-
-  await sql`
-    CREATE TABLE IF NOT EXISTS social_quest_log_entries (
-      id TEXT PRIMARY KEY,
-      title TEXT NOT NULL CHECK (char_length(title) BETWEEN 1 AND 120),
-      quest_type TEXT NOT NULL CHECK (
-        quest_type IN (
-          'singles-event',
-          'discord-group',
-          'meetup',
-          'class-workshop',
-          'friend-hang',
-          'solo-outing',
-          'other'
-        )
-      ),
-      event_name TEXT NOT NULL CHECK (char_length(event_name) BETWEEN 1 AND 140),
-      location TEXT NOT NULL DEFAULT '',
-      occurred_on DATE NOT NULL,
-      people_met_count INTEGER NOT NULL DEFAULT 0 CHECK (people_met_count BETWEEN 0 AND 99),
-      conversations_count INTEGER NOT NULL DEFAULT 0 CHECK (conversations_count BETWEEN 0 AND 99),
-      confidence_before INTEGER NOT NULL DEFAULT 3 CHECK (confidence_before BETWEEN 1 AND 5),
-      confidence_after INTEGER NOT NULL DEFAULT 3 CHECK (confidence_after BETWEEN 1 AND 5),
-      conversation_notes TEXT NOT NULL DEFAULT '',
-      follow_up_ideas TEXT NOT NULL DEFAULT '',
-      what_i_learned TEXT NOT NULL DEFAULT '',
-      next_experiment TEXT NOT NULL DEFAULT '',
-      victory_note TEXT NOT NULL DEFAULT '',
-      tags JSONB NOT NULL DEFAULT '[]'::jsonb,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-    )
-  `;
-
-  await sql`
-    CREATE INDEX IF NOT EXISTS social_quest_log_entries_occurred_on_idx
-    ON social_quest_log_entries (occurred_on DESC, created_at DESC)
-  `;
-
-  await sql`
-    CREATE INDEX IF NOT EXISTS social_quest_log_entries_quest_type_idx
-    ON social_quest_log_entries (quest_type)
-  `;
-
-  await sql`
-    CREATE INDEX IF NOT EXISTS social_quest_log_entries_created_at_idx
-    ON social_quest_log_entries (created_at DESC)
-  `;
-}
-
 export function toSocialQuestEntry(row: SocialQuestRow): SocialQuestEntry {
   return {
     id: row.id,

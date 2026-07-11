@@ -15,6 +15,7 @@ The repo currently blends:
 - `app/` - routes, layouts, server components, API handlers, and shared UI
 - `app/home/` - homepage-specific sections and components
 - `app/lib/` - shared helpers for auth, database access, uploads, feeds, and formatting
+- `db/migrations/` - immutable numbered SQL migrations for the Neon schema
 - `public/` - static assets
 - `scripts/` - local maintenance and audit scripts
 - `tests/` - active unit and e2e coverage
@@ -102,6 +103,24 @@ Run the focused mobile safety browser test:
 ```bash
 npm run test:mobile-safety
 ```
+
+## Database migrations
+
+The Neon schema is owned by immutable numbered files in `db/migrations/`. Application requests and builds never run migrations or repair schema.
+
+Check which migrations are applied, pending, or mismatched:
+
+```bash
+npm run db:migrate:status
+```
+
+Apply pending migrations to the database configured in the current environment:
+
+```bash
+npm run db:migrate
+```
+
+Run migrations locally when setting up or updating a local database. For production, an operator must deliberately run `npm run db:migrate` against the production environment before deploying code that depends on the new schema. Never edit a migration after it has been applied; add the next numbered migration instead.
 
 Run the site audit and generate a markdown packet in `review-packets/`:
 

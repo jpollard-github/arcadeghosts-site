@@ -5,8 +5,6 @@ import {
   contextRefreshVariants,
   countContextRefreshWords,
   createContextRefreshExport,
-  ensureContextRefreshExportsTable,
-  ensureContextRefreshProfileTable,
   getContextRefreshProfile,
   isContextRefreshVariant,
   normalizeContextRefreshContent,
@@ -33,8 +31,6 @@ export async function GET() {
   }
 
   try {
-    await ensureContextRefreshExportsTable();
-    await ensureContextRefreshProfileTable();
     const sql = getSiteSql();
     const rows = await sql`
       SELECT
@@ -83,7 +79,6 @@ export async function POST(request: Request) {
         : "concise";
     const redacted = typeof body.redacted === "boolean" ? body.redacted : true;
 
-    await ensureContextRefreshExportsTable();
     const created = await createContextRefreshExport({ variant, redacted });
 
     return Response.json({ ok: true, export: created });
@@ -116,7 +111,6 @@ export async function PUT(request: Request) {
       return Response.json({ error: "Write export content before saving." }, { status: 400 });
     }
 
-    await ensureContextRefreshExportsTable();
     const sql = getSiteSql();
     const rows = await sql`
       UPDATE context_refresh_exports

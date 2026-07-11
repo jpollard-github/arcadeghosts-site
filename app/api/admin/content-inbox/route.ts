@@ -4,10 +4,7 @@ import {
   requireAdminJson,
   routeFailure,
 } from "../../../lib/admin-route";
-import {
-  ensureContentInboxTable,
-  getAdminContentInboxItems,
-} from "../../../lib/content-inbox";
+import { getAdminContentInboxItems } from "../../../lib/content-inbox";
 import {
   emptyContentInboxItem,
   isContentInboxBucket,
@@ -84,7 +81,6 @@ export async function POST(request: Request) {
       return jsonError("Content is required before saving to the inbox.", 400);
     }
 
-    await ensureContentInboxTable();
     const sql = getSiteSql();
     const rows = await sql`
       INSERT INTO content_inbox_items (
@@ -142,7 +138,6 @@ export async function PUT(request: Request) {
       return jsonError("Content is required before saving to the inbox.", 400);
     }
 
-    await ensureContentInboxTable();
     const sql = getSiteSql();
     const rows = await sql`
       UPDATE content_inbox_items
@@ -200,7 +195,6 @@ export async function PATCH(request: Request) {
       return jsonError("Inbox item id and status are required.", 400);
     }
 
-    await ensureContentInboxTable();
     const sql = getSiteSql();
     const rows = await sql`
       UPDATE content_inbox_items
@@ -237,7 +231,6 @@ export async function DELETE(request: Request) {
       return jsonError("Inbox item id is required.", 400);
     }
 
-    await ensureContentInboxTable();
     const sql = getSiteSql();
     const rows = await sql`
       DELETE FROM content_inbox_items

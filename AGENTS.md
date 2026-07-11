@@ -33,6 +33,8 @@ Jason owns editorial and content decisions. Do not invent, rewrite, summarize, s
 - Keep production dependencies minimal and explain why a new one is needed.
 - Never log, commit, or expose secrets, tokens, private context, or `.env` values.
 - Parameterize SQL. Do not add new runtime `CREATE TABLE` or `ALTER TABLE` work. Flag schema changes for an explicit migration.
+- Schema changes belong in a new numbered file under `db/migrations/**`. Never edit an applied migration.
+- Use `npm run db:migrate:status` to inspect migration state and `npm run db:migrate` only as a deliberate operator action against the intended database.
 - Multi-statement writes that represent one user action must be atomic.
 - New or modified admin mutations must use the shared authentication path, validate inputs, and preserve same-origin protections.
 - Uploaded files require size, declared-type, content-signature, and safe-extension validation.

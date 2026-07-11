@@ -16,10 +16,7 @@ import {
   type WritingDraft,
   type WritingDraftRow,
 } from "../../../lib/writing-drafts";
-import {
-  ensureWritingDraftsTable,
-  getAdminWritingDrafts,
-} from "../../../lib/writing-drafts-store";
+import { getAdminWritingDrafts } from "../../../lib/writing-drafts-store";
 
 export const runtime = "nodejs";
 
@@ -97,7 +94,6 @@ export async function PATCH(request: Request) {
       return jsonError("Every writing draft needs a title and body before saving.", 400);
     }
 
-    await ensureWritingDraftsTable();
     const sql = getSiteSql();
     const rows = await sql`
       INSERT INTO writing_drafts (
@@ -168,7 +164,6 @@ export async function DELETE(request: Request) {
       return jsonError("Writing draft id is required.", 400);
     }
 
-    await ensureWritingDraftsTable();
     const sql = getSiteSql();
     const rows = await sql`
       DELETE FROM writing_drafts

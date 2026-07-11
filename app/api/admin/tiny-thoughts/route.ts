@@ -10,7 +10,6 @@ import { deleteTinyThoughtBlobs } from "../../../lib/blob";
 import { getSiteSql } from "../../../lib/database";
 import {
   countWords,
-  ensureTinyThoughtsTable,
   isTinyThoughtCategory,
   isTinyThoughtInspiredByCategory,
   normalizeTinyThoughtAttachments,
@@ -118,7 +117,6 @@ export async function GET() {
   }
 
   try {
-    await ensureTinyThoughtsTable();
     const sql = getSiteSql();
     const rows = await sql`
       SELECT
@@ -160,7 +158,6 @@ export async function POST(request: Request) {
       return jsonError(error, 400);
     }
 
-    await ensureTinyThoughtsTable();
     const sql = getSiteSql();
     const rows = await sql`
       INSERT INTO tiny_thoughts (
@@ -225,7 +222,6 @@ export async function PUT(request: Request) {
       return jsonError(error, 400);
     }
 
-    await ensureTinyThoughtsTable();
     const sql = getSiteSql();
     const oldRows = await sql`
       SELECT
@@ -308,7 +304,6 @@ export async function DELETE(request: Request) {
       return jsonError("Missing tiny thought id.", 400);
     }
 
-    await ensureTinyThoughtsTable();
     const sql = getSiteSql();
     const rows = await sql`
       DELETE FROM tiny_thoughts

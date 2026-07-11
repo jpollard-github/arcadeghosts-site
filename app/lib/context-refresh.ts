@@ -7,7 +7,6 @@ import { writings } from "../writings";
 import { getSiteSql } from "./database";
 import { getContextRefreshProjects, projectPriorityOptions } from "./projects";
 import {
-  ensureTinyThoughtsTable,
   toTinyThought,
   type TinyThoughtRow,
 } from "./tiny-thoughts";
@@ -313,55 +312,6 @@ export function contextRefreshFilename(date = new Date()) {
   return `${stamp}_ChatGPTContextRefresh.md`;
 }
 
-export async function ensureContextRefreshExportsTable() {
-  const sql = getSiteSql();
-
-  await sql`
-    CREATE TABLE IF NOT EXISTS context_refresh_exports (
-      id TEXT PRIMARY KEY,
-      filename TEXT NOT NULL,
-      variant TEXT NOT NULL CHECK (
-        variant IN ('concise', 'full', 'project', 'dating-social', 'dev-technical')
-      ),
-      redacted BOOLEAN NOT NULL DEFAULT true,
-      content TEXT NOT NULL,
-      word_count INTEGER NOT NULL DEFAULT 0,
-      saved_at TIMESTAMPTZ,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-    )
-  `;
-
-  await sql`
-    CREATE INDEX IF NOT EXISTS context_refresh_exports_updated_at_idx
-    ON context_refresh_exports (updated_at DESC)
-  `;
-}
-
-export async function ensureContextRefreshProfileTable() {
-  const sql = getSiteSql();
-
-  await sql`
-    CREATE TABLE IF NOT EXISTS context_refresh_profiles (
-      id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      preferred_name TEXT NOT NULL,
-      region TEXT NOT NULL,
-      site_name TEXT NOT NULL,
-      github_repo TEXT NOT NULL,
-      identity_summary TEXT NOT NULL,
-      memory_core TEXT NOT NULL DEFAULT '',
-      long_term_goals TEXT NOT NULL DEFAULT '',
-      current_priorities TEXT NOT NULL DEFAULT '',
-      active_social_context TEXT NOT NULL DEFAULT '',
-      creative_themes TEXT NOT NULL DEFAULT '',
-      conversation_preferences TEXT NOT NULL DEFAULT '',
-      additional_context TEXT NOT NULL DEFAULT '',
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
-    )
-  `;
-}
-
 export function toContextRefreshExport(
   row: ContextRefreshExportRow,
 ): ContextRefreshExport {
@@ -457,7 +407,6 @@ async function seedDefaultContextRefreshProfile() {
 }
 
 export async function getContextRefreshProfile() {
-  await ensureContextRefreshProfileTable();
   await seedDefaultContextRefreshProfile();
   const sql = getSiteSql();
   const rows = await sql`
@@ -490,7 +439,6 @@ export async function getContextRefreshProfile() {
 }
 
 export async function saveContextRefreshProfile(value: unknown) {
-  await ensureContextRefreshProfileTable();
   const sql = getSiteSql();
   const profile = normalizeContextRefreshProfileInput(value);
   const rows = await sql`
@@ -590,7 +538,6 @@ async function loadWritingSummaries() {
 
 async function loadTinyThoughts() {
   try {
-    await ensureTinyThoughtsTable();
     const sql = getSiteSql();
     const rows = await sql`
       SELECT
