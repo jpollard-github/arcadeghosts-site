@@ -158,7 +158,18 @@ Admin auth:
 ```bash
 ADMIN_USERNAME=
 ADMIN_PASSWORD=
+ADMIN_SESSION_SECRET=
 ```
+
+All three values are required. `ADMIN_SESSION_SECRET` must contain at least 32 UTF-8 bytes and must be separate from the password. Generate a strong local value with:
+
+```bash
+node -e "console.log(require('node:crypto').randomBytes(48).toString('base64url'))"
+```
+
+Admin sessions expire after eight hours. Rotating either the password or session secret invalidates existing sessions, and this session-format change intentionally invalidates sessions issued by older deployments. Production uses a host-bound `__Host-arcadeghosts_admin` cookie; local HTTP development uses `arcadeghosts_admin`. Vercel environment-variable changes require a new deployment.
+
+As an operator-controlled production safeguard, configure a Vercel WAF fixed-window rate-limit rule for `POST /api/admin/session`: start with 10 requests per 60 seconds per source IP and the default 429 response. Application code does not create this Vercel setting.
 
 Blob uploads:
 

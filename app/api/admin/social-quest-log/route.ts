@@ -102,7 +102,7 @@ function toTypeTotals(rows: TypeRow[]): SocialQuestTypeTotal[] {
 }
 
 export async function GET(request: Request) {
-  const unauthorized = await requireAdminJson();
+  const unauthorized = await requireAdminJson(request);
 
   if (unauthorized) {
     return unauthorized;
@@ -230,7 +230,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const unauthorized = await requireAdminJson();
+  const unauthorized = await requireAdminJson(request);
 
   if (unauthorized) {
     return unauthorized;
@@ -318,7 +318,7 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const unauthorized = await requireAdminJson();
+  const unauthorized = await requireAdminJson(request);
 
   if (unauthorized) {
     return unauthorized;
@@ -398,7 +398,7 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const unauthorized = await requireAdminJson();
+  const unauthorized = await requireAdminJson(request);
 
   if (unauthorized) {
     return unauthorized;

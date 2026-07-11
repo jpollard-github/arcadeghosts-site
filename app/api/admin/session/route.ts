@@ -1,29 +1,34 @@
 import {
   clearAdminSession,
   isAdminAuthenticated,
-  isAdminPasswordConfigured,
+  isAdminAuthConfigured,
   setAdminSession,
   verifyAdminCredentials,
 } from "../../../lib/admin-auth";
-import { parseJsonBody } from "../../../lib/admin-route";
+import { parseJsonBody, requireSameOriginJson } from "../../../lib/admin-route";
 
 export const runtime = "nodejs";
 
 export async function GET() {
   return Response.json({
     authenticated: await isAdminAuthenticated(),
-    configured: isAdminPasswordConfigured(),
+    configured: isAdminAuthConfigured(),
   });
 }
 
 export async function POST(request: Request) {
+  const invalidOrigin = requireSameOriginJson(request);
+  if (invalidOrigin) {
+    return invalidOrigin;
+  }
+
   const body = await parseJsonBody(request);
   const username = typeof body.username === "string" ? body.username : "";
   const password = typeof body.password === "string" ? body.password : "";
 
-  if (!isAdminPasswordConfigured()) {
+  if (!isAdminAuthConfigured()) {
     return Response.json(
-      { error: "ADMIN_USERNAME or ADMIN_PASSWORD is not configured." },
+      { error: "Admin authentication is not configured." },
       { status: 500 },
     );
   }
@@ -36,7 +41,12 @@ export async function POST(request: Request) {
   return Response.json({ authenticated: true });
 }
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
+  const invalidOrigin = requireSameOriginJson(request);
+  if (invalidOrigin) {
+    return invalidOrigin;
+  }
+
   await clearAdminSession();
   return Response.json({ authenticated: false });
 }

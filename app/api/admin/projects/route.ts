@@ -97,8 +97,8 @@ async function selectProjectRows() {
   return rows as SiteProjectRow[];
 }
 
-export async function GET() {
-  const unauthorized = await requireAdminJson();
+export async function GET(request: Request) {
+  const unauthorized = await requireAdminJson(request);
 
   if (unauthorized) {
     return unauthorized;
@@ -112,7 +112,7 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const unauthorized = await requireAdminJson();
+  const unauthorized = await requireAdminJson(request);
 
   if (unauthorized) {
     return unauthorized;
@@ -196,7 +196,7 @@ export async function PUT(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const unauthorized = await requireAdminJson();
+  const unauthorized = await requireAdminJson(request);
 
   if (unauthorized) {
     return unauthorized;
@@ -361,7 +361,7 @@ export async function PATCH(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const unauthorized = await requireAdminJson();
+  const unauthorized = await requireAdminJson(request);
 
   if (unauthorized) {
     return unauthorized;

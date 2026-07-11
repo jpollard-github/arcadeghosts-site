@@ -38,7 +38,7 @@ function normalizePublishDraft(value: unknown) {
 }
 
 export async function POST(request: Request) {
-  const unauthorized = await requireAdminJson();
+  const unauthorized = await requireAdminJson(request);
 
   if (unauthorized) {
     return unauthorized;

@@ -8,7 +8,7 @@ import {
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
-  const unauthorized = await requireAdminJson();
+  const unauthorized = await requireAdminJson(request);
 
   if (unauthorized) {
     return unauthorized;

@@ -12,9 +12,24 @@ function requireAdminCredentials() {
   return credentials;
 }
 
+function adminRequestOrigin(page: Page) {
+  const currentUrl = page.url();
+  if (currentUrl.startsWith("http://") || currentUrl.startsWith("https://")) {
+    return new URL(currentUrl).origin;
+  }
+
+  const baseURL = test.info().project.use.baseURL;
+  if (typeof baseURL === "string") {
+    return new URL(baseURL).origin;
+  }
+
+  throw new Error("Playwright baseURL is required for admin API origin checks.");
+}
+
 async function authenticateAdmin(page: Page) {
   const credentials = requireAdminCredentials();
   const response = await page.request.post("/api/admin/session", {
+    headers: { Origin: adminRequestOrigin(page) },
     data: {
       username: credentials.username,
       password: credentials.password,
@@ -45,6 +60,7 @@ async function cleanupProjectTestData(page: Page, token: string) {
 
   for (const project of testProjects) {
     const deleteResponse = await page.request.delete("/api/admin/projects", {
+      headers: { Origin: adminRequestOrigin(page) },
       data: { id: project.id },
     });
 
@@ -70,6 +86,7 @@ async function cleanupTinyThoughtTestData(page: Page, token: string) {
 
   for (const thought of testThoughts) {
     const deleteResponse = await page.request.delete("/api/admin/tiny-thoughts", {
+      headers: { Origin: adminRequestOrigin(page) },
       data: { id: thought.id },
     });
 
@@ -124,6 +141,11 @@ test.describe("admin", () => {
 
     await expect(page.getByRole("button", { name: "Log In" })).toBeVisible();
     await expect(page.getByText("Signed out.")).toBeVisible();
+    const sessionResponse = await page.request.get("/api/admin/session");
+    expect(sessionResponse.ok()).toBeTruthy();
+    expect(await sessionResponse.json()).toMatchObject({
+      authenticated: false,
+    });
   });
 
   test("authenticated admin can create, update, and delete a tiny thought", async ({

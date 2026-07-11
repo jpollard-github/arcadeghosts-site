@@ -1,6 +1,5 @@
 import { randomUUID } from "crypto";
-import { isAdminAuthenticated } from "../../../lib/admin-auth";
-import { parseJsonBody } from "../../../lib/admin-route";
+import { parseJsonBody, requireAdminJson } from "../../../lib/admin-route";
 import { getSiteSql } from "../../../lib/database";
 import { saveNowItems } from "../../../lib/now-write-transactions";
 import {
@@ -12,14 +11,6 @@ import {
 } from "../../../lib/now";
 
 export const runtime = "nodejs";
-
-async function requireAdmin() {
-  if (!(await isAdminAuthenticated())) {
-    return Response.json({ error: "Admin login required." }, { status: 401 });
-  }
-
-  return null;
-}
 
 function normalizeNowItem(value: unknown): NowItem | null {
   if (!value || typeof value !== "object") {
@@ -43,8 +34,8 @@ function normalizeNowItem(value: unknown): NowItem | null {
   };
 }
 
-export async function GET() {
-  const unauthorized = await requireAdmin();
+export async function GET(request: Request) {
+  const unauthorized = await requireAdminJson(request);
 
   if (unauthorized) {
     return unauthorized;
@@ -59,7 +50,7 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const unauthorized = await requireAdmin();
+  const unauthorized = await requireAdminJson(request);
 
   if (unauthorized) {
     return unauthorized;

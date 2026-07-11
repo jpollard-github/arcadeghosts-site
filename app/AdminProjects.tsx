@@ -153,7 +153,7 @@ export function AdminProjects() {
       setConfigured(data.configured);
 
       if (!data.configured) {
-        setStatus("ADMIN_USERNAME or ADMIN_PASSWORD is not configured.");
+        setStatus("Admin authentication is not configured.");
         return;
       }
 
