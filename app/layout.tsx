@@ -1,9 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
-import { ControlRoomLink } from "./ControlRoomLink";
-import { GlobalBackHomeLink } from "./GlobalBackHomeLink";
-import { PublicFooter } from "./PublicFooter";
-import { SiteLogo } from "./SiteLogo";
 import { absoluteUrl, siteConfig } from "./seo";
 import "./globals.css";
 
@@ -77,11 +73,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <SiteLogo />
-        <GlobalBackHomeLink />
-        <ControlRoomLink />
         {children}
-        <PublicFooter />
         <Analytics />
       </body>
     </html>

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {
   getAmbientTimeModeForHour,
   normalizeAmbientTimeMode,
-} from "../../app/ambient/ambient-time";
+} from "../../app/(ambient)/ambient/ambient-time";
 
 test("normalizeAmbientTimeMode accepts supported query values", () => {
   assert.equal(normalizeAmbientTimeMode("morning"), "morning");

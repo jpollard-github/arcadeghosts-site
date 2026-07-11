@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 const footerGroups = [
   {
@@ -41,12 +38,6 @@ function FooterLink({ href, label }: { href: string; label: string }) {
 }
 
 export function PublicFooter() {
-  const pathname = usePathname();
-
-  if (pathname?.startsWith("/ambient")) {
-    return null;
-  }
-
   return (
     <footer className="site-footer" aria-label="Public site footer">
       <div className="site-footer-shell">

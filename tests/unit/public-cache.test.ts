@@ -49,9 +49,9 @@ test("public cache architecture stays focused on tagged data reads", async () =>
   const read = (file: string) => readFile(path.join(root, file), "utf8");
   const [home, search, ambient, revalidation, spotlight, projects, tinyThoughts] =
     await Promise.all([
-      read("app/page.tsx"),
-      read("app/search/page.tsx"),
-      read("app/ambient/page.tsx"),
+      read("app/(public)/page.tsx"),
+      read("app/(public)/search/page.tsx"),
+      read("app/(ambient)/ambient/page.tsx"),
       read("app/lib/admin-revalidation.ts"),
       read("app/api/admin/home-spotlight/route.ts"),
       read("app/lib/projects.ts"),
@@ -69,7 +69,7 @@ test("public cache architecture stays focused on tagged data reads", async () =>
   for (const route of [
     "app/api/projects/route.ts",
     "app/api/tiny-thoughts/route.ts",
-    "app/tiny-thoughts/rss.xml/route.ts",
+    "app/(public)/tiny-thoughts/rss.xml/route.ts",
   ]) {
     assert.match(await read(route), /"Cache-Control": "no-store"/);
   }

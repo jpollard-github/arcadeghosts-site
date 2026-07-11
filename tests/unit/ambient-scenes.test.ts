@@ -5,7 +5,7 @@ import {
   normalizeAmbientSceneManifest,
   selectAmbientSceneForSignal,
   type AmbientScene,
-} from "../../app/ambient/ambient-scenes";
+} from "../../app/(ambient)/ambient/ambient-scenes";
 
 test("empty ambient scene manifest includes categories and no scenes", () => {
   const manifest = createEmptyAmbientSceneManifest();

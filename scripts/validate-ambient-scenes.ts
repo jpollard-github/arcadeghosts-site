@@ -5,7 +5,7 @@ import {
   createEmptyAmbientSceneManifest,
   normalizeAmbientSceneManifest,
   type AmbientScene,
-} from "../app/ambient/ambient-scenes";
+} from "../app/(ambient)/ambient/ambient-scenes";
 
 const repoRoot = process.cwd();
 const manifestPath = path.join(repoRoot, "public", "ambient", "scenes", "manifest.json");

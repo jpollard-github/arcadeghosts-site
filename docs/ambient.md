@@ -4,7 +4,7 @@ Ambient turns ArcadeGhosts into a calm, slightly haunted room display. It is a f
 
 ## Architecture
 
-`/ambient` is a Next.js App Router page. `app/ambient/page.tsx` gathers public site data and normalizes it into display signals. `AmbientDisplay.tsx` owns time-of-day selection, dwell timing, manual navigation, and transitions. `ambient.module.css` owns the viewport shell, fixed stage geometry, responsive layouts, and visual themes.
+`/ambient` is a Next.js App Router page. `app/(ambient)/ambient/page.tsx` gathers public site data and normalizes it into display signals. The `(ambient)` route-group layout owns the document-level `ambient-mode` body state without adding public chrome. `AmbientDisplay.tsx` owns time-of-day selection, dwell timing, manual navigation, and transitions. `ambient.module.css` owns the viewport shell, fixed stage geometry, responsive layouts, and visual themes.
 
 The website remains the source of truth. Ambient consumes public Tiny Thoughts and projects plus repository-backed writings and cat-room content. The page may select a curated scene from `public/ambient/scenes/manifest.json` for text-heavy signals. Cat signals retain their first-party imagery.
 

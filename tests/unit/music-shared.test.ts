@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { formatHours, percent, titleCase } from "../../app/music/shared";
+import { formatHours, percent, titleCase } from "../../app/(public)/music/shared";
 
 test("formatHours keeps one decimal place under 100 hours", () => {
   assert.equal(formatHours(75.94), "75.9");

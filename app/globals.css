@@ -60,13 +60,6 @@ body.ambient-mode::before {
   display: none;
 }
 
-body.ambient-mode .site-logo,
-body.ambient-mode .control-room-link {
-  opacity: 0;
-  pointer-events: none;
-  visibility: hidden;
-}
-
 body::before {
   position: fixed;
   inset: 0;

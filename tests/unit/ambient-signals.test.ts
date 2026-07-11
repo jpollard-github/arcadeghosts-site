@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { getAmbientSignalDwellMs } from "../../app/ambient/ambient-signals";
+import { getAmbientSignalDwellMs } from "../../app/(ambient)/ambient/ambient-signals";
 
 test("active Ambient signal kinds use deliberate dwell timing", () => {
   assert.equal(

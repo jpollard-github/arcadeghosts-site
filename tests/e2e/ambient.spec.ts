@@ -152,7 +152,7 @@ test("solid diagnostic route contains only a fixed black page-owned canvas", asy
   await expect(canvas).toHaveCSS("background-color", "rgb(0, 0, 0)");
   await expect(canvas).toHaveCSS("border-top-width", "0px");
   await expect(canvas).toHaveCSS("box-shadow", "none");
-  await expect(page.locator(".site-logo")).toHaveCSS("display", "none");
+  await expect(page.locator(".site-logo")).toHaveCount(0);
 
   const documentStyles = await page.evaluate(() => {
     const body = getComputedStyle(document.body);

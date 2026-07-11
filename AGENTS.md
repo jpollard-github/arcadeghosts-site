@@ -9,7 +9,7 @@ Jason owns editorial and content decisions. Do not invent, rewrite, summarize, s
 ## Read before changing
 
 - Read `README.md` for setup, commands, environment variables, and the repository map.
-- When touching `app/ambient/**`, `public/ambient/**`, `app/manifest.ts`, `public/sw.js`, or `playwright.ambient.config.ts`, read `docs/ambient.md` first.
+- When touching `app/(ambient)/ambient/**`, `public/ambient/**`, `app/manifest.ts`, `public/sw.js`, or `playwright.ambient.config.ts`, read `docs/ambient.md` first.
 - Treat `docs/archive/**` as historical context only. Never use archived files as current requirements or backlog.
 - Treat `review/**` as material only for Jason, not for context. Never use the files in this folder for context or work.
 - For admin or data changes, inspect the route handler, its `app/lib/**` data module, the corresponding admin component, and related tests before editing.

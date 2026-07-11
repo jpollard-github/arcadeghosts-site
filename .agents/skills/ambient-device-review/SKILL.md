@@ -4,7 +4,7 @@ description: Review changes to ArcadeGhosts Ambient, its PWA behavior, scene lib
 ---
 
 1. Read `AGENTS.md` and `docs/ambient.md` before inspecting the implementation.
-2. Inspect the diff across `app/ambient/**`, `public/ambient/**`, `app/manifest.ts`, `public/sw.js`, and Ambient Playwright configuration.
+2. Inspect the diff across `app/(ambient)/ambient/**`, `public/ambient/**`, `app/manifest.ts`, `public/sw.js`, and Ambient Playwright configuration.
 3. Preserve the documented model: the website is the source of truth, signal kinds share one outer stage, layout dimensions do not animate, and long copy scrolls inside its stage region.
 4. Run:
    - `npm run ambient:scenes:validate`
