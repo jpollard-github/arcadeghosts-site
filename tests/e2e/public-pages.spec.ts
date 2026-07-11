@@ -297,10 +297,19 @@ test(
 
     expect(await robots.text()).toContain("Sitemap:");
     const sitemapText = await sitemap.text();
-    expect(sitemapText).toContain("/ambient");
-    expect(sitemapText).toContain("/tiny-thoughts");
-    expect(sitemapText).not.toContain("/build-log");
-    expect(sitemapText).not.toContain("/updates");
+    const sitemapLocations = Array.from(
+      sitemapText.matchAll(/<loc>([^<]+)<\/loc>/g),
+      ([, location]) => new URL(location).pathname,
+    );
+    expect(sitemapLocations).toContain("/ambient");
+    expect(sitemapLocations).toContain("/tiny-thoughts");
+    expect(sitemapLocations).not.toContain("/build-log");
+    expect(sitemapLocations).not.toContain("/updates");
+    expect(sitemapLocations).not.toContain("/movies-tv");
+    expect(sitemapLocations).not.toContain("/games/between-two-lodges");
+    expect(sitemapLocations).toContain(
+      "/games/between-two-lodges/index.html",
+    );
 
     const projectsJson = (await projects.json()) as { projects: unknown[] };
     const tinyThoughtsJson = (await tinyThoughts.json()) as {
