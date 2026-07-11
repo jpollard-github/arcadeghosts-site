@@ -182,7 +182,7 @@ Blob uploads:
 BLOB_READ_WRITE_TOKEN=
 ```
 
-Admin image uploads support PNG, JPEG, GIF, and WebP, are validated from file content, and enforce a 5 MB compressed-size limit, 16,384-pixel dimension limit, and 64-megapixel limit.
+Admin image uploads support PNG, JPEG, GIF, and WebP, are validated from file content, and enforce a 4 MB compressed-size limit, 16,384-pixel dimension limit, and 64-megapixel limit.
 
 ## Notes
 

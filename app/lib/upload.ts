@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { imageDimensionsFromData } from "image-dimensions";
 
-const DEFAULT_MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const DEFAULT_MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 const DEFAULT_MAX_IMAGE_DIMENSION = 16_384;
 const DEFAULT_MAX_IMAGE_PIXELS = 64_000_000;
 const DEFAULT_ALLOWED_IMAGE_TYPES = new Set([

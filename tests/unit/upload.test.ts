@@ -192,6 +192,20 @@ test("file larger than configured byte limit is rejected", async () => {
   assert.match(result.error, /must be .* MB or smaller/);
 });
 
+test("default upload limit rejects files larger than 4 MB", async () => {
+  const file = new File(
+    [new Uint8Array(4 * 1024 * 1024 + 1)],
+    "oversized.png",
+    { type: "image/png" },
+  );
+  const result = await validateImageUpload(file, { label: "Project images" });
+
+  assert.deepEqual(result, {
+    ok: false,
+    error: "Project images must be 4 MB or smaller.",
+  });
+});
+
 test("image width above maximum dimension is rejected", async () => {
   const result = await validateImageUpload(
     imageFile("png", "wide.png", "image/png", pngWithDimensions(5, 2)),

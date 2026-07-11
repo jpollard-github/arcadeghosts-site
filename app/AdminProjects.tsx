@@ -698,7 +698,7 @@ export function AdminProjects() {
                               }}
                             />
                             <small className="admin-help">
-                              PNG, JPG, GIF, or WebP. 5 MB max.
+                              PNG, JPG, GIF, or WebP. 4 MB max.
                             </small>
                           </label>
                           {isUploading ? (
