@@ -100,18 +100,6 @@
         "panel": "shared",
         "clear": true
       }
-    },
-    {
-      "label": "Docs: Open Codex Context",
-      "type": "shell",
-      "command": "code -g docs/README.md docs/MOBILE-TODO.md docs/WORK-WITH-ME-TODO.md docs/AMBIENT-TODO.md",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "reveal": "never",
-        "panel": "shared"
-      }
     }
   ]
 }

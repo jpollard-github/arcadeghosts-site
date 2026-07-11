@@ -1,0 +1,99 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: America/New_York
+    open-pull-requests-limit: 10
+    rebase-strategy: auto
+    commit-message:
+      prefix: deps
+    labels:
+      - dependencies
+    groups:
+      security-production:
+        applies-to: security-updates
+        patterns:
+          - "*"
+        dependency-type: production
+      security-development:
+        applies-to: security-updates
+        patterns:
+          - "*"
+        dependency-type: development
+      next-react:
+        applies-to: version-updates
+        patterns:
+          - next
+          - react
+          - react-dom
+          - eslint-config-next
+          - "@types/react"
+          - "@types/react-dom"
+        update-types:
+          - minor
+          - patch
+      platform-services:
+        applies-to: version-updates
+        patterns:
+          - "@vercel/*"
+          - "@neondatabase/*"
+          - resend
+        update-types:
+          - minor
+          - patch
+      testing-tooling:
+        applies-to: version-updates
+        patterns:
+          - "@playwright/*"
+          - eslint
+          - lighthouse
+          - tsx
+          - typescript
+          - "@types/node"
+        update-types:
+          - minor
+          - patch
+      other-production:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        exclude-patterns:
+          - next
+          - react
+          - react-dom
+          - eslint-config-next
+          - "@types/react"
+          - "@types/react-dom"
+          - "@vercel/*"
+          - "@neondatabase/*"
+          - resend
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+      other-development:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        exclude-patterns:
+          - next
+          - react
+          - react-dom
+          - eslint-config-next
+          - "@types/react"
+          - "@types/react-dom"
+          - "@playwright/*"
+          - eslint
+          - lighthouse
+          - tsx
+          - typescript
+          - "@types/node"
+        dependency-type: development
+        update-types:
+          - minor
+          - patch

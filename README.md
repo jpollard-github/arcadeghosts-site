@@ -20,6 +20,16 @@ The repo currently blends:
 - `tests/` - active unit and e2e coverage
 - `review-packets/` - generated review and audit markdown packets
 
+## Agent guidance and skills
+
+`AGENTS.md` contains the repository's working rules, architecture notes, validation expectations, and definition of done for coding agents. Read it before making changes.
+
+Repository-specific skills live in `.agents/skills/`:
+
+- `verify-change` - selects and runs the appropriate verification checks for a change, then reports exact results and remaining risks.
+- `ambient-device-review` - reviews Ambient and PWA changes across automated browser checks and a separate Samsung tablet checklist.
+- `release-writing` - prepares and validates repository-backed writing for publication without changing Jason's voice.
+
 ## Tech Stack
 
 - Next.js 16
@@ -99,6 +109,14 @@ Run the site audit and generate a markdown packet in `review-packets/`:
 ```bash
 npm run website:audit
 ```
+
+## Continuous integration
+
+GitHub Actions runs two jobs in parallel for pull requests and pushes to `main`. The `verify` job audits production dependencies, then runs linting, type checking, unit tests, and a production build through `npm run verify:full`. The `e2e` job installs Chromium and runs the Playwright browser suite with `npm run test:e2e`.
+
+Authenticated admin Playwright tests skip unless CI admin credentials and an isolated test database are configured. When Playwright runs, its report is available from the workflow run's **Artifacts** section for 7 days, including after test failures.
+
+Dependabot checks for scheduled version updates each week, while security updates are opened when GitHub detects a vulnerable dependency. Minor and patch updates are grouped by related area to reduce pull-request noise; major updates remain separate so breaking changes can be reviewed independently. CI runs automatically on every Dependabot pull request.
 
 ## Environment Variables
 

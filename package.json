@@ -11,7 +11,6 @@
     "build:timed": "node scripts/run-npm-script-with-timing.mjs build",
     "ambient:scenes:validate": "node --import tsx scripts/validate-ambient-scenes.ts",
     "start": "next start",
-    "go": "npm run lint && npm run build && npm run start",
     "lint": "eslint .",
     "lint:timed": "node scripts/run-npm-script-with-timing.mjs lint",
     "typecheck": "tsc --noEmit",
@@ -34,7 +33,7 @@
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
     "@vercel/analytics": "^2.0.1",
-    "@vercel/blob": "^2.4.0",
+    "@vercel/blob": "^2.6.1",
     "next": "^16.2.9",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
@@ -42,7 +41,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
-    "@types/node": "20.17.16",
+    "@types/node": "24.13.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.1",
@@ -52,6 +51,9 @@
     "typescript": "5.7.3"
   },
   "overrides": {
-    "postcss": "^8.5.15"
+    "postcss": "^8.5.15",
+    "@vercel/blob": {
+      "undici": "6.27.0"
+    }
   }
 }
