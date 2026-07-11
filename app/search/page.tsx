@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { getSearchEntries } from "../lib/search";
 import { SearchPageClient } from "./SearchPageClient";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "Search",
   description:

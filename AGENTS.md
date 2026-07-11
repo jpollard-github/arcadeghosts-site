@@ -36,6 +36,7 @@ Jason owns editorial and content decisions. Do not invent, rewrite, summarize, s
 - Schema changes belong in a new numbered file under `db/migrations/**`. Never edit an applied migration.
 - Use `npm run db:migrate:status` to inspect migration state and `npm run db:migrate` only as a deliberate operator action against the intended database.
 - Multi-statement writes that represent one user action must be atomic.
+- Public database reads use the tagged Next Data Cache; admin reads and writes remain uncached, and successful public-content mutations must expire the relevant tag.
 - New or modified admin mutations must use the shared authentication path, validate inputs, and preserve same-origin protections.
 - Uploaded files require size, declared-type, content-signature, and safe-extension validation.
 - Do not hide failures behind silent fallback behavior. Preserve resilience, but log or surface when fallback data is being used.

@@ -1,4 +1,10 @@
+import { unstable_cache } from "next/cache";
 import { getSiteSql } from "./database";
+import {
+  publicCacheKeyPrefixes,
+  publicCacheRevalidateSeconds,
+  publicCacheTags,
+} from "./public-cache";
 
 export const tinyThoughtCategories = [
   "lesson",
@@ -166,6 +172,10 @@ export function toTinyThought(row: TinyThoughtRow): TinyThought {
 }
 
 export async function getPublicTinyThoughts(limit = 24) {
+  return getCachedPublicTinyThoughts(limit);
+}
+
+async function loadPublicTinyThoughts(limit: number) {
   const sql = getSiteSql();
   const rows = await sql`
     SELECT
@@ -185,3 +195,12 @@ export async function getPublicTinyThoughts(limit = 24) {
 
   return (rows as TinyThoughtRow[]).map(toTinyThought);
 }
+
+const getCachedPublicTinyThoughts = unstable_cache(
+  loadPublicTinyThoughts,
+  [publicCacheKeyPrefixes.tinyThoughts],
+  {
+    tags: [publicCacheTags.tinyThoughts],
+    revalidate: publicCacheRevalidateSeconds.tinyThoughts,
+  },
+);

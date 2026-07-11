@@ -1,5 +1,11 @@
+import { unstable_cache } from "next/cache";
 import { getSiteSql } from "./database";
 import { seedProjectDefaults, type SiteSql } from "./project-write-transactions";
+import {
+  publicCacheKeyPrefixes,
+  publicCacheRevalidateSeconds,
+  publicCacheTags,
+} from "./public-cache";
 
 export const projectStatuses = [
   "active",
@@ -264,7 +270,13 @@ export async function seedDefaultProjectsIfEmpty(sql: SiteSql = getSiteSql()) {
 }
 
 export async function getPublicProjects() {
-  return loadStoredPublicProjects().catch(() => defaultProjects);
+  try {
+    const projects = await getCachedStoredPublicProjects();
+
+    return projects.length ? projects : defaultProjects;
+  } catch {
+    return defaultProjects;
+  }
 }
 
 async function loadStoredPublicProjects() {
@@ -291,10 +303,17 @@ async function loadStoredPublicProjects() {
     ORDER BY display_order ASC, priority ASC, title ASC
   `;
 
-  const projects = (rows as SiteProjectRow[]).map(toSiteProject);
-
-  return projects.length ? projects : defaultProjects;
+  return (rows as SiteProjectRow[]).map(toSiteProject);
 }
+
+const getCachedStoredPublicProjects = unstable_cache(
+  loadStoredPublicProjects,
+  [publicCacheKeyPrefixes.projects],
+  {
+    tags: [publicCacheTags.projects],
+    revalidate: publicCacheRevalidateSeconds.projects,
+  },
+);
 
 export async function getAdminProjects() {
   const sql = getSiteSql();

@@ -104,6 +104,10 @@ Run the focused mobile safety browser test:
 npm run test:mobile-safety
 ```
 
+## Public data caching
+
+Public Projects use a one-hour tagged Next Data Cache, while public Tiny Thoughts use a fifteen-minute tagged cache. Successful admin mutations immediately expire the relevant tag; admin reads and writes are never cached. Public Project and Tiny Thought JSON responses and the Tiny Thoughts RSS response are `no-store`, so the tagged server-side data cache remains the single freshness policy. Ambient remains request-specific for its query-driven signal selection while reusing the same cached public data.
+
 ## Database migrations
 
 The Neon schema is owned by immutable numbered files in `db/migrations/`. Application requests and builds never run migrations or repair schema.

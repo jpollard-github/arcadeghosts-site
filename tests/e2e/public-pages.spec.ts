@@ -294,6 +294,9 @@ test(
     expect(writingsRss.headers()["content-type"]).toMatch(
       /application\/rss\+xml/,
     );
+    expect(tinyThoughtsRss.headers()["cache-control"]).toContain("no-store");
+    expect(projects.headers()["cache-control"]).toContain("no-store");
+    expect(tinyThoughts.headers()["cache-control"]).toContain("no-store");
 
     expect(await robots.text()).toContain("Sitemap:");
     const sitemapText = await sitemap.text();

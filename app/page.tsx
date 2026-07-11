@@ -13,8 +13,6 @@ import { getPublicProjects } from "./lib/projects";
 import { absoluteUrl, siteConfig } from "./seo";
 import { writings } from "./writings";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "Jason Pollard's Projects, Writing, Music, Cats, and Arcade Ghosts",
   description:

@@ -13,14 +13,15 @@ export async function GET(request: Request) {
         ? Math.min(Math.floor(limitValue), 60)
         : undefined;
 
-    return Response.json({
-      thoughts: await getPublicTinyThoughts(limit),
-    });
+    return Response.json(
+      { thoughts: await getPublicTinyThoughts(limit) },
+      { headers: { "Cache-Control": "no-store" } },
+    );
   } catch (error) {
     console.error("Tiny thoughts GET failed", error);
     return Response.json(
       { error: "Tiny thoughts are temporarily unavailable." },
-      { status: 500 },
+      { status: 500, headers: { "Cache-Control": "no-store" } },
     );
   }
 }

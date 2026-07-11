@@ -1,13 +1,14 @@
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
+import { publicCacheTags } from "./public-cache";
 
-export function revalidateProjectViews() {
-  revalidatePath("/");
-  revalidatePath("/search");
+type RevalidatePublicTag = typeof revalidateTag;
+
+export function revalidatePublicProjects(expireTag: RevalidatePublicTag = revalidateTag) {
+  expireTag(publicCacheTags.projects, { expire: 0 });
 }
 
-export function revalidateTinyThoughtViews() {
-  revalidatePath("/");
-  revalidatePath("/tiny-thoughts");
-  revalidatePath("/search");
-  revalidatePath("/tiny-thoughts/rss.xml");
+export function revalidatePublicTinyThoughts(
+  expireTag: RevalidatePublicTag = revalidateTag,
+) {
+  expireTag(publicCacheTags.tinyThoughts, { expire: 0 });
 }

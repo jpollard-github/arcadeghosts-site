@@ -10,8 +10,6 @@ import { beverlyAndLucindaPhotos, thomasJonesMissyCassPhotos } from "../site-dat
 import { absoluteUrl } from "../seo";
 import { writings, type WritingEntry } from "../writings";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "Ambient",
   description:

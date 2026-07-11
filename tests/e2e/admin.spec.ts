@@ -186,6 +186,17 @@ test.describe("admin", () => {
       });
       await expect(updatedThoughtCard).toBeVisible();
 
+      const publicThoughtsResponse = await page.request.get(
+        "/api/tiny-thoughts?limit=60",
+      );
+      expect(publicThoughtsResponse.ok()).toBeTruthy();
+      const publicThoughts = (await publicThoughtsResponse.json()) as {
+        thoughts: Array<{ content: string }>;
+      };
+      expect(
+        publicThoughts.thoughts.some((thought) => thought.content === updatedText),
+      ).toBeTruthy();
+
       page.once("dialog", (dialog) => dialog.accept());
       await updatedThoughtCard.getByRole("button", { name: "Delete" }).click();
 
@@ -248,6 +259,15 @@ test.describe("admin", () => {
 
       await expect(page.getByText("Project saved.")).toBeVisible();
       await expect(projectCard().getByLabel("Title")).toHaveValue(updatedTitle);
+
+      const publicProjectsResponse = await page.request.get("/api/projects");
+      expect(publicProjectsResponse.ok()).toBeTruthy();
+      const publicProjects = (await publicProjectsResponse.json()) as {
+        projects: Array<{ title: string }>;
+      };
+      expect(
+        publicProjects.projects.some((project) => project.title === updatedTitle),
+      ).toBeTruthy();
 
       page.once("dialog", (dialog) => dialog.accept());
       await projectCard().getByRole("button", { name: "Delete" }).click();

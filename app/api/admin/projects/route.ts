@@ -5,7 +5,7 @@ import {
   requireAdminJson,
   routeFailure,
 } from "../../../lib/admin-route";
-import { revalidateProjectViews } from "../../../lib/admin-revalidation";
+import { revalidatePublicProjects } from "../../../lib/admin-revalidation";
 import { getSiteSql } from "../../../lib/database";
 import {
   deleteProjectAndReorder,
@@ -162,7 +162,7 @@ export async function PUT(request: Request) {
       (existingRows as { id: string }[]).map((row) => row.id),
     );
 
-    revalidateProjectViews();
+    revalidatePublicProjects();
 
     const rows = await sql`
       SELECT
@@ -232,7 +232,7 @@ export async function PATCH(request: Request) {
         return jsonError("Project order does not match the saved project list.", 400);
       }
 
-      revalidateProjectViews();
+      revalidatePublicProjects();
 
       return Response.json({
         ok: true,
@@ -324,7 +324,7 @@ export async function PATCH(request: Request) {
         updated_at = now()
     `;
 
-    revalidateProjectViews();
+    revalidatePublicProjects();
 
     const rows = await sql`
       SELECT
@@ -388,7 +388,7 @@ export async function DELETE(request: Request) {
       return jsonError("Keep at least one project in the list.", 400);
     }
 
-    revalidateProjectViews();
+    revalidatePublicProjects();
 
     return Response.json({
       ok: true,

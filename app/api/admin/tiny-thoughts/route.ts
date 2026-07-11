@@ -5,7 +5,7 @@ import {
   requireAdminJson,
   routeFailure,
 } from "../../../lib/admin-route";
-import { revalidateTinyThoughtViews } from "../../../lib/admin-revalidation";
+import { revalidatePublicTinyThoughts } from "../../../lib/admin-revalidation";
 import { deleteTinyThoughtBlobs } from "../../../lib/blob";
 import { getSiteSql } from "../../../lib/database";
 import {
@@ -190,7 +190,7 @@ export async function POST(request: Request) {
         updated_at
     `;
 
-    revalidateTinyThoughtViews();
+    revalidatePublicTinyThoughts();
 
     return Response.json({
       ok: true,
@@ -272,7 +272,7 @@ export async function PUT(request: Request) {
     }
 
     const savedThought = toTinyThought((rows as TinyThoughtRow[])[0]);
-    revalidateTinyThoughtViews();
+    revalidatePublicTinyThoughts();
     const nextImageUrls = new Set(imageUrls(payload.attachments));
     const removedImageUrls = imageUrls(oldThought.attachments).filter(
       (url) => !nextImageUrls.has(url),
@@ -325,7 +325,7 @@ export async function DELETE(request: Request) {
     }
 
     const deletedThought = toTinyThought((rows as TinyThoughtRow[])[0]);
-    revalidateTinyThoughtViews();
+    revalidatePublicTinyThoughts();
     await deleteBlobImages(imageUrls(deletedThought.attachments));
 
     return Response.json({

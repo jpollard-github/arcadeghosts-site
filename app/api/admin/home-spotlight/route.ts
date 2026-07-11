@@ -1,5 +1,4 @@
 import { parseJsonBody, requireAdminJson } from "../../../lib/admin-route";
-import { revalidatePath } from "next/cache";
 import { getSiteSql } from "../../../lib/database";
 import { saveHomeSpotlight } from "../../../lib/home-spotlight-write-transactions";
 import {
@@ -112,8 +111,6 @@ export async function PUT(request: Request) {
     const sql = getSiteSql();
 
     await saveHomeSpotlight(sql, spotlight, queue);
-
-    revalidatePath("/");
 
     return Response.json({
       ok: true,
