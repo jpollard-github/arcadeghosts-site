@@ -2,7 +2,6 @@ import { jsonError, requireAdminJson } from "../../../../lib/admin-route";
 import { hasBlobWriteAccess, putTinyThoughtBlob } from "../../../../lib/blob";
 import {
   createImageUploadPath,
-  toUploadBuffer,
   validateImageUpload,
 } from "../../../../lib/upload";
 
@@ -21,7 +20,7 @@ export async function POST(request: Request) {
 
   try {
     const formData = await request.formData();
-    const validation = validateImageUpload(formData.get("file"), {
+    const validation = await validateImageUpload(formData.get("file"), {
       label: "Tiny Thoughts images",
     });
 
@@ -29,12 +28,11 @@ export async function POST(request: Request) {
       return jsonError(validation.error, 400);
     }
 
-    const file = validation.file;
-    const buffer = await toUploadBuffer(file);
-    const pathname = createImageUploadPath("tiny-thoughts", file);
-    const blob = await putTinyThoughtBlob(pathname, buffer, {
+    const { upload } = validation;
+    const pathname = createImageUploadPath("tiny-thoughts", upload.extension);
+    const blob = await putTinyThoughtBlob(pathname, upload.buffer, {
       access: "public",
-      contentType: file.type,
+      contentType: upload.contentType,
     });
 
     return Response.json({
