@@ -10,7 +10,10 @@ async function rect(locator: Locator): Promise<Rect> {
 
 function expectSameRect(actual: Rect, expected: Rect, tolerance = 1) {
   for (const key of ["x", "y", "width", "height"] as const) {
-    expect(Math.abs(actual[key] - expected[key]), `${key} moved`).toBeLessThanOrEqual(tolerance);
+    expect(
+      Math.abs(actual[key] - expected[key]),
+      `${key} moved`,
+    ).toBeLessThanOrEqual(tolerance);
   }
 }
 
@@ -27,58 +30,72 @@ async function expectNoPageOverflow(page: Page) {
   }
 }
 
-test("representative signal kinds share one stable 1280x800 stage rectangle", async ({ page }) => {
-  let expectedStage: Rect | null = null;
+test(
+  "representative signal kinds share one stable 1280x800 stage rectangle",
+  { tag: "@database" },
+  async ({ page }) => {
+    let expectedStage: Rect | null = null;
 
-  for (const kind of ["cat", "thought", "project", "writing"] as const) {
-    await page.goto(`/ambient?type=${kind}`);
-    const stack = page.locator("[data-ambient-stage-stack]");
-    const stage = page.locator(`[data-ambient-stage][data-signal-kind="${kind}"]`);
+    for (const kind of ["cat", "thought", "project", "writing"] as const) {
+      await page.goto(`/ambient?type=${kind}`);
+      const stack = page.locator("[data-ambient-stage-stack]");
+      const stage = page.locator(
+        `[data-ambient-stage][data-signal-kind="${kind}"]`,
+      );
 
-    await expect(stage).toBeVisible();
-    const stackRect = await rect(stack);
-    expectSameRect(await rect(stage), stackRect);
+      await expect(stage).toBeVisible();
+      const stackRect = await rect(stack);
+      expectSameRect(await rect(stage), stackRect);
 
-    if (expectedStage) {
-      expectSameRect(stackRect, expectedStage);
-    } else {
-      expectedStage = stackRect;
+      if (expectedStage) {
+        expectSameRect(stackRect, expectedStage);
+      } else {
+        expectedStage = stackRect;
+      }
+
+      await expectNoPageOverflow(page);
     }
+  },
+);
 
-    await expectNoPageOverflow(page);
-  }
-});
-
-test("stage top edge has no light border or inset highlight", async ({ page }) => {
+test("stage top edge has no light border or inset highlight", async ({
+  page,
+}) => {
   await page.goto("/ambient?type=cat");
 
-  const edgeStyles = await page.locator("[data-ambient-stage]").evaluate((element) => {
-    const styles = getComputedStyle(element);
+  const edgeStyles = await page
+    .locator("[data-ambient-stage]")
+    .evaluate((element) => {
+      const styles = getComputedStyle(element);
 
-    return {
-      borderTopColor: styles.borderTopColor,
-      boxShadow: styles.boxShadow,
-    };
-  });
+      return {
+        borderTopColor: styles.borderTopColor,
+        boxShadow: styles.boxShadow,
+      };
+    });
 
   expect(edgeStyles.borderTopColor).toBe("rgba(0, 0, 0, 0)");
   expect(edgeStyles.boxShadow).not.toContain("inset");
   expect(edgeStyles.boxShadow).not.toMatch(/rgba\(255, 255, 255/);
 });
 
-test("background grid does not paint a horizontal stripe at y=0", async ({ page }) => {
+test("background grid does not paint a horizontal stripe at y=0", async ({
+  page,
+}) => {
   await page.goto("/ambient?type=cat");
 
-  const gridStyles = await page.locator('[class*="backgroundGrid"]').evaluate((element) => {
-    const styles = getComputedStyle(element);
+  const gridStyles = await page
+    .locator('[class*="backgroundGrid"]')
+    .evaluate((element) => {
+      const styles = getComputedStyle(element);
 
-    return {
-      backgroundImage: styles.backgroundImage,
-      backgroundSize: styles.backgroundSize,
-      display: styles.display,
-      maskImage: styles.maskImage,
-    };
-  });
+      return {
+        backgroundImage: styles.backgroundImage,
+        backgroundSize: styles.backgroundSize,
+        display: styles.display,
+        maskImage: styles.maskImage,
+      };
+    });
 
   expect(gridStyles.display).not.toBe("none");
   expect(gridStyles.backgroundSize).toBe("48px 48px, 48px 48px");
@@ -89,7 +106,9 @@ test("background grid does not paint a horizontal stripe at y=0", async ({ page 
   expect(gridStyles.maskImage).toContain("linear-gradient");
 });
 
-test("temporary diagnostic mode isolates visual layers without affecting normal Ambient", async ({ page }) => {
+test("temporary diagnostic mode isolates visual layers without affecting normal Ambient", async ({
+  page,
+}) => {
   await page.goto("/ambient");
   await expect(page.getByLabel("Temporary Ambient diagnostics")).toHaveCount(0);
 
@@ -116,10 +135,15 @@ test("temporary diagnostic mode isolates visual layers without affecting normal 
   await panel.getByLabel("12. Solid document only").check();
   await expect(root).toHaveCSS("display", "none");
   await expect(panel).toBeVisible();
-  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(8, 9, 12)");
+  await expect(page.locator("body")).toHaveCSS(
+    "background-color",
+    "rgb(8, 9, 12)",
+  );
 });
 
-test("solid diagnostic route contains only a fixed black page-owned canvas", async ({ page }) => {
+test("solid diagnostic route contains only a fixed black page-owned canvas", async ({
+  page,
+}) => {
   await page.goto("/ambient/diagnostic-solid");
 
   const canvas = page.locator("[data-ambient-solid-diagnostic]");
@@ -135,12 +159,16 @@ test("solid diagnostic route contains only a fixed black page-owned canvas", asy
     const before = getComputedStyle(document.body, "::before");
 
     return {
-      htmlBackground: getComputedStyle(document.documentElement).backgroundColor,
+      htmlBackground: getComputedStyle(document.documentElement)
+        .backgroundColor,
       bodyBackground: body.backgroundColor,
       bodyMargin: body.margin,
       bodyBeforeDisplay: before.display,
       bodyBeforeContent: before.content,
-      manifestHref: document.querySelector<HTMLLinkElement>('link[rel="manifest"]')?.getAttribute("href") ?? null,
+      manifestHref:
+        document
+          .querySelector<HTMLLinkElement>('link[rel="manifest"]')
+          ?.getAttribute("href") ?? null,
     };
   });
 
@@ -155,10 +183,14 @@ test("solid diagnostic route contains only a fixed black page-owned canvas", asy
   await expectNoPageOverflow(page);
 });
 
-test("media and text-only signals use explicit compositions without moving the frame", async ({ page }) => {
+test("media and text-only signals use explicit compositions without moving the frame", async ({
+  page,
+}) => {
   await page.goto("/ambient?type=cat");
 
-  const mediaStage = page.locator('[data-ambient-stage][data-composition="media"]');
+  const mediaStage = page.locator(
+    '[data-ambient-stage][data-composition="media"]',
+  );
   await expect(mediaStage).toBeVisible();
   await expect(mediaStage.locator("[data-ambient-media] img")).toBeVisible();
 
@@ -170,18 +202,25 @@ test("media and text-only signals use explicit compositions without moving the f
 
   await page.goto("/ambient?type=writing");
 
-  const textStage = page.locator('[data-ambient-stage][data-composition="text-only"]');
+  const textStage = page.locator(
+    '[data-ambient-stage][data-composition="text-only"]',
+  );
   await expect(textStage).toBeVisible();
   await expect(textStage.locator("[data-ambient-media]")).toHaveCount(0);
   await expect(textStage.locator("img")).toHaveCount(0);
 
-  expectSameRect(await rect(page.locator("[data-ambient-stage-stack]")), mediaRects.stage);
+  expectSameRect(
+    await rect(page.locator("[data-ambient-stage-stack]")),
+    mediaRects.stage,
+  );
   expectSameRect(await rect(page.locator("main header")), mediaRects.header);
   expectSameRect(await rect(page.locator("main footer")), mediaRects.controls);
   await expectNoPageOverflow(page);
 });
 
-test("transition layers overlap without moving stage, header, or controls", async ({ page }) => {
+test("transition layers overlap without moving stage, header, or controls", async ({
+  page,
+}) => {
   await page.goto("/ambient");
 
   const stack = page.locator("[data-ambient-stage-stack]");
@@ -225,7 +264,9 @@ test("reduced-motion changes stay layout-neutral", async ({ page }) => {
   await expectNoPageOverflow(page);
 });
 
-test("rapid Previous and Next input leaves one settled stage without overflow", async ({ page }) => {
+test("rapid Previous and Next input leaves one settled stage without overflow", async ({
+  page,
+}) => {
   await page.goto("/ambient");
 
   const previous = page.getByRole("button", { name: "Previous", exact: true });
@@ -239,13 +280,18 @@ test("rapid Previous and Next input leaves one settled stage without overflow", 
 
   await page.waitForTimeout(750);
   await expect(page.locator("[data-ambient-stage]")).toHaveCount(1);
-  expectSameRect(await rect(page.locator("[data-ambient-stage-stack]")), stackBefore);
+  expectSameRect(
+    await rect(page.locator("[data-ambient-stage-stack]")),
+    stackBefore,
+  );
   await expectNoPageOverflow(page);
 });
 
 test("ordinary pages retain their normal document layout", async ({ page }) => {
   await page.goto("/about");
-  await expect(page.getByRole("heading", { name: "Who I am and how I think." })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Who I am and how I think." }),
+  ).toBeVisible();
   await expect(page.locator("body")).not.toHaveClass(/ambient-mode/);
 
   const colors = await page.evaluate(() => ({

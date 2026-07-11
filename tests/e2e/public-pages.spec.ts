@@ -24,12 +24,8 @@ test("arcade page renders cabinet favorites", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Quarter-light favorites." }),
   ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Back Home" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Galaga" }),
-  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "Back Home" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Galaga" })).toBeVisible();
 });
 
 test("about page renders identity and resonance sections", async ({ page }) => {
@@ -38,7 +34,9 @@ test("about page renders identity and resonance sections", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Who I am and how I think." }),
   ).toBeVisible();
-  await expect(page.getByText("Some places on the internet that resonate with me:")).toBeVisible();
+  await expect(
+    page.getByText("Some places on the internet that resonate with me:"),
+  ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "The Five Agents" }),
   ).toBeVisible();
@@ -48,11 +46,11 @@ test("screening page renders the media grid", async ({ page }) => {
   await page.goto("/screening");
 
   await expect(
-    page.getByRole("heading", { name: "Stories that keep following me around." }),
+    page.getByRole("heading", {
+      name: "Stories that keep following me around.",
+    }),
   ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Back Home" }),
-  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "Back Home" })).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Twin Peaks Season 1" }),
   ).toBeVisible();
@@ -63,17 +61,25 @@ test("legacy movies and tv route redirects to screening", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/screening$/);
   await expect(
-    page.getByRole("heading", { name: "Stories that keep following me around." }),
+    page.getByRole("heading", {
+      name: "Stories that keep following me around.",
+    }),
   ).toBeVisible();
 });
 
-test("search page can find twin peaks rooms and public writings", async ({ page }) => {
+test("search page can find twin peaks rooms and public writings", async ({
+  page,
+}) => {
   await page.goto("/search");
 
   await expect(
-    page.getByRole("heading", { name: "Find a room by signal instead of by hallway." }),
+    page.getByRole("heading", {
+      name: "Find a room by signal instead of by hallway.",
+    }),
   ).toBeVisible();
-  await expect(page.getByText("Showing a featured mix of places to start.")).toBeVisible();
+  await expect(
+    page.getByText("Showing a featured mix of places to start."),
+  ).toBeVisible();
 
   await page.getByRole("searchbox").fill("Twin Peaks");
 
@@ -86,27 +92,43 @@ test("search page can find twin peaks rooms and public writings", async ({ page 
   ).toBeVisible();
 });
 
-test("search page handles empty results and restores featured routes when cleared", async ({ page }) => {
+test("search page handles empty results and restores featured routes when cleared", async ({
+  page,
+}) => {
   await page.goto("/search");
 
   const searchBox = page.getByRole("searchbox");
 
   await searchBox.fill("zzzz-no-match-arcadeghosts");
 
-  await expect(page.getByRole("heading", { name: "No exact signal match yet." })).toBeVisible();
-  await expect(page.getByText('0 results for "zzzz-no-match-arcadeghosts".')).toBeVisible();
-  await expect(page.getByRole("link", { name: "Twin Peaks Self" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "No exact signal match yet." }),
+  ).toBeVisible();
+  await expect(
+    page.getByText('0 results for "zzzz-no-match-arcadeghosts".'),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Twin Peaks Self" }),
+  ).toBeVisible();
 
   await searchBox.clear();
 
-  await expect(page.getByText("Showing a featured mix of places to start.")).toBeVisible();
+  await expect(
+    page.getByText("Showing a featured mix of places to start."),
+  ).toBeVisible();
   const quickRoutes = page.getByLabel("Quick routes");
-  await expect(quickRoutes.getByRole("link", { name: "Projects" })).toBeVisible();
+  await expect(
+    quickRoutes.getByRole("link", { name: "Projects" }),
+  ).toBeVisible();
   await expect(quickRoutes.getByRole("link", { name: "About" })).toBeVisible();
-  await expect(quickRoutes.getByRole("link", { name: "Tiny Thoughts" })).toBeVisible();
+  await expect(
+    quickRoutes.getByRole("link", { name: "Tiny Thoughts" }),
+  ).toBeVisible();
 });
 
-test("writings index and a writing detail page render correctly", async ({ page }) => {
+test("writings index and a writing detail page render correctly", async ({
+  page,
+}) => {
   await page.goto("/writings");
 
   await expect(
@@ -117,7 +139,9 @@ test("writings index and a writing detail page render correctly", async ({ page 
 
   await expect(page).toHaveURL(/\/writings\/.+/);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.getByRole("region", { name: "A few nearby signals." })).toBeVisible();
+  await expect(
+    page.getByRole("region", { name: "A few nearby signals." }),
+  ).toBeVisible();
 });
 
 test("tiny thoughts archive exposes rss", async ({ page }) => {
@@ -131,15 +155,23 @@ test("tiny thoughts archive exposes rss", async ({ page }) => {
   ).toHaveAttribute("href", "/tiny-thoughts/rss.xml");
 });
 
-test("Ambient renders active sources without dormant Now or Guestbook links", async ({ page }) => {
+test("Ambient renders active sources without dormant Now or Guestbook links", async ({
+  page,
+}) => {
   await page.goto("/ambient?type=cat");
 
   await expect(page.getByRole("heading", { name: "First Glow" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Beverly and Lucinda" })).toBeVisible();
-  await expect(page.locator('a[href$="#now"], a[href$="#guestbook"]')).toHaveCount(0);
+  await expect(
+    page.getByRole("heading", { name: "Beverly and Lucinda" }),
+  ).toBeVisible();
+  await expect(
+    page.locator('a[href$="#now"], a[href$="#guestbook"]'),
+  ).toHaveCount(0);
 });
 
-test("Ambient fits a landscape tablet and keeps display controls available", async ({ page }) => {
+test("Ambient fits a landscape tablet and keeps display controls available", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/ambient?type=cat");
 
@@ -169,7 +201,9 @@ test("Ambient install resources expose the expected manifest and uncached worker
 
   expect(manifestResponse.ok()).toBeTruthy();
   expect(workerResponse.ok()).toBeTruthy();
-  expect(manifestResponse.headers()["content-type"]).toMatch(/application\/manifest\+json/);
+  expect(manifestResponse.headers()["content-type"]).toMatch(
+    /application\/manifest\+json/,
+  );
 
   const manifestJson = (await manifestResponse.json()) as {
     start_url: string;
@@ -185,7 +219,12 @@ test("Ambient install resources expose the expected manifest and uncached worker
 });
 
 test("removed public routes return not found", async ({ page }) => {
-  for (const route of ["/build-log", "/updates", "/work-with-me", "/admin/side-hustle"]) {
+  for (const route of [
+    "/build-log",
+    "/updates",
+    "/work-with-me",
+    "/admin/side-hustle",
+  ]) {
     await page.goto(route);
     await expect(
       page.getByRole("heading", {
@@ -216,16 +255,23 @@ test("custom 500 page renders surreal copy", async ({ page }) => {
       name: "There was a fish in the percolator.",
     }),
   ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "Try Again" }),
-  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Try Again" })).toBeVisible();
 });
 
-test("public feed, sitemap, robots, and json endpoints respond with expected shapes", async ({
-  request,
-}) => {
-  const [tinyThoughtsRss, writingsRss, robots, sitemap, projects, now, guestbook, tinyThoughts] =
-    await Promise.all([
+test(
+  "public feed, sitemap, robots, and json endpoints respond with expected shapes",
+  { tag: "@database" },
+  async ({ request }) => {
+    const [
+      tinyThoughtsRss,
+      writingsRss,
+      robots,
+      sitemap,
+      projects,
+      now,
+      guestbook,
+      tinyThoughts,
+    ] = await Promise.all([
       request.get("/tiny-thoughts/rss.xml"),
       request.get("/writings/rss.xml"),
       request.get("/robots.txt"),
@@ -236,33 +282,43 @@ test("public feed, sitemap, robots, and json endpoints respond with expected sha
       request.get("/api/tiny-thoughts?limit=3"),
     ]);
 
-  assertStatusOk(tinyThoughtsRss, "/tiny-thoughts/rss.xml");
-  assertStatusOk(writingsRss, "/writings/rss.xml");
-  assertStatusOk(robots, "/robots.txt");
-  assertStatusOk(sitemap, "/sitemap.xml");
-  assertStatusOk(projects, "/api/projects");
-  expect(now.status()).toBe(404);
-  expect(guestbook.status()).toBe(404);
-  assertStatusOk(tinyThoughts, "/api/tiny-thoughts?limit=3");
+    assertStatusOk(tinyThoughtsRss, "/tiny-thoughts/rss.xml");
+    assertStatusOk(writingsRss, "/writings/rss.xml");
+    assertStatusOk(robots, "/robots.txt");
+    assertStatusOk(sitemap, "/sitemap.xml");
+    assertStatusOk(projects, "/api/projects");
+    expect(now.status()).toBe(404);
+    expect(guestbook.status()).toBe(404);
+    assertStatusOk(tinyThoughts, "/api/tiny-thoughts?limit=3");
 
-  expect(tinyThoughtsRss.headers()["content-type"]).toMatch(/application\/rss\+xml/);
-  expect(writingsRss.headers()["content-type"]).toMatch(/application\/rss\+xml/);
+    expect(tinyThoughtsRss.headers()["content-type"]).toMatch(
+      /application\/rss\+xml/,
+    );
+    expect(writingsRss.headers()["content-type"]).toMatch(
+      /application\/rss\+xml/,
+    );
 
-  expect(await robots.text()).toContain("Sitemap:");
-  const sitemapText = await sitemap.text();
-  expect(sitemapText).toContain("/ambient");
-  expect(sitemapText).toContain("/tiny-thoughts");
-  expect(sitemapText).not.toContain("/build-log");
-  expect(sitemapText).not.toContain("/updates");
+    expect(await robots.text()).toContain("Sitemap:");
+    const sitemapText = await sitemap.text();
+    expect(sitemapText).toContain("/ambient");
+    expect(sitemapText).toContain("/tiny-thoughts");
+    expect(sitemapText).not.toContain("/build-log");
+    expect(sitemapText).not.toContain("/updates");
 
-  const projectsJson = (await projects.json()) as { projects: unknown[] };
-  const tinyThoughtsJson = (await tinyThoughts.json()) as { thoughts: unknown[] };
+    const projectsJson = (await projects.json()) as { projects: unknown[] };
+    const tinyThoughtsJson = (await tinyThoughts.json()) as {
+      thoughts: unknown[];
+    };
 
-  expect(Array.isArray(projectsJson.projects)).toBeTruthy();
-  expect(Array.isArray(tinyThoughtsJson.thoughts)).toBeTruthy();
-  expect(tinyThoughtsJson.thoughts.length).toBeLessThanOrEqual(3);
-});
+    expect(Array.isArray(projectsJson.projects)).toBeTruthy();
+    expect(Array.isArray(tinyThoughtsJson.thoughts)).toBeTruthy();
+    expect(tinyThoughtsJson.thoughts.length).toBeLessThanOrEqual(3);
+  },
+);
 
-function assertStatusOk(response: { ok(): boolean; status(): number }, label: string) {
+function assertStatusOk(
+  response: { ok(): boolean; status(): number },
+  label: string,
+) {
   expect(response.ok(), `${label} returned ${response.status()}`).toBeTruthy();
 }
