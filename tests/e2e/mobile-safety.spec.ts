@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
 const mobileWidths = [
   { label: "375px", width: 375, height: 812 },
@@ -56,13 +56,27 @@ const tapTargetChecks = [
   },
 ] as const;
 
+async function preparePageForLayoutMeasurement(
+  page: Page,
+  route: string,
+  viewport: { width: number; height: number },
+) {
+  await page.setViewportSize(viewport);
+  await page.goto(route, { waitUntil: "domcontentloaded" });
+  await expect(page.locator("main")).toBeVisible();
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
+  });
+}
+
 for (const route of routes) {
   test.describe(`mobile safety ${route}`, () => {
     for (const viewport of mobileWidths) {
       test(`has no obvious horizontal overflow at ${viewport.label}`, async ({ page }) => {
-        await page.setViewportSize({ width: viewport.width, height: viewport.height });
-        await page.goto(route, { waitUntil: "domcontentloaded" });
-        await page.waitForLoadState("networkidle").catch(() => undefined);
+        await preparePageForLayoutMeasurement(page, route, viewport);
 
         const overflow = await page.evaluate(() => {
           const viewportWidth = window.innerWidth;
@@ -92,9 +106,10 @@ for (const route of routes) {
 for (const check of tapTargetChecks) {
   test.describe(`mobile tap targets ${check.route}`, () => {
     test("keeps primary mobile controls finger-friendly at 390px", async ({ page }) => {
-      await page.setViewportSize({ width: 390, height: 844 });
-      await page.goto(check.route, { waitUntil: "domcontentloaded" });
-      await page.waitForLoadState("networkidle").catch(() => undefined);
+      await preparePageForLayoutMeasurement(page, check.route, {
+        width: 390,
+        height: 844,
+      });
 
       const violations = await page.evaluate((selectors) => {
         const minimumTarget = 40;

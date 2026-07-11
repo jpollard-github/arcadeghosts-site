@@ -97,7 +97,7 @@ async function cleanupTinyThoughtTestData(page: Page, token: string) {
   }
 }
 
-test.describe("admin", () => {
+test.describe("admin", { tag: "@database" }, () => {
   test.describe.configure({ mode: "serial" });
 
   test("admin dashboard supports sign in and sign out", async ({ page }) => {

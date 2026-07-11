@@ -259,44 +259,26 @@ test("custom 500 page renders surreal copy", async ({ page }) => {
 });
 
 test(
-  "public feed, sitemap, robots, and json endpoints respond with expected shapes",
-  { tag: "@database" },
+  "database-independent public endpoints respond with expected shapes",
   async ({ request }) => {
-    const [
-      tinyThoughtsRss,
-      writingsRss,
-      robots,
-      sitemap,
-      projects,
-      now,
-      tinyThoughts,
-    ] = await Promise.all([
-      request.get("/tiny-thoughts/rss.xml"),
+    const [writingsRss, robots, sitemap, projects, now] = await Promise.all([
       request.get("/writings/rss.xml"),
       request.get("/robots.txt"),
       request.get("/sitemap.xml"),
       request.get("/api/projects"),
       request.get("/api/now"),
-      request.get("/api/tiny-thoughts?limit=3"),
     ]);
 
-    assertStatusOk(tinyThoughtsRss, "/tiny-thoughts/rss.xml");
     assertStatusOk(writingsRss, "/writings/rss.xml");
     assertStatusOk(robots, "/robots.txt");
     assertStatusOk(sitemap, "/sitemap.xml");
     assertStatusOk(projects, "/api/projects");
     expect(now.status()).toBe(404);
-    assertStatusOk(tinyThoughts, "/api/tiny-thoughts?limit=3");
 
-    expect(tinyThoughtsRss.headers()["content-type"]).toMatch(
-      /application\/rss\+xml/,
-    );
     expect(writingsRss.headers()["content-type"]).toMatch(
       /application\/rss\+xml/,
     );
-    expect(tinyThoughtsRss.headers()["cache-control"]).toContain("no-store");
     expect(projects.headers()["cache-control"]).toContain("no-store");
-    expect(tinyThoughts.headers()["cache-control"]).toContain("no-store");
 
     expect(await robots.text()).toContain("Sitemap:");
     const sitemapText = await sitemap.text();
@@ -315,11 +297,32 @@ test(
     );
 
     const projectsJson = (await projects.json()) as { projects: unknown[] };
+
+    expect(Array.isArray(projectsJson.projects)).toBeTruthy();
+  },
+);
+
+test(
+  "database-backed Tiny Thoughts endpoints respond with expected shapes",
+  { tag: "@database" },
+  async ({ request }) => {
+    const [tinyThoughtsRss, tinyThoughts] = await Promise.all([
+      request.get("/tiny-thoughts/rss.xml"),
+      request.get("/api/tiny-thoughts?limit=3"),
+    ]);
+
+    assertStatusOk(tinyThoughtsRss, "/tiny-thoughts/rss.xml");
+    assertStatusOk(tinyThoughts, "/api/tiny-thoughts?limit=3");
+    expect(tinyThoughtsRss.headers()["content-type"]).toMatch(
+      /application\/rss\+xml/,
+    );
+    expect(tinyThoughtsRss.headers()["cache-control"]).toContain("no-store");
+    expect(tinyThoughts.headers()["cache-control"]).toContain("no-store");
+
     const tinyThoughtsJson = (await tinyThoughts.json()) as {
       thoughts: unknown[];
     };
 
-    expect(Array.isArray(projectsJson.projects)).toBeTruthy();
     expect(Array.isArray(tinyThoughtsJson.thoughts)).toBeTruthy();
     expect(tinyThoughtsJson.thoughts.length).toBeLessThanOrEqual(3);
   },

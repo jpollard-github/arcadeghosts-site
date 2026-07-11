@@ -27,6 +27,8 @@
     "test:unit": "node --import tsx --test tests/unit/*.test.ts",
     "test:unit:timed": "node scripts/run-npm-script-with-timing.mjs test:unit",
     "test:e2e": "playwright test",
+    "test:e2e:ci": "playwright test --grep-invert @database",
+    "test:e2e:database": "playwright test --grep @database --workers=1",
     "test:e2e:ambient": "playwright test tests/e2e/ambient.spec.ts --config=playwright.ambient.config.ts",
     "test:mobile-safety": "playwright test tests/e2e/mobile-safety.spec.ts",
     "test:e2e:headed": "playwright test --headed",

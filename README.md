@@ -29,6 +29,7 @@ Repository-specific skills live in `.agents/skills/`:
 
 - `verify-change` - selects and runs the appropriate verification checks for a change, then reports exact results and remaining risks.
 - `ambient-device-review` - reviews Ambient and PWA changes across automated browser checks and a separate Samsung tablet checklist.
+- `export-repo-review` - packages the current repository into a review ZIP and reveals the generated archive in Finder.
 - `release-writing` - prepares and validates repository-backed writing for publication without changing Jason's voice.
 
 ## Tech Stack
@@ -134,9 +135,9 @@ npm run website:audit
 
 ## Continuous integration
 
-GitHub Actions runs two jobs in parallel for pull requests and pushes to `main`. The `verify` job audits production dependencies, then runs linting, type checking, unit tests, and a production build through `npm run verify:full`. The `e2e` job installs Chromium and runs the Playwright browser suite with `npm run test:e2e`.
+GitHub Actions runs two jobs in parallel for pull requests and pushes to `main`. The `verify` job audits production dependencies, then runs linting, type checking, unit tests, and a production build through `npm run verify:full`. The normal `e2e` job installs Chromium and runs the database-independent Playwright suite through `npm run test:e2e:ci`.
 
-Authenticated admin Playwright tests skip unless CI admin credentials and an isolated test database are configured. When Playwright runs, its report is available from the workflow run's **Artifacts** section for 7 days, including after test failures.
+Tests tagged `@database`, including authenticated admin coverage, require an isolated database and can be run serially with `npm run test:e2e:database`. They are excluded from the normal CI E2E job. Admin tests also require configured test credentials. When Playwright runs, its report is available from the workflow run's **Artifacts** section for 7 days, including after test failures.
 
 Dependabot checks for scheduled version updates each week, while security updates are opened when GitHub detects a vulnerable dependency. Minor and patch updates are grouped by related area to reduce pull-request noise; major updates remain separate so breaking changes can be reviewed independently. CI runs automatically on every Dependabot pull request.
 
