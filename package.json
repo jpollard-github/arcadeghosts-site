@@ -48,7 +48,7 @@
     "eslint-config-next": "^16.2.10",
     "lighthouse": "^13.4.0",
     "tsx": "^4.23.0",
-    "typescript": "5.7.3"
+    "typescript": "7.0.2"
   },
   "overrides": {
     "postcss": "^8.5.15",
