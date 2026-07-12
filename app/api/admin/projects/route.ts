@@ -62,10 +62,6 @@ function normalizeProject(value: unknown): SiteProject | null {
     blockers: normalizeProjectText(candidate.blockers, 1200),
     priority: normalizeProjectPriority(candidate.priority),
     lastUpdatedAt: normalizeProjectDate(candidate.lastUpdatedAt),
-    includeInContextRefresh:
-      typeof candidate.includeInContextRefresh === "boolean"
-        ? candidate.includeInContextRefresh
-        : true,
   };
 }
 
@@ -86,7 +82,6 @@ async function selectProjectRows() {
       blockers,
       priority,
       last_updated_at,
-      include_in_context_refresh,
       display_order,
       created_at,
       updated_at
@@ -178,7 +173,6 @@ export async function PUT(request: Request) {
         blockers,
         priority,
         last_updated_at,
-        include_in_context_refresh,
         display_order,
         created_at,
         updated_at
@@ -288,7 +282,6 @@ export async function PATCH(request: Request) {
         blockers,
         priority,
         last_updated_at,
-        include_in_context_refresh,
         display_order
       )
       VALUES (
@@ -304,7 +297,6 @@ export async function PATCH(request: Request) {
         ${project.blockers},
         ${project.priority},
         ${resolvedLastUpdatedAt || null},
-        ${project.includeInContextRefresh},
         ${displayOrder}
       )
       ON CONFLICT (id)
@@ -320,7 +312,6 @@ export async function PATCH(request: Request) {
         blockers = EXCLUDED.blockers,
         priority = EXCLUDED.priority,
         last_updated_at = EXCLUDED.last_updated_at,
-        include_in_context_refresh = EXCLUDED.include_in_context_refresh,
         updated_at = now()
     `;
 
@@ -340,7 +331,6 @@ export async function PATCH(request: Request) {
         blockers,
         priority,
         last_updated_at,
-        include_in_context_refresh,
         display_order,
         created_at,
         updated_at

@@ -11,13 +11,6 @@ const aboutTrustCards = [
     cta: "Open The Workbench",
   },
   {
-    eyebrow: "Orientation",
-    title: "Search",
-    text: "If you already know the signal you want, Search is the quickest way to jump rooms without walking the whole hallway.",
-    href: "/search",
-    cta: "Use Search",
-  },
-  {
     eyebrow: "Voice",
     title: "Writings",
     text: "A quieter room for longer thoughts on technology, identity, grief, attention, and the suspiciously brave act of trying again.",

@@ -1,12 +1,5 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { saveHomeSpotlight } from "../../app/lib/home-spotlight-write-transactions";
-import type {
-  HomeSpotlightQueueItem,
-  HomeSpotlightRecord,
-} from "../../app/lib/home-spotlight";
-import { saveNowItems } from "../../app/lib/now-write-transactions";
-import type { NowItem } from "../../app/lib/now";
 import {
   deleteProjectAndReorder,
   saveProjectList,
@@ -73,7 +66,6 @@ function project(id: string): SiteProject {
     blockers: "",
     priority: 3,
     lastUpdatedAt: "2026-07-11",
-    includeInContextRefresh: true,
   };
 }
 
@@ -173,69 +165,4 @@ test("non-empty project table skips default seed transaction", async () => {
   await seedDefaultProjectsIfEmpty(fake.sql);
 
   assert.equal(fake.transactionCalls.length, 0);
-});
-
-test("Now save batches upserts and calculates removed ids", async () => {
-  const fake = createFakeSql();
-  const items: NowItem[] = [
-    { id: "kept", label: "Doing", title: "Kept", text: "Still here" },
-    { id: "new", label: "Making", title: "New", text: "Just arrived" },
-  ];
-
-  await saveNowItems(fake.sql, items, ["kept", "removed"]);
-
-  assert.equal(fake.transactionCalls.length, 1);
-  assert.equal(fake.transactionCalls[0].length, 3);
-  assert.deepEqual(fake.transactionCalls[0][2].values, ["removed"]);
-});
-
-const spotlight: HomeSpotlightRecord = {
-  id: "main",
-  eyebrow: "Current Signal",
-  title: "A spotlight",
-  text: "Spotlight body",
-  linkLabel: "Read more",
-  linkHref: "/about",
-  enabled: true,
-};
-
-function queueItem(id: string, displayOrder: number): HomeSpotlightQueueItem {
-  return {
-    ...spotlight,
-    id,
-    title: `Queue ${id}`,
-    displayOrder,
-  };
-}
-
-test("spotlight save batches main, queue clear, and ordered inserts", async () => {
-  const fake = createFakeSql();
-
-  await saveHomeSpotlight(fake.sql, spotlight, [queueItem("a", 9), queueItem("b", 4)]);
-
-  assert.equal(fake.transactionCalls.length, 1);
-  assert.equal(fake.transactionCalls[0].length, 4);
-  assert.match(fake.transactionCalls[0][0].text, /INSERT INTO home_spotlight/);
-  assert.match(fake.transactionCalls[0][1].text, /DELETE FROM home_spotlight_queue/);
-  assert.deepEqual(
-    fake.transactionCalls[0].slice(2).map(({ values }) => values.at(-1)),
-    [0, 1],
-  );
-});
-
-test("empty spotlight queue still atomically saves main and clears queue", async () => {
-  const fake = createFakeSql();
-
-  await saveHomeSpotlight(fake.sql, spotlight, []);
-
-  assert.equal(fake.transactionCalls.length, 1);
-  assert.equal(fake.transactionCalls[0].length, 2);
-});
-
-test("spotlight save propagates transaction rejection", async () => {
-  const failure = new Error("queue insert failed");
-  const fake = createFakeSql({ transactionError: failure });
-
-  await assert.rejects(saveHomeSpotlight(fake.sql, spotlight, [queueItem("a", 0)]), failure);
-  assert.equal(fake.transactionCalls.length, 1);
 });

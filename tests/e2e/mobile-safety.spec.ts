@@ -11,7 +11,6 @@ const routes = [
   "/about",
   "/music",
   "/writings",
-  "/search",
   "/arcade",
   "/screening",
   "/terminal",
@@ -25,10 +24,6 @@ const tapTargetChecks = [
   {
     route: "/",
     selectors: [".nav-links a"],
-  },
-  {
-    route: "/search",
-    selectors: [".back-link", ".search-input-wrap input", ".search-quick-link-chip", ".search-result-link"],
   },
   {
     route: "/tiny-thoughts",

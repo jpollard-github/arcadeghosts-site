@@ -26,7 +26,6 @@ function projectInsertQuery(sql: SiteSql, write: ProjectWrite) {
       blockers,
       priority,
       last_updated_at,
-      include_in_context_refresh,
       display_order
     )
     VALUES (
@@ -42,7 +41,6 @@ function projectInsertQuery(sql: SiteSql, write: ProjectWrite) {
       ${project.blockers},
       ${project.priority},
       ${lastUpdatedAt || null},
-      ${project.includeInContextRefresh},
       ${displayOrder}
     )
   `;
@@ -71,7 +69,6 @@ export async function saveProjectList(
         blockers,
         priority,
         last_updated_at,
-        include_in_context_refresh,
         display_order
       )
       VALUES (
@@ -87,7 +84,6 @@ export async function saveProjectList(
         ${project.blockers},
         ${project.priority},
         ${lastUpdatedAt || null},
-        ${project.includeInContextRefresh},
         ${displayOrder}
       )
       ON CONFLICT (id)
@@ -103,7 +99,6 @@ export async function saveProjectList(
         blockers = EXCLUDED.blockers,
         priority = EXCLUDED.priority,
         last_updated_at = EXCLUDED.last_updated_at,
-        include_in_context_refresh = EXCLUDED.include_in_context_refresh,
         display_order = EXCLUDED.display_order,
         updated_at = now()
     `;

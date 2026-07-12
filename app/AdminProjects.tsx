@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { consumeSessionDraft } from "./lib/session-draft";
 import {
   projectPriorityOptions,
   projectStatuses,
@@ -18,8 +17,6 @@ const statusLabels = new Map<ProjectStatus, string>([
   ["archived", "Archived"],
 ]);
 
-const projectDraftStorageKey = "arcadeghosts-project-draft";
-
 function emptyProject(): SiteProject {
   return {
     id: crypto.randomUUID(),
@@ -34,7 +31,6 @@ function emptyProject(): SiteProject {
     blockers: "",
     priority: 3,
     lastUpdatedAt: new Date().toISOString().slice(0, 10),
-    includeInContextRefresh: true,
   };
 }
 
@@ -111,34 +107,10 @@ export function AdminProjects() {
     }
 
     const data = (await response.json()) as { projects: SiteProject[] };
-    let nextProjects = data.projects;
-    let nextExpandedIds: string[] = [];
-    let nextStatus = data.projects.length ? "Projects loaded." : "No projects yet.";
-
-    if (typeof window !== "undefined") {
-      const imported = consumeSessionDraft<Partial<SiteProject>>(
-        window.sessionStorage,
-        projectDraftStorageKey,
-      );
-
-      if (imported.value) {
-        const project = {
-          ...emptyProject(),
-          ...imported.value,
-          id: crypto.randomUUID(),
-        };
-        nextProjects = [...data.projects, project];
-        nextExpandedIds = [project.id];
-        nextStatus = "Imported draft from Content Inbox. Refine it, then save when ready.";
-      } else if (imported.parseError) {
-        nextStatus = "A Content Inbox project draft was found but could not be imported cleanly.";
-      }
-    }
-
-    setProjects(nextProjects);
+    setProjects(data.projects);
     setSavedProjects(data.projects);
-    setExpandedProjectIds(nextExpandedIds);
-    setStatus(nextStatus);
+    setExpandedProjectIds([]);
+    setStatus(data.projects.length ? "Projects loaded." : "No projects yet.");
   }
 
   useEffect(() => {
@@ -778,20 +750,6 @@ export function AdminProjects() {
                               updateProject(project.id, "lastUpdatedAt", event.target.value)
                             }
                           />
-                        </label>
-                        <label className="projects-admin-checkbox">
-                          <input
-                            type="checkbox"
-                            checked={project.includeInContextRefresh}
-                            onChange={(event) =>
-                              updateProject(
-                                project.id,
-                                "includeInContextRefresh",
-                                event.target.checked,
-                              )
-                            }
-                          />
-                          <span>Include in Context Refresh</span>
                         </label>
                       </div>
                     ) : null}

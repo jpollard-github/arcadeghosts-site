@@ -67,65 +67,6 @@ test("legacy movies and tv route redirects to screening", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("search page can find twin peaks rooms and public writings", async ({
-  page,
-}) => {
-  await page.goto("/search");
-
-  await expect(
-    page.getByRole("heading", {
-      name: "Find a room by signal instead of by hallway.",
-    }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("Showing a featured mix of places to start."),
-  ).toBeVisible();
-
-  await page.getByRole("searchbox").fill("Twin Peaks");
-
-  await expect(page.getByText(/result(s)? for "Twin Peaks"\./)).toBeVisible();
-  await expect(
-    page
-      .getByRole("article")
-      .filter({ has: page.getByRole("link", { name: "Enter the lodges" }) })
-      .getByRole("heading", { name: "The Lodges Within" }),
-  ).toBeVisible();
-});
-
-test("search page handles empty results and restores featured routes when cleared", async ({
-  page,
-}) => {
-  await page.goto("/search");
-
-  const searchBox = page.getByRole("searchbox");
-
-  await searchBox.fill("zzzz-no-match-arcadeghosts");
-
-  await expect(
-    page.getByRole("heading", { name: "No exact signal match yet." }),
-  ).toBeVisible();
-  await expect(
-    page.getByText('0 results for "zzzz-no-match-arcadeghosts".'),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Twin Peaks Self" }),
-  ).toBeVisible();
-
-  await searchBox.clear();
-
-  await expect(
-    page.getByText("Showing a featured mix of places to start."),
-  ).toBeVisible();
-  const quickRoutes = page.getByLabel("Quick routes");
-  await expect(
-    quickRoutes.getByRole("link", { name: "Projects" }),
-  ).toBeVisible();
-  await expect(quickRoutes.getByRole("link", { name: "About" })).toBeVisible();
-  await expect(
-    quickRoutes.getByRole("link", { name: "Tiny Thoughts" }),
-  ).toBeVisible();
-});
-
 test("writings index and a writing detail page render correctly", async ({
   page,
 }) => {
@@ -153,20 +94,6 @@ test("tiny thoughts archive exposes rss", async ({ page }) => {
   await expect(
     page.getByRole("link", { name: "Subscribe via RSS" }),
   ).toHaveAttribute("href", "/tiny-thoughts/rss.xml");
-});
-
-test("Ambient renders active sources without a dormant Now link", async ({
-  page,
-}) => {
-  await page.goto("/ambient?type=cat");
-
-  await expect(page.getByRole("heading", { name: "First Glow" })).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Beverly and Lucinda" }),
-  ).toBeVisible();
-  await expect(
-    page.locator('a[href$="#now"]'),
-  ).toHaveCount(0);
 });
 
 test("Ambient fits a landscape tablet and keeps display controls available", async ({
@@ -220,10 +147,7 @@ test("Ambient install resources expose the expected manifest and uncached worker
 
 test("removed public routes return not found", async ({ page }) => {
   for (const route of [
-    "/build-log",
     "/updates",
-    "/work-with-me",
-    "/admin/side-hustle",
   ]) {
     await page.goto(route);
     await expect(
@@ -261,19 +185,17 @@ test("custom 500 page renders surreal copy", async ({ page }) => {
 test(
   "database-independent public endpoints respond with expected shapes",
   async ({ request }) => {
-    const [writingsRss, robots, sitemap, projects, now] = await Promise.all([
+    const [writingsRss, robots, sitemap, projects] = await Promise.all([
       request.get("/writings/rss.xml"),
       request.get("/robots.txt"),
       request.get("/sitemap.xml"),
       request.get("/api/projects"),
-      request.get("/api/now"),
     ]);
 
     assertStatusOk(writingsRss, "/writings/rss.xml");
     assertStatusOk(robots, "/robots.txt");
     assertStatusOk(sitemap, "/sitemap.xml");
     assertStatusOk(projects, "/api/projects");
-    expect(now.status()).toBe(404);
 
     expect(writingsRss.headers()["content-type"]).toMatch(
       /application\/rss\+xml/,
@@ -288,7 +210,6 @@ test(
     );
     expect(sitemapLocations).toContain("/ambient");
     expect(sitemapLocations).toContain("/tiny-thoughts");
-    expect(sitemapLocations).not.toContain("/build-log");
     expect(sitemapLocations).not.toContain("/updates");
     expect(sitemapLocations).not.toContain("/movies-tv");
     expect(sitemapLocations).not.toContain("/games/between-two-lodges");

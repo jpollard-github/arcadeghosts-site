@@ -40,7 +40,6 @@ export type SiteProject = {
   blockers: string;
   priority: number;
   lastUpdatedAt: string;
-  includeInContextRefresh: boolean;
 };
 
 export type SiteProjectRow = {
@@ -56,7 +55,6 @@ export type SiteProjectRow = {
   blockers: string | null;
   priority: number | null;
   last_updated_at: string | null;
-  include_in_context_refresh: boolean | null;
   display_order: number;
   created_at: string;
   updated_at: string;
@@ -77,7 +75,6 @@ export const defaultProjects: SiteProject[] = [
     blockers: "",
     priority: 2,
     lastUpdatedAt: "",
-    includeInContextRefresh: true,
   },
   {
     id: "codex-prompt-pack-for-vs-code",
@@ -93,7 +90,6 @@ export const defaultProjects: SiteProject[] = [
     blockers: "",
     priority: 3,
     lastUpdatedAt: "",
-    includeInContextRefresh: true,
   },
   {
     id: "softsignal",
@@ -109,7 +105,6 @@ export const defaultProjects: SiteProject[] = [
     blockers: "",
     priority: 1,
     lastUpdatedAt: "",
-    includeInContextRefresh: true,
   },
 ];
 
@@ -251,7 +246,6 @@ export function toSiteProject(row: SiteProjectRow): SiteProject {
     blockers: row.blockers ?? "",
     priority: normalizeProjectPriority(row.priority),
     lastUpdatedAt: formatStoredProjectDate(row.last_updated_at),
-    includeInContextRefresh: row.include_in_context_refresh ?? true,
   };
 }
 
@@ -295,7 +289,6 @@ async function loadStoredPublicProjects() {
       blockers,
       priority,
       last_updated_at,
-      include_in_context_refresh,
       display_order,
       created_at,
       updated_at
@@ -331,7 +324,6 @@ export async function getAdminProjects() {
       blockers,
       priority,
       last_updated_at,
-      include_in_context_refresh,
       display_order,
       created_at,
       updated_at
@@ -342,10 +334,4 @@ export async function getAdminProjects() {
   const projects = (rows as SiteProjectRow[]).map(toSiteProject);
 
   return projects.length ? projects : defaultProjects;
-}
-
-export async function getContextRefreshProjects() {
-  const projects = await getAdminProjects();
-
-  return projects.filter((project) => project.includeInContextRefresh);
 }

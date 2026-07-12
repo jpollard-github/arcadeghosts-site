@@ -130,13 +130,6 @@ test.describe("admin", { tag: "@database" }, () => {
     await expect(
       page.getByRole("link", { name: "Open Error Previews" }),
     ).toBeVisible();
-    await expect(
-      page.getByRole("link", { name: "Open Edit Now" }),
-    ).toHaveCount(0);
-    await expect(
-      page.getByRole("link", { name: "Open Content Inbox" }),
-    ).toHaveCount(0);
-
     await page.getByRole("button", { name: "Log Out" }).click();
 
     await expect(page.getByRole("button", { name: "Log In" })).toBeVisible();

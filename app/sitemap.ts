@@ -11,7 +11,6 @@ const staticRoutes = [
   "/about",
   "/agents",
   "/terminal",
-  "/search",
   "/writings",
   "/tiny-thoughts",
   "/twin-peaks-self",

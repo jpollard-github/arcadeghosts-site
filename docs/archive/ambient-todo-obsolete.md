@@ -46,9 +46,6 @@ Ambient should primarily consume content the site already knows about:
 - arcade and movie/music taste surfaces
 - Spotify-adjacent music surfaces already present on the site
 
-`Now` and `Guestbook` are intentionally quarantined from Ambient. Their retained
-admin/database code is not an invitation to reconnect them to the display.
-
 Ambient should not start by inventing:
 
 - a second CMS
@@ -99,7 +96,6 @@ Ship the first usable Ambient experience as a single full-screen page that alrea
 
 ### Evidence / Sources
 
-- `app/lib/now.ts`
 - `app/lib/tiny-thoughts.ts`
 - `app/site-content/cats.ts`
 - `app/home/*` for tone, pacing, and visual language
@@ -114,11 +110,10 @@ Ship the first usable Ambient experience as a single full-screen page that alrea
 - Rotation stays intentionally simple for now: one display stage, automatic cycling, and manual previous/next controls.
 - The route hides the normal fixed site chrome while Ambient is active so the screen feels more like an installation.
 - The first device-focused follow-up pass now treats landscape tablet review as a first-class proofing target inside the existing review-packet workflow.
-- Stable Ambient review states now include the default route plus forced `now`, `tiny-thought`, and `cat` captures for visual comparison.
+- Stable Ambient review states include the default route plus forced `tiny-thought` and `cat` captures for visual comparison.
 
 ### Content Sources Used In Phase 1
 
-- `Now` items from `app/lib/now.ts`
 - recent `Tiny Thoughts` from `app/lib/tiny-thoughts.ts`
 - cat imagery from `app/site-content/cats.ts`
 
@@ -186,7 +181,7 @@ Expand Ambient from a proof of concept into a real content-fed experience powere
 - `Tiny Thought` signals now render as fuller desk-distance reading moments instead of turning the thought text into the oversized title.
 - `Project` signals are derived from existing public project metadata and use trimmed descriptions plus `nextAction` when available to keep the cards alive without becoming task-manager UI.
 - `Writing` signals are derived from `app/writings.ts` and intentionally stay short, reflective, and linked back to the site’s writing pages.
-- Stable query-param review states now include `type=project` and `type=writing` alongside the earlier `now`, `tiny-thought`, and `cat` states.
+- Stable query-param review states include `type=project` and `type=writing` alongside `tiny-thought` and `cat` states.
 - The repo now includes a dedicated `Ambient Scene Library` structure at `public/ambient/scenes/` with category folders, a manifest, import guidance, and a small validator script.
 - Ambient text-heavy signals can now draw from the scene library when real scene assets are imported, while cat cards keep their existing first-party imagery intact.
 - The empty-library case is deliberate and safe: no fake assets are assumed, and Ambient should continue to degrade gracefully until real scenes are added.

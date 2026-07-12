@@ -16,9 +16,6 @@ test("homepage renders the hero and key sections", async ({ page }) => {
     mainNav.locator('a[href="#screening"]'),
   ).toBeVisible();
   await expect(
-    mainNav.getByRole("link", { name: "Work With Me", exact: true }),
-  ).toHaveCount(0);
-  await expect(
     page.getByRole("heading", {
       name: "Shipped, active, paused, and becoming.",
     }),

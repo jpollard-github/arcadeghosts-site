@@ -103,7 +103,6 @@ export function AdminDashboard() {
               </button>
             </div>
 
-            {/* Dormant experiment routes intentionally remain unlinked from the active dashboard. */}
             <div className="admin-entry-list admin-dashboard-grid">
               <article className="admin-entry">
                 <div className="admin-entry-meta">
