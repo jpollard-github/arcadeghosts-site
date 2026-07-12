@@ -1,4 +1,10 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
+import { randomUUID } from "node:crypto";
+import {
+  authenticateAdmin,
+  cleanupTinyThoughtTestData,
+  createTinyThoughtFixture,
+} from "./helpers/admin-api";
 
 type Rect = { x: number; y: number; width: number; height: number };
 
@@ -34,26 +40,28 @@ test(
   "representative signal kinds share one stable 1280x800 stage rectangle",
   { tag: "@database" },
   async ({ page }) => {
-    let expectedStage: Rect | null = null;
+    const token = randomUUID();
+    await authenticateAdmin(page);
 
-    for (const kind of ["cat", "thought", "writing"] as const) {
-      await page.goto(`/ambient?type=${kind}`);
-      const stack = page.locator("[data-ambient-stage-stack]");
-      const stage = page.locator(
-        `[data-ambient-stage][data-signal-kind="${kind}"]`,
-      );
+    try {
+      await createTinyThoughtFixture(page, `Ambient thought e2e ${token}`);
+      let expectedStage: Rect | null = null;
 
-      await expect(stage).toBeVisible();
-      const stackRect = await rect(stack);
-      expectSameRect(await rect(stage), stackRect);
+      for (const kind of ["cat", "thought", "writing"] as const) {
+        await page.goto(`/ambient?type=${kind}`);
+        const stack = page.locator("[data-ambient-stage-stack]");
+        const stage = page.locator(`[data-ambient-stage][data-signal-kind="${kind}"]`);
 
-      if (expectedStage) {
-        expectSameRect(stackRect, expectedStage);
-      } else {
-        expectedStage = stackRect;
+        await expect(stage).toBeVisible();
+        const stackRect = await rect(stack);
+        expectSameRect(await rect(stage), stackRect);
+        if (expectedStage) expectSameRect(stackRect, expectedStage);
+        else expectedStage = stackRect;
+
+        await expectNoPageOverflow(page);
       }
-
-      await expectNoPageOverflow(page);
+    } finally {
+      await cleanupTinyThoughtTestData(page, token);
     }
   },
 );

@@ -1,4 +1,4 @@
-import { getSiteSql } from "../app/lib/database";
+import { neon } from "@neondatabase/serverless";
 import {
   loadMigrationFiles,
   migrationDirectory,
@@ -14,6 +14,22 @@ type MigrationRow = {
   checksum: string;
   applied_at: string;
 };
+
+function getMigrationSql() {
+  const connectionString =
+    process.env.DATABASE_URL_UNPOOLED ??
+    process.env.POSTGRES_URL_NON_POOLING ??
+    process.env.STORAGE_DATABASE_URL_UNPOOLED ??
+    process.env.DATABASE_URL;
+
+  if (!connectionString) {
+    throw new Error(
+      "Missing migration connection string. Set DATABASE_URL_UNPOOLED, POSTGRES_URL_NON_POOLING, STORAGE_DATABASE_URL_UNPOOLED, or DATABASE_URL.",
+    );
+  }
+
+  return neon(connectionString);
+}
 
 const historyTableSql = `
   CREATE TABLE IF NOT EXISTS site_schema_migrations (
@@ -51,7 +67,7 @@ function printPlan(plan: MigrationPlan) {
 }
 
 async function readAppliedMigrations(
-  sql: ReturnType<typeof getSiteSql>,
+  sql: ReturnType<typeof getMigrationSql>,
   createHistoryTable: boolean,
 ) {
   if (createHistoryTable) {
@@ -81,7 +97,7 @@ async function main() {
   }
 
   const migrations = loadMigrationFiles(migrationDirectory());
-  const sql = getSiteSql();
+  const sql = getMigrationSql();
   const appliedMigrations = await readAppliedMigrations(sql, !statusOnly);
   const plan = planMigrations(migrations, appliedMigrations);
 

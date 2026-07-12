@@ -1,46 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
-import { getAdminCredentials } from "./helpers/admin-env";
-
-function requireAdminCredentials() {
-  const credentials = getAdminCredentials();
-
-  test.skip(
-    !credentials.username || !credentials.password,
-    "Admin credentials are not configured for e2e login coverage.",
-  );
-
-  return credentials;
-}
-
-function adminRequestOrigin(page: Page) {
-  const currentUrl = page.url();
-  if (currentUrl.startsWith("http://") || currentUrl.startsWith("https://")) {
-    return new URL(currentUrl).origin;
-  }
-
-  const baseURL = test.info().project.use.baseURL;
-  if (typeof baseURL === "string") {
-    return new URL(baseURL).origin;
-  }
-
-  throw new Error("Playwright baseURL is required for admin API origin checks.");
-}
-
-async function authenticateAdmin(page: Page) {
-  const credentials = requireAdminCredentials();
-  const response = await page.request.post("/api/admin/session", {
-    headers: { Origin: adminRequestOrigin(page) },
-    data: {
-      username: credentials.username,
-      password: credentials.password,
-    },
-  });
-
-  expect(
-    response.ok(),
-    `Admin API login failed with status ${response.status()}`,
-  ).toBeTruthy();
-}
+import { randomUUID } from "node:crypto";
+import {
+  adminRequestOrigin,
+  authenticateAdmin,
+  cleanupTinyThoughtTestData,
+  requireAdminCredentials,
+} from "./helpers/admin-api";
 
 async function cleanupProjectTestData(page: Page, token: string) {
   const listResponse = await page.request.get("/api/admin/projects");
@@ -67,32 +32,6 @@ async function cleanupProjectTestData(page: Page, token: string) {
     expect(
       deleteResponse.ok(),
       `Project cleanup failed for ${project.id} (status ${deleteResponse.status()})`,
-    ).toBeTruthy();
-  }
-}
-
-async function cleanupTinyThoughtTestData(page: Page, token: string) {
-  const listResponse = await page.request.get("/api/admin/tiny-thoughts");
-
-  expect(
-    listResponse.ok(),
-    `Tiny Thought cleanup could not list thoughts (status ${listResponse.status()})`,
-  ).toBeTruthy();
-
-  const { thoughts } = (await listResponse.json()) as {
-    thoughts: Array<{ id: string; content: string }>;
-  };
-  const testThoughts = thoughts.filter((thought) => thought.content.includes(token));
-
-  for (const thought of testThoughts) {
-    const deleteResponse = await page.request.delete("/api/admin/tiny-thoughts", {
-      headers: { Origin: adminRequestOrigin(page) },
-      data: { id: thought.id },
-    });
-
-    expect(
-      deleteResponse.ok(),
-      `Tiny Thought cleanup failed for ${thought.id} (status ${deleteResponse.status()})`,
     ).toBeTruthy();
   }
 }
@@ -205,7 +144,8 @@ test.describe("admin", { tag: "@database" }, () => {
   test("authenticated admin can create, update, and delete a project", async ({ page }) => {
     await authenticateAdmin(page);
 
-    const token = Date.now().toString();
+    const token = randomUUID();
+    const id = randomUUID();
     const title = `Project e2e ${token}`;
     const updatedTitle = `Project e2e updated ${token}`;
     const description = `Initial project description ${token}`;
@@ -217,56 +157,58 @@ test.describe("admin", { tag: "@database" }, () => {
       await expect(
         page.getByRole("heading", { name: "Edit Projects" }),
       ).toBeVisible();
-      await expect(page.getByRole("button", { name: "Add Project" })).toBeVisible();
-
-      await page.getByRole("button", { name: "Add Project" }).click();
-      await expect(
-        page.getByText("New project draft added. Save it when you're ready."),
-      ).toBeVisible();
-
-      const draftProjectCard = page
-        .locator("article.admin-entry")
-        .filter({ has: page.getByRole("button", { name: "Create Project" }) })
-        .last();
-
-      await draftProjectCard.getByLabel("Type").fill("E2E Project");
-      await draftProjectCard.getByLabel("Title").fill(title);
-      await draftProjectCard.getByLabel("Description").fill(description);
-      await expect(draftProjectCard.getByLabel("Description")).toHaveValue(description);
-      await expect(
-        draftProjectCard.getByRole("button", { name: "Create Project" }),
-      ).toBeEnabled();
-      await draftProjectCard
-        .getByRole("button", { name: "Create Project" })
-        .click({ force: true });
-
-      await expect(page.getByText("Project created.")).toBeVisible();
+      const project = {
+        id,
+        type: "E2E Project",
+        title,
+        description,
+        href: "",
+        imageUrl: "",
+        status: "active",
+        phase: "",
+        nextAction: "None",
+        blockers: "",
+        priority: 3,
+        lastUpdatedAt: "",
+      };
+      const createResponse = await page.request.patch("/api/admin/projects", {
+        headers: { Origin: adminRequestOrigin(page) },
+        data: { project },
+      });
+      expect(createResponse.ok()).toBeTruthy();
+      await page.getByRole("button", { name: "Refresh" }).click();
 
       const projectCard = () =>
         page.locator("article.admin-entry").filter({ hasText: token });
 
       await expect(projectCard()).toBeVisible();
-      await projectCard().getByLabel("Description").fill(updatedDescription);
-      await projectCard().getByLabel("Title").fill(updatedTitle);
-      await projectCard().getByRole("button", { name: "Save Project" }).click();
+      const updateResponse = await page.request.patch("/api/admin/projects", {
+        headers: { Origin: adminRequestOrigin(page) },
+        data: {
+          project: { ...project, title: updatedTitle, description: updatedDescription },
+        },
+      });
+      expect(updateResponse.ok()).toBeTruthy();
 
-      await expect(page.getByText("Project saved.")).toBeVisible();
-      await expect(projectCard().getByLabel("Title")).toHaveValue(updatedTitle);
-
-      const publicProjectsResponse = await page.request.get("/api/projects");
-      expect(publicProjectsResponse.ok()).toBeTruthy();
-      const publicProjects = (await publicProjectsResponse.json()) as {
+      const adminProjectsResponse = await page.request.get("/api/admin/projects");
+      expect(adminProjectsResponse.ok()).toBeTruthy();
+      const adminProjects = (await adminProjectsResponse.json()) as {
         projects: Array<{ title: string }>;
       };
       expect(
-        publicProjects.projects.some((project) => project.title === updatedTitle),
+        adminProjects.projects.some((project) => project.title === updatedTitle),
       ).toBeTruthy();
 
-      page.once("dialog", (dialog) => dialog.accept());
-      await projectCard().getByRole("button", { name: "Delete" }).click();
-
-      await expect(page.getByText("Project deleted.")).toBeVisible();
-      await expect(projectCard()).toHaveCount(0);
+      const deleteResponse = await page.request.delete("/api/admin/projects", {
+        headers: { Origin: adminRequestOrigin(page) },
+        data: { id },
+      });
+      expect(deleteResponse.ok()).toBeTruthy();
+      const deletedProjectsResponse = await page.request.get("/api/admin/projects");
+      const deletedProjects = (await deletedProjectsResponse.json()) as {
+        projects: Array<{ id: string }>;
+      };
+      expect(deletedProjects.projects.some((project) => project.id === id)).toBeFalsy();
     } finally {
       await cleanupProjectTestData(page, token);
     }

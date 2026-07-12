@@ -58,3 +58,55 @@ jobs:
           path: playwright-report/
           retention-days: 7
           if-no-files-found: ignore
+
+  e2e-database:
+    if: ${{ github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    concurrency:
+      group: arcadeghosts-shared-nonprod-database
+      cancel-in-progress: false
+    env:
+      DATABASE_URL: ${{ secrets.CI_DATABASE_URL }}
+      DATABASE_URL_UNPOOLED: ${{ secrets.CI_DATABASE_URL_UNPOOLED }}
+      ADMIN_USERNAME: ${{ secrets.CI_ADMIN_USERNAME }}
+      ADMIN_PASSWORD: ${{ secrets.CI_ADMIN_PASSWORD }}
+      ADMIN_SESSION_SECRET: ${{ secrets.CI_ADMIN_SESSION_SECRET }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install chromium --with-deps
+      - name: Validate database test environment
+        shell: bash
+        run: |
+          required=(DATABASE_URL DATABASE_URL_UNPOOLED ADMIN_USERNAME ADMIN_PASSWORD ADMIN_SESSION_SECRET)
+          for name in "${required[@]}"; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "Required environment variable is missing: $name" >&2
+              exit 1
+            fi
+          done
+      - name: Check migration status before migration
+        run: npm run db:migrate:status
+      - name: Apply database migrations
+        run: npm run db:migrate
+      - name: Check migration status after migration
+        run: npm run db:migrate:status
+      - name: Run database-backed end-to-end tests
+        run: npm run test:e2e:database
+      - name: Upload database Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-report-database
+          path: playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore

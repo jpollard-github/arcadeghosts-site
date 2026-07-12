@@ -109,7 +109,18 @@ npm run test:mobile-safety
 
 The Projects API uses a one-hour tagged Next Data Cache, while public Tiny Thoughts use a fifteen-minute tagged cache. Successful admin mutations immediately expire the relevant tag; admin reads and writes are never cached. Project and Tiny Thought JSON responses and the Tiny Thoughts RSS response are `no-store`, so the tagged server-side data cache remains the single freshness policy. Ambient remains request-specific for its query-driven signal selection while reusing cached Tiny Thoughts.
 
-## Database migrations
+## Database environments and migrations
+
+Production and non-production database credentials are deliberately separate. Neon database branches are not used.
+
+| Environment | Neon database |
+| --- | --- |
+| Vercel Production | Production Neon |
+| Vercel Preview | Shared non-production Neon |
+| Local (`.env.local`) | Shared non-production Neon |
+| GitHub database E2E tests | Shared non-production Neon |
+
+Normal application queries use the pooled `DATABASE_URL`. Migrations prefer the direct `DATABASE_URL_UNPOOLED`, then `POSTGRES_URL_NON_POOLING`, then `STORAGE_DATABASE_URL_UNPOOLED`; `DATABASE_URL` is the documented final fallback. This keeps normal Next.js requests on the pooled connection while allowing migration commands to use a direct connection.
 
 The Neon schema is owned by immutable numbered files in `db/migrations/`. Application requests and builds never run migrations or repair schema.
 
@@ -135,9 +146,11 @@ npm run website:audit
 
 ## Continuous integration
 
-GitHub Actions runs two jobs in parallel for pull requests and pushes to `main`. The `verify` job audits production dependencies, then runs linting, type checking, unit tests, and a production build through `npm run verify:full`. The normal `e2e` job installs Chromium and runs the database-independent Playwright suite through `npm run test:e2e:ci`.
+GitHub Actions runs the existing `verify` and database-independent `e2e` jobs for pull requests and pushes to `main`. The `verify` job audits production dependencies, then runs linting, type checking, unit tests, and a production build through `npm run verify:full`. The normal `e2e` job installs Chromium and runs `npm run test:e2e:ci`.
 
-Tests tagged `@database`, including authenticated admin coverage, require an isolated database and can be run serially with `npm run test:e2e:database`. They are excluded from the normal CI E2E job. Admin tests also require configured test credentials. When Playwright runs, its report is available from the workflow run's **Artifacts** section for 7 days, including after test failures.
+The `e2e-database` job migrates the shared non-production database and runs tests tagged `@database` with one Playwright worker. A fixed concurrency group serializes this job across branches and workflow runs. The tests create uniquely identified fixtures and clean up only their own data, so no permanent CI seed content is required. Dependabot and pull requests from forks still run the normal jobs but skip this secret-dependent database job.
+
+Configure these repository secrets for the database job: `CI_DATABASE_URL`, `CI_DATABASE_URL_UNPOOLED`, `CI_ADMIN_USERNAME`, `CI_ADMIN_PASSWORD`, and `CI_ADMIN_SESSION_SECRET`. The workflow maps them to the application's environment-variable names. Production database credentials do not belong in GitHub Actions. When Playwright runs, its report is available from the workflow run's **Artifacts** section for 7 days, including after test failures.
 
 Dependabot checks for scheduled version updates each week, while security updates are opened when GitHub detects a vulnerable dependency. Minor and patch updates are grouped by related area to reduce pull-request noise; major updates remain separate so breaking changes can be reviewed independently. CI runs automatically on every Dependabot pull request.
 
@@ -145,17 +158,26 @@ Dependabot checks for scheduled version updates each week, while security update
 
 Create `.env.local` for local work. Equivalent values should exist in Vercel for deployed environments.
 
-Database connection, one of:
+Pooled runtime database connection:
 
 ```bash
 DATABASE_URL=
+```
+
+Direct migration database connection:
+
+```bash
+DATABASE_URL_UNPOOLED=
+```
+
+Supported provider-generated fallbacks:
+
+```bash
 STORAGE_DATABASE_URL=
 POSTGRES_URL=
 STORAGE_POSTGRES_URL=
 POSTGRES_URL_NON_POOLING=
-STORAGE_POSTGRES_URL_NON_POOLING=
 STORAGE_DATABASE_URL_UNPOOLED=
-NEON_DATABASE_URL=
 ```
 
 Admin auth:
