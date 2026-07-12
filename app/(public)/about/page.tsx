@@ -4,13 +4,6 @@ import { aboutCards, resonanceLinks } from "../../home/data";
 
 const aboutTrustCards = [
   {
-    eyebrow: "Current Work",
-    title: "Projects",
-    text: "A visible workbench of active, shipped, paused, and becoming projects so you can see what I actually build.",
-    href: "/#projects",
-    cta: "Open The Workbench",
-  },
-  {
     eyebrow: "Voice",
     title: "Writings",
     text: "A quieter room for longer thoughts on technology, identity, grief, attention, and the suspiciously brave act of trying again.",
@@ -145,13 +138,6 @@ export default function AboutPage() {
               />
             ))}
           </div>
-          <p>
-            <Link href="/#projects">Projects</Link> is the clearest proof-of-work
-            path on the public site right now. This page is the human context
-            that connects the workbench, the writing, and the stranger rooms
-            around it.
-          </p>
-
           <h3>If you&apos;re the type of person who enjoys:</h3>
           <ul className="about-list">
             <li>The strange atmosphere of Twin Peaks</li>
@@ -175,7 +161,7 @@ export default function AboutPage() {
 
           <p>
             ArcadeGhosts is ultimately an experiment in whether a collection of
-            interests, stories, projects, music, photos, and ideas can attract
+            interests, stories, music, photos, and ideas can attract
             the right conversations. If something here feels familiar, reach
             out.
           </p>

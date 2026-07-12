@@ -4,32 +4,29 @@ import { HomeCats } from "../home/HomeCats";
 import { HomeFunAndGames } from "../home/HomeFunAndGames";
 import { HomeHero } from "../home/HomeHero";
 import { HomeHashScroller } from "../home/HomeHashScroller";
-import { HomeProjects } from "../home/HomeProjects";
 import { HomeScreening } from "../home/HomeScreening";
 import { HomeTinyThoughts } from "../home/HomeTinyThoughts";
 import { HomeWriting } from "../home/HomeWriting";
 import { serializeJsonLd } from "../lib/json-ld";
-import { getPublicProjects } from "../lib/projects";
 import { absoluteUrl, siteConfig } from "../seo";
 import { writings } from "../writings";
 
 export const metadata: Metadata = {
-  title: "Jason Pollard's Projects, Writing, Music, Cats, and Arcade Ghosts",
+  title: "Jason Pollard's Writing, Music, Cats, and Arcade Ghosts",
   description:
-    "ArcadeGhosts is Jason Pollard's personal site for software projects, essays, music signals, cat photos, arcade nostalgia, and curious little experiments.",
+    "ArcadeGhosts is Jason Pollard's personal site for essays, music signals, cat photos, arcade nostalgia, and curious little experiments.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "ArcadeGhosts | Jason Pollard",
     description:
-      "Software projects, essays, music signals, cat photos, arcade nostalgia, and curious little experiments.",
+      "Essays, music signals, cat photos, arcade nostalgia, and curious little experiments.",
     url: "/",
   },
 };
 
-export default async function Home() {
-  const projects = await getPublicProjects();
+export default function Home() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -60,20 +57,6 @@ export default async function Home() {
         },
       },
       {
-        "@type": "ItemList",
-        "@id": absoluteUrl("/#project-list"),
-        name: "Featured projects",
-        itemListElement: projects.slice(0, 6).map((project, index) => ({
-          "@type": project.href.startsWith("/") ? "SoftwareApplication" : "CreativeWork",
-          position: index + 1,
-          name: project.title,
-          description: project.description,
-          url: absoluteUrl(project.href || "/#projects"),
-          applicationCategory: project.type,
-          creativeWorkStatus: project.status,
-        })),
-      },
-      {
         "@type": "Blog",
         "@id": absoluteUrl("/#writing-list"),
         name: "ArcadeGhosts writing",
@@ -101,7 +84,6 @@ export default async function Home() {
         Back Up Top
       </a>
       <HomeHero />
-      <HomeProjects projects={projects} />
       <HomeWriting />
       <HomeTinyThoughts />
       <HomeFunAndGames />

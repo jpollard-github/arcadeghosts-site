@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ArcadeGhosts Terminal",
     description:
-      "The green terminal room: commands, project shortcuts, and old-screen signal.",
+      "The green terminal room: commands, curious shortcuts, and old-screen signal.",
     url: "/terminal",
   },
 };
@@ -26,8 +26,8 @@ export default function TerminalPage() {
           Back Home
         </Link>
         <SectionHeading eyebrow="Terminal" title="The green-screen room has its own door now.">
-          A small command line for the personal side of ArcadeGhosts: projects,
-          about, music, cats, arcade, and the direct email route if you want to
+          A small command line for the personal side of ArcadeGhosts: about,
+          music, cats, arcade, and the direct email route if you want to
           say hello.
         </SectionHeading>
         <HomeDevTerminal />

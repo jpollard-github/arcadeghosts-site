@@ -46,7 +46,7 @@ export default function WritingsIndexPage() {
               </p>
               <h2>{writing.title}</h2>
               <p>{writing.description}</p>
-              <Link className="project-link" href={`/writings/${writing.slug}`}>
+              <Link className="writing-index-link" href={`/writings/${writing.slug}`}>
                 Read piece
               </Link>
             </article>

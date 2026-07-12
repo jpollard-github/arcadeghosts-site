@@ -71,7 +71,7 @@ export function HomeAbout() {
 
         <p>
           ArcadeGhosts is ultimately an experiment in whether a collection of
-          interests, stories, projects, music, photos, and ideas can attract
+          interests, stories, music, photos, and ideas can attract
           the right conversations. If something here feels familiar, reach out.
         </p>
 

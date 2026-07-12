@@ -445,7 +445,7 @@ export function AmbientDisplay({
 
   const isThought = current.kind === "thought";
   const isCat = current.kind === "cat";
-  const isLibraryCard = current.kind === "project" || current.kind === "writing";
+  const isLibraryCard = current.kind === "writing";
   const currentDwellMs = getAmbientSignalDwellMs(current);
 
   function queueIndex(nextIndex: number) {
@@ -534,7 +534,7 @@ export function AmbientDisplay({
               signal={upcoming}
               isThought={upcoming.kind === "thought"}
               isCat={upcoming.kind === "cat"}
-              isLibraryCard={upcoming.kind === "project" || upcoming.kind === "writing"}
+              isLibraryCard={upcoming.kind === "writing"}
               className={styles.stageIncoming}
               inert
             />

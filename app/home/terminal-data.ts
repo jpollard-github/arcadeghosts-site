@@ -24,16 +24,6 @@ export const terminalCommands: TerminalCommandDefinition[] = [
     linkLabel: "Open homepage in a new tab",
   },
   {
-    command: "projects",
-    description: "View shipped, active, paused, and becoming projects.",
-    responseLines: [
-      "Project archive loaded.",
-      "Shipped experiments, active builds, and curious little works-in-progress are ready.",
-    ],
-    href: "/#projects",
-    linkLabel: "Open projects in a new tab",
-  },
-  {
     command: "about",
     description: "Read the personal field guide behind the site.",
     responseLines: [

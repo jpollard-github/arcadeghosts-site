@@ -36,7 +36,7 @@ test(
   async ({ page }) => {
     let expectedStage: Rect | null = null;
 
-    for (const kind of ["cat", "thought", "project", "writing"] as const) {
+    for (const kind of ["cat", "thought", "writing"] as const) {
       await page.goto(`/ambient?type=${kind}`);
       const stack = page.locator("[data-ambient-stage-stack]");
       const stage = page.locator(

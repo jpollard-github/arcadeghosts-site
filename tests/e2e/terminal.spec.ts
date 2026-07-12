@@ -8,15 +8,6 @@ const commandCases = [
     href: "/",
   },
   {
-    command: "projects",
-    lines: [
-      "Project archive loaded.",
-      "Shipped experiments, active builds, and curious little works-in-progress are ready.",
-    ],
-    linkLabel: "Open projects in a new tab",
-    href: "/#projects",
-  },
-  {
     command: "about",
     lines: [
       "Background file opened.",
@@ -75,7 +66,7 @@ test("terminal page commands expose the expected output and links", async ({ pag
 
   await expect(page.getByText("Available commands:")).toBeVisible();
   await expect(
-    page.getByText("help  reset  hello  projects  about  music  cats  arcade  contact"),
+    page.getByText("help  reset  hello  about  music  cats  arcade  contact"),
   ).toBeVisible();
 
   for (const commandCase of commandCases) {

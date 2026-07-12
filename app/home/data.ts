@@ -16,7 +16,6 @@ type HomeNavItem = {
 };
 
 export const navItems: readonly HomeNavItem[] = [
-  { label: "Projects", mobileLabel: "Build", href: "#projects", mobilePriority: "primary" },
   { label: "Writing", mobileLabel: "Essays", href: "#writing", mobilePriority: "primary" },
   { label: "Tiny Thoughts", mobileLabel: "Tiny", href: "#tiny-thoughts", mobilePriority: "primary" },
   { label: "Fun & Games", mobileLabel: "Fun", href: "#fun-and-games", mobilePriority: "primary" },
@@ -82,7 +81,7 @@ export const aboutCards = [
   {
     eyebrow: "Field Guide",
     title: "Arcade Room",
-    text: `${arcadeGames.length} favorite cabinets and the quarter-light nostalgia that still hums behind the projects.`,
+    text: `${arcadeGames.length} favorite cabinets and the quarter-light nostalgia that still hums behind the site.`,
     href: "/arcade",
     cta: "Open",
   },

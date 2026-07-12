@@ -5,7 +5,6 @@ import type { AmbientSignal } from "./ambient-signals";
 import { normalizeAmbientTimeMode } from "./ambient-time";
 import { getAmbientSceneManifest, selectAmbientSceneForSignal } from "./ambient-scenes";
 import { getPublicTinyThoughts, type TinyThought, type TinyThoughtCategory } from "../../lib/tiny-thoughts";
-import { getPublicProjects, type SiteProject } from "../../lib/projects";
 import { beverlyAndLucindaPhotos, thomasJonesMissyCassPhotos } from "../../site-data";
 import { absoluteUrl } from "../../seo";
 import { writings, type WritingEntry } from "../../writings";
@@ -13,7 +12,7 @@ import { writings, type WritingEntry } from "../../writings";
 export const metadata: Metadata = {
   title: "Ambient",
   description:
-    "A calm ambient display built from ArcadeGhosts signals: tiny thoughts, projects, writing, and cat rooms.",
+    "A calm ambient display built from ArcadeGhosts signals: tiny thoughts, writing, and cat rooms.",
   alternates: {
     canonical: "/ambient",
   },
@@ -69,23 +68,12 @@ function trimAmbientText(value: string, maxLength: number) {
   return `${normalized.slice(0, maxLength - 3).trimEnd()}...`;
 }
 
-function formatProjectMeta(project: SiteProject) {
-  const parts = [project.type];
-
-  if (project.status && project.status !== "active") {
-    parts.push(project.status);
-  }
-
-  return parts.join(" • ");
-}
-
 function formatWritingMeta(writing: WritingEntry) {
   return `${writing.icon} Writing`;
 }
 
 function buildAmbientSignals(input: {
   thoughts: TinyThought[];
-  projects: Awaited<ReturnType<typeof getPublicProjects>>;
   writings: WritingEntry[];
   scenes: Awaited<ReturnType<typeof getAmbientSceneManifest>>["scenes"];
 }): AmbientSignal[] {
@@ -138,23 +126,6 @@ function buildAmbientSignals(input: {
     },
   ];
 
-  const projectSignals = input.projects.slice(0, 2).map((project) => ({
-    id: `project-${project.id}`,
-    kind: "project" as const,
-    sourceLabel: "Project",
-    title: project.title,
-    body: trimAmbientText(project.description, 150),
-    meta: formatProjectMeta(project),
-    href: project.href ? absoluteUrl(project.href) : absoluteUrl("/#projects"),
-    actionLabel: project.href?.startsWith("/") ? "Open project" : "Visit project",
-    aside:
-      project.nextAction && project.nextAction.toLowerCase() !== "none"
-        ? `Next move: ${trimAmbientText(project.nextAction, 110)}`
-        : "Projects give Ambient a longer heartbeat: active experiments, half-built worlds, and useful work still in motion.",
-    imageSrc: project.imageUrl || undefined,
-    imageAlt: project.imageUrl ? `${project.title} project image.` : undefined,
-  }));
-
   const writingSignals = input.writings.slice(0, 2).map((writing) => ({
     id: `writing-${writing.slug}`,
     kind: "writing" as const,
@@ -170,11 +141,10 @@ function buildAmbientSignals(input: {
         : "Writings slow the room down on purpose: memory, grief, attention, comedy, and trying again tomorrow.",
   }));
 
-  const groups = [catSignals, thoughtSignals, projectSignals, writingSignals];
+  const groups = [catSignals, thoughtSignals, writingSignals];
   const combined: Array<
     | (typeof catSignals)[number]
     | (typeof thoughtSignals)[number]
-    | (typeof projectSignals)[number]
     | (typeof writingSignals)[number]
   > = [];
   const maxLength = Math.max(...groups.map((group) => group.length));
@@ -213,7 +183,6 @@ function selectAmbientSignals(
     requestedType === "thought" ||
     requestedType === "tiny-thought" ||
     requestedType === "cat" ||
-    requestedType === "project" ||
     requestedType === "writing"
       ? signals.filter((signal) =>
           requestedType === "tiny-thought" ? signal.kind === "thought" : signal.kind === requestedType,
@@ -240,9 +209,8 @@ export default async function AmbientPage({
 }: {
   searchParams?: Promise<AmbientQuery>;
 }) {
-  const [thoughts, projects, sceneManifest] = await Promise.all([
+  const [thoughts, sceneManifest] = await Promise.all([
     getPublicTinyThoughts(4).catch(() => []),
-    getPublicProjects().catch(() => []),
     getAmbientSceneManifest(),
   ]);
   const query = (await searchParams) ?? {};
@@ -252,7 +220,6 @@ export default async function AmbientPage({
   const signals = selectAmbientSignals(
     buildAmbientSignals({
       thoughts,
-      projects,
       writings,
       scenes: sceneManifest.scenes,
     }),

@@ -15,10 +15,11 @@ test("homepage renders the hero and key sections", async ({ page }) => {
   await expect(
     mainNav.locator('a[href="#screening"]'),
   ).toBeVisible();
+  await expect(page.locator("#projects")).toHaveCount(0);
+  await expect(mainNav.getByRole("link", { name: "Projects" })).toHaveCount(0);
+  await expect(page.locator('footer a[href="/#projects"]')).toHaveCount(0);
   await expect(
-    page.getByRole("heading", {
-      name: "Shipped, active, paused, and becoming.",
-    }),
+    page.getByRole("link", { name: "Open GitHub repository" }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {
@@ -33,7 +34,7 @@ test("homepage renders the hero and key sections", async ({ page }) => {
   await expect(mainNav.locator('a[href="#start-here"]')).toHaveCount(0);
   await expect(page.locator("#start-here")).toHaveCount(0);
   await expect(page.locator("main > section").nth(0)).toHaveClass(/hero/);
-  await expect(page.locator("main > section").nth(1)).toHaveAttribute("id", "projects");
+  await expect(page.locator("main > section").nth(1)).toHaveAttribute("id", "writing");
   await expect(page.getByText("80s Dev Terminal")).toHaveCount(0);
 });
 

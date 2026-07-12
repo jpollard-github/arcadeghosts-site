@@ -6,13 +6,13 @@ Ambient turns ArcadeGhosts into a calm, slightly haunted room display. It is a f
 
 `/ambient` is a Next.js App Router page. `app/(ambient)/ambient/page.tsx` gathers public site data and normalizes it into display signals. The `(ambient)` route-group layout owns the document-level `ambient-mode` body state without adding public chrome. `AmbientDisplay.tsx` owns time-of-day selection, dwell timing, manual navigation, and transitions. `ambient.module.css` owns the viewport shell, fixed stage geometry, responsive layouts, and visual themes.
 
-The website remains the source of truth. Ambient consumes public Tiny Thoughts and projects plus repository-backed writings and cat-room content. The page may select a curated scene from `public/ambient/scenes/manifest.json` for text-heavy signals. Cat signals retain their first-party imagery.
+The website remains the source of truth. Ambient consumes public Tiny Thoughts plus repository-backed writings and cat-room content. The page may select a curated scene from `public/ambient/scenes/manifest.json` for text-heavy signals. Cat signals retain their first-party imagery.
 
 The installed Android PWA starts at `/ambient`, is scoped to that route, and requests fullscreen landscape display. Its service worker exists to satisfy installation requirements and deliberately does not cache dynamic signals.
 
 ## Signal model
 
-An `AmbientSignal` has a stable id and one of four kinds: `cat`, `thought`, `project`, or `writing`. Each signal supplies a source label, title, body, metadata, destination link, action label, and aside note. A usable first-party image or selected scene-library asset creates a media composition. Signals without usable media use a deliberate text-and-note composition and do not render an empty or synthetic image region.
+An `AmbientSignal` has a stable id and one of three kinds: `cat`, `thought`, or `writing`. Each signal supplies a source label, title, body, metadata, destination link, action label, and aside note. A usable first-party image or selected scene-library asset creates a media composition. Signals without usable media use a deliberate text-and-note composition and do not render an empty or synthetic image region.
 
 Signals share one stage component and one outer rectangle. Kind-specific styling may tune typography and column proportions, but it must never change the surrounding header, controls, or stage bounds. Dwell time may vary by kind and reading length.
 

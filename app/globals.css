@@ -903,7 +903,6 @@ p {
 }
 
 .about-panel,
-.project-card,
 .tape {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -911,8 +910,7 @@ p {
   box-shadow: 0 22px 70px rgba(0, 0, 0, 0.24);
 }
 
-.about-panel,
-.project-card {
+.about-panel {
   padding: 1.25rem;
 }
 
@@ -1136,45 +1134,10 @@ p {
   margin-top: 2rem;
 }
 
-.project-card {
-  position: relative;
-  min-height: 260px;
-  overflow: hidden;
-}
 
-.project-card::before {
-  position: absolute;
-  inset: 0;
-  content: "";
-  background:
-    linear-gradient(135deg, rgba(255, 54, 95, 0.18), transparent 42%),
-    radial-gradient(circle at 82% 18%, rgba(41, 240, 212, 0.22), transparent 32%);
-  opacity: 0.8;
-}
 
-.project-card > * {
-  position: relative;
-}
 
-.project-card-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-  align-items: center;
-  justify-content: space-between;
-}
 
-.project-card-meta span {
-  border: 1px solid rgba(41, 240, 212, 0.32);
-  border-radius: 999px;
-  padding: 0.34rem 0.58rem;
-  color: var(--teal);
-  font-size: 0.66rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  background: rgba(41, 240, 212, 0.08);
-}
 
 .page-home-link {
   position: fixed;
@@ -1291,7 +1254,7 @@ p {
   color: var(--ink);
 }
 
-.project-link,
+.writing-index-link,
 .update-link,
 .arcade-card-copy a,
 .media-card-copy > a,
@@ -1318,7 +1281,7 @@ p {
   transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease;
 }
 
-.project-link:hover,
+.writing-index-link:hover,
 .update-link:hover,
 .arcade-card-copy a:hover,
 .media-card-copy > a:hover,
@@ -1330,38 +1293,6 @@ p {
   background: rgba(255, 198, 109, 0.14);
 }
 
-.project-details {
-  display: grid;
-  gap: 0.55rem;
-  margin-top: 1rem;
-}
-
-.project-details p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.55;
-}
-
-.project-details strong {
-  color: var(--ink);
-}
-
-.project-blockers {
-  display: grid;
-  gap: 0.45rem;
-}
-
-.project-blockers ul {
-  margin: 0;
-  padding-left: 1.1rem;
-  color: var(--muted);
-}
-
-.project-blockers li {
-  margin: 0 0 0.35rem;
-  line-height: 1.6;
-}
 
 
 
@@ -1388,23 +1319,12 @@ p {
 
 
 
-.project-image-wrap {
-  position: relative;
-  width: 100%;
-  margin-bottom: 1rem;
-  overflow: hidden;
-  border: 1px solid rgba(248, 239, 227, 0.14);
-  border-radius: 8px;
-  aspect-ratio: 12 / 7;
-  background: rgba(255, 255, 255, 0.06);
-}
 
-.project-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
+
+
+
+
+
 
 .card-grid,
 .media-grid,
@@ -1414,7 +1334,7 @@ p {
   contain-intrinsic-size: 1px 1000px;
 }
 
-.project-link {
+.writing-index-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1432,20 +1352,12 @@ p {
   transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
 }
 
-.project-link:hover {
+.writing-index-link:hover {
   transform: translateY(-2px);
   border-color: var(--amber);
   background: rgba(255, 198, 109, 0.18);
 }
 
-.project-updated {
-  margin-top: 1rem;
-  color: var(--dim);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
 
 
 
@@ -3116,8 +3028,7 @@ p {
   }
 
 .recent-signal-card,
-  .section-link-card,
-  .project-card {
+  .section-link-card {
     min-height: auto;
     padding: 1rem;
   }
@@ -3128,15 +3039,13 @@ p {
   }
 
 .section-link-card p,
-  .project-details p,
   .recent-signal-card p {
     font-size: 0.95rem;
     line-height: 1.58;
   }
 
 .section-link-card > span:last-child,
-  .recent-signal-card a,
-  .project-card-meta span {
+  .recent-signal-card a {
     font-size: 0.72rem;
   }
 
@@ -3160,9 +3069,9 @@ p {
     margin-top: 0.95rem;
   }
 
-  .feed-link,
+.feed-link,
   .list-panel-more,
-  .project-link {
+  .writing-index-link {
     width: 100%;
     justify-content: center;
   }
@@ -3195,7 +3104,7 @@ p {
 
 .feed-link,
   .list-panel-more,
-  .project-link,
+  .writing-index-link,
   .update-link {
     font-size: 0.74rem;
     letter-spacing: 0.1em;
@@ -3207,32 +3116,12 @@ p {
     gap: 0.45rem;
   }
 
-  .project-card {
-    min-height: auto;
-  }
 
-  .project-image-wrap {
-    margin-bottom: 0.8rem;
-    aspect-ratio: 16 / 8.5;
-  }
 
-  .project-card-meta {
-    align-items: flex-start;
-    justify-content: flex-start;
-  }
 
-  .project-details {
-    gap: 0.4rem;
-    margin-top: 0.8rem;
-  }
 
-  .project-details > p:not(:first-child),
-  .project-blockers,
-  .project-updated {
-    display: none;
-  }
 
-  .project-link {
+.writing-index-link {
     margin-top: 0.8rem;
   }
 
@@ -3456,7 +3345,6 @@ p {
 
 
 .section-link-card,
-  .project-card,
   .writing-index-card,
   .related-signal-card,
   .tiny-thought-card {

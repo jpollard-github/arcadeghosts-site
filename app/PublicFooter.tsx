@@ -4,7 +4,6 @@ const footerGroups = [
   {
     title: "Explore",
     links: [
-      { href: "/#projects", label: "Projects" },
       { href: "/writings", label: "Writing" },
       { href: "/#tiny-thoughts", label: "Tiny Thoughts" },
       { href: "/#fun-and-games", label: "Fun & Games" },

@@ -53,8 +53,8 @@ export function HomeHero() {
         <div className="hero-copy">
           <p>
             ArcadeGhosts is my personal corner of the internet: writing, cats,
-            software experiments, music, old arcade ghosts, and pieces of
-            whatever I&apos;m trying to understand.
+            music, old arcade ghosts, and pieces of whatever I&apos;m trying to
+            understand.
           </p>
           <p>
             It&apos;s a place for things I make, things I love, and the strange

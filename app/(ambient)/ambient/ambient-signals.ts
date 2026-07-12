@@ -1,4 +1,4 @@
-export type AmbientSignalKind = "thought" | "cat" | "project" | "writing";
+export type AmbientSignalKind = "thought" | "cat" | "writing";
 
 export type AmbientSignal = {
   id: string;
@@ -17,7 +17,6 @@ export type AmbientSignal = {
 const ambientSignalBaseDwellMs: Record<AmbientSignalKind, number> = {
   thought: 17000,
   cat: 22000,
-  project: 21000,
   writing: 23000,
 };
 

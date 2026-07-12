@@ -51,7 +51,7 @@ export type AmbientSceneManifest = {
 
 export type AmbientSceneCapableSignal = {
   id: string;
-  kind: "thought" | "cat" | "project" | "writing";
+  kind: "thought" | "cat" | "writing";
   imageSrc?: string;
 };
 
@@ -60,7 +60,6 @@ const ambientSceneManifestPath = path.join(process.cwd(), "public", "ambient", "
 const signalCategoryPreferences: Record<AmbientSceneCapableSignal["kind"], AmbientSceneCategory[]> = {
   thought: ["misty-forests", "moonlit-lakes", "night-skies", "warm-lamps-shadows", "rain-on-windows"],
   cat: ["cat-silhouettes", "warm-lamps-shadows"],
-  project: ["cozy-desks", "arcade-glow", "crt-reflections", "city-streets", "books-notebooks"],
   writing: ["books-notebooks", "warm-lamps-shadows", "moonlit-lakes", "rain-on-windows", "night-skies"],
 };
 
@@ -264,7 +263,7 @@ const defaultAmbientSceneCategories: AmbientSceneCategorySummary[] = [
     id: "cozy-desks",
     title: "Cozy Desks",
     targetCount: 4,
-    description: "Coffee, keyboards, lamps, and notebook corners that pair well with active project cards.",
+    description: "Coffee, keyboards, lamps, and notebook corners that pair well with text-heavy signals.",
   },
   {
     id: "arcade-glow",

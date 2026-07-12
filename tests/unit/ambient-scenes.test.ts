@@ -49,11 +49,11 @@ test("normalizeAmbientSceneManifest keeps valid scenes only", () => {
 test("selectAmbientSceneForSignal prefers overlay-friendly category matches", () => {
   const scenes: AmbientScene[] = [
     {
-      id: "now-desk",
-      category: "cozy-desks",
-      title: "Desk Lamp",
-      path: "/ambient/scenes/cozy-desks/desk-lamp.webp",
-      moodTags: ["warm", "desk"],
+      id: "writing-desk",
+      category: "books-notebooks",
+      title: "Writing Desk",
+      path: "/ambient/scenes/books-notebooks/writing-desk.webp",
+      moodTags: ["warm", "writing"],
       brightness: "dark",
       textOverlaySuitability: "excellent",
       preferredUse: "side-panel",
@@ -76,12 +76,12 @@ test("selectAmbientSceneForSignal prefers overlay-friendly category matches", ()
 
   const selected = selectAmbientSceneForSignal(
     {
-      id: "project-123",
-      kind: "project",
+      id: "writing-123",
+      kind: "writing",
     },
     scenes,
   );
 
-  assert.equal(selected?.imageSrc, "/ambient/scenes/cozy-desks/desk-lamp.webp");
-  assert.equal(selected?.imageAlt, "Desk Lamp");
+  assert.equal(selected?.imageSrc, "/ambient/scenes/books-notebooks/writing-desk.webp");
+  assert.equal(selected?.imageAlt, "Writing Desk");
 });

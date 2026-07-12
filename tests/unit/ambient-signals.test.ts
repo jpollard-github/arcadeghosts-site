@@ -5,14 +5,6 @@ import { getAmbientSignalDwellMs } from "../../app/(ambient)/ambient/ambient-sig
 test("active Ambient signal kinds use deliberate dwell timing", () => {
   assert.equal(
     getAmbientSignalDwellMs({
-      kind: "project",
-      body: "A project signal.",
-    }),
-    21000,
-  );
-
-  assert.equal(
-    getAmbientSignalDwellMs({
       kind: "cat",
       body: "A cat signal.",
     }),
