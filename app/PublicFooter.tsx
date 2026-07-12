@@ -9,7 +9,7 @@ const footerGroups = [
       { href: "/#fun-and-games", label: "Fun & Games" },
       { href: "/#screening", label: "Screening" },
       { href: "/#cats", label: "Cats" },
-      { href: "/about", label: "About" },
+      { href: "/#about", label: "About" },
       { href: "mailto:jason@arcadeghosts.org", label: "Contact" },
     ],
   },

@@ -10,20 +10,6 @@ test("arcade page renders cabinet favorites", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Galaga" })).toBeVisible();
 });
 
-test("about page renders identity and resonance sections", async ({ page }) => {
-  await page.goto("/about");
-
-  await expect(
-    page.getByRole("heading", { name: "Who I am and how I think." }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("Some places on the internet that resonate with me:"),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "The Five Agents" }),
-  ).toBeVisible();
-});
-
 test("screening page renders the media grid", async ({ page }) => {
   await page.goto("/screening");
 

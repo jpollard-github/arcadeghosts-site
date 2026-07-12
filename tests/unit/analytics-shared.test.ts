@@ -32,12 +32,12 @@ test("normalizeAnalyticsProperties keeps at most two properties", () => {
   assert.deepEqual(
     normalizeAnalyticsProperties({
       source: "homepage",
-      destination: "/about",
+      destination: "/screening",
       extra: "ignored",
     }),
     {
       source: "homepage",
-      destination: "/about",
+      destination: "/screening",
     },
   );
 });

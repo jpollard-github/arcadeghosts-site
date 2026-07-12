@@ -26,11 +26,21 @@ test("homepage renders the hero and key sections", async ({ page }) => {
       name: "Games, rooms, and playable static.",
     }),
   ).toBeVisible();
-  await expect(
-    page.getByRole("heading", {
-      name: "Who I am and how I think.",
-    }),
-  ).toBeVisible();
+  const about = page.locator("#about");
+  await expect(about).toBeVisible();
+  await expect(about.getByText("I'm Jason. I'm a professional software developer and I made this site for fun. Feel free to explore and provide feedback.")).toBeVisible();
+  await expect(about.getByText("I live in the Triad area of North Carolina. I have two cats, Beverly and Lucinda; you can see their pictures here. Have a great day!")).toBeVisible();
+  await expect(about.getByRole("link", { name: "provide feedback" })).toHaveAttribute(
+    "href",
+    "mailto:jason@arcadeghosts.org",
+  );
+  await expect(about.getByRole("link", { name: "here" })).toHaveAttribute(
+    "href",
+    "/cats/beverly-and-lucinda",
+  );
+  await expect(about.getByRole("heading")).toHaveCount(0);
+  await expect(about.getByRole("link", { name: "Read the full About room" })).toHaveCount(0);
+  await expect(about.locator(".section-link-card")).toHaveCount(0);
   await expect(mainNav.locator('a[href="#start-here"]')).toHaveCount(0);
   await expect(page.locator("#start-here")).toHaveCount(0);
   await expect(page.locator("main > section").nth(0)).toHaveClass(/hero/);

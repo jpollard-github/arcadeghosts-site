@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("public routes render only public chrome", async ({ page }) => {
-  await page.goto("/about");
+  await page.goto("/arcade");
 
   await expect(page.getByRole("link", { name: "ArcadeGhosts home" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Open Control Room" })).toBeVisible();
@@ -24,7 +24,7 @@ test("Ambient owns its document mode and releases it on public navigation", asyn
   await expect(page.locator(".site-logo, .control-room-link, .page-home-link, .site-footer")).toHaveCount(0);
   await expect(page.locator("body")).toHaveClass(/ambient-mode/);
 
-  await page.goto("/about");
+  await page.goto("/arcade");
 
   await expect(page.locator("body")).not.toHaveClass(/ambient-mode/);
   await expect(page.getByRole("link", { name: "ArcadeGhosts home" })).toBeVisible();

@@ -296,9 +296,9 @@ test("rapid Previous and Next input leaves one settled stage without overflow", 
 });
 
 test("ordinary pages retain their normal document layout", async ({ page }) => {
-  await page.goto("/about");
+  await page.goto("/screening");
   await expect(
-    page.getByRole("heading", { name: "Who I am and how I think." }),
+    page.getByRole("heading", { name: "Stories that keep following me around." }),
   ).toBeVisible();
   await expect(page.locator("body")).not.toHaveClass(/ambient-mode/);
 

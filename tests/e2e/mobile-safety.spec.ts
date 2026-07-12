@@ -8,7 +8,6 @@ const mobileWidths = [
 
 const routes = [
   "/",
-  "/about",
   "/writings",
   "/arcade",
   "/screening",

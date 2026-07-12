@@ -1,8 +1,6 @@
 import {
-  arcadeGames,
   beverlyAndLucindaPhotos,
   thomasJonesMissyCassPhotos,
-  visualMedia,
 } from "../site-data";
 import { businessLinks } from "../lib/business-config";
 
@@ -76,30 +74,6 @@ export const funAndGamesCards = [
   },
 ];
 
-export const aboutCards = [
-  {
-    eyebrow: "Field Guide",
-    title: "Arcade Room",
-    text: `${arcadeGames.length} favorite cabinets and the quarter-light nostalgia that still hums behind the site.`,
-    href: "/arcade",
-    cta: "Open",
-  },
-  {
-    eyebrow: "Taste Map",
-    title: "Screening",
-    text: `${visualMedia.length} screen signals: Twin Peaks, Severance, horror, curious comedies, and other resonant static.`,
-    href: "/screening",
-    cta: "Browse",
-  },
-  {
-    eyebrow: "Ambient",
-    title: "First Glow",
-    text: "A quieter personal/tablet feature: drifting signals, neon atmosphere, and a softer mode for the same haunted house.",
-    href: "/ambient",
-    cta: "Drift",
-  },
-];
-
 export const catCards = [
   {
     eyebrow: `${beverlyAndLucindaPhotos.length} photos`,
@@ -113,13 +87,4 @@ export const catCards = [
     text: "A larger memory room from 2016 to 2025, with Thomas and the little orbit of cats around him.",
     href: "/cats/thomas-jones-missy-cass",
   },
-];
-
-export const resonanceLinks = [
-  { href: "https://welcometotwinpeaks.com", label: "Twin Peaks fans" },
-  { href: "https://nightride.fm/", label: "Synthwave and retro culture" },
-  { href: "https://rateyourmusic.com", label: "Music discovery" },
-  { href: "https://www.arcade-museum.com", label: "Arcade history and preservation" },
-  { href: "https://longreads.com", label: "Curious minds and long-form ideas" },
-  { href: "https://www.are.na", label: "Weird, beautiful internet projects" },
 ];
