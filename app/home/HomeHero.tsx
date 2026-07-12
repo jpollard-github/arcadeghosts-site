@@ -53,7 +53,7 @@ export function HomeHero() {
         <div className="hero-copy">
           <p>
             ArcadeGhosts is my personal corner of the internet: writing, cats,
-            music, old arcade ghosts, and pieces of whatever I&apos;m trying to
+            old arcade ghosts, and pieces of whatever I&apos;m trying to
             understand.
           </p>
           <p>
