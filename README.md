@@ -31,6 +31,7 @@ Repository-specific skills live in `.agents/skills/`:
 - `ambient-device-review` - reviews Ambient and PWA changes across automated browser checks and a separate Samsung tablet checklist.
 - `export-repo-review` - packages the current repository into a review ZIP and reveals the generated archive in Finder.
 - `release-writing` - prepares and validates repository-backed writing for publication without changing Jason's voice.
+- `add-screening-entry` - adds or updates repository-backed Screening entries, local poster art, links, and optional personal comments.
 
 ## Tech Stack
 
@@ -97,6 +98,20 @@ Run browser tests:
 
 ```bash
 npm run test:e2e
+```
+
+Convert a local image to a repository-backed WebP:
+
+```bash
+npm run image:webp -- "./path/to/poster.png" \
+  "public/images/movies-tv/example-movie.webp"
+```
+
+A direct image URL can be used as the input:
+
+```bash
+npm run image:webp -- "https://example.com/poster.jpg" \
+  "public/images/movies-tv/example-movie.webp"
 ```
 
 Run the focused mobile safety browser test:

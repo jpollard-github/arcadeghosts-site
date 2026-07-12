@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { RelatedSignals } from "../../RelatedSignals";
 import { SectionHeading } from "../../SectionHeading";
+import { VisualMediaCard } from "../../VisualMediaCard";
 import { visualMedia } from "../../site-data";
 
 export const metadata: Metadata = {
@@ -78,39 +78,13 @@ export default function ScreeningPage() {
         </div>
         <div className="media-grid">
           {visualMedia.map((item, index) => (
-            <article className="media-card" key={item.title}>
-              <a
-                className="media-image-link"
-                href={item.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`${item.title} image source`}
-              >
-                <Image
-                  src={item.image}
-                  alt={`${item.title} poster or key art`}
-                  fill
-                  priority={index < 3}
-                  unoptimized
-                  sizes="(max-width: 640px) 50vw, (max-width: 980px) 33vw, 20vw"
-                  className={`media-image${item.fit === "contain" ? " contain" : ""}`}
-                />
-              </a>
-              <div className="media-card-copy">
-                <h3>
-                  {item.itemUrl ? (
-                    <a href={item.itemUrl} target="_blank" rel="noreferrer">
-                      {item.title}
-                    </a>
-                  ) : (
-                    item.title
-                  )}
-                </h3>
-                <a href={item.sourceUrl} target="_blank" rel="noreferrer">
-                  Source
-                </a>
-              </div>
-            </article>
+            <VisualMediaCard
+              item={item}
+              key={item.title}
+              priority={index < 3}
+              showComment
+              sizes="(max-width: 430px) 100vw, (max-width: 560px) 50vw, (max-width: 980px) 33vw, 25vw"
+            />
           ))}
         </div>
         <RelatedSignals

@@ -36,6 +36,50 @@ test("screening page renders the media grid", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Twin Peaks Season 1" }),
   ).toBeVisible();
+  await assertScreeningCardLinks(page, {
+    title: "The Secret of My Success (1987)",
+    detailsUrl:
+      "https://en.wikipedia.org/wiki/The_Secret_of_My_Success_(1987_film)",
+    sourceUrl:
+      "https://www.impawards.com/1987/secret_of_my_success_xlg.html",
+  });
+  await assertScreeningCardLinks(page, {
+    title: "Twin Peaks Season 1",
+    detailsUrl:
+      "https://en.wikipedia.org/wiki/List_of_Twin_Peaks_episodes#Season_1_(1990)",
+    sourceUrl: "https://watch.plex.tv/en-GB/show/twin-peaks/season/1",
+  });
+  await expect(page.getByRole("link", { name: /image source$/i })).toHaveCount(0);
+  await expect(page.locator(".media-card-comment")).toHaveCount(0);
+  await expect(page.locator("img[src*='the-secret-of-my-success-1987']")).toBeVisible();
+});
+
+async function assertScreeningCardLinks(
+  page: import("@playwright/test").Page,
+  item: { title: string; detailsUrl: string; sourceUrl: string },
+) {
+  const heading = page.getByRole("heading", { name: item.title, exact: true });
+  await expect(heading.getByRole("link")).toHaveAttribute(
+    "href",
+    item.detailsUrl,
+  );
+  await expect(
+    page.getByRole("link", { name: `View details for ${item.title}` }),
+  ).toHaveAttribute("href", item.detailsUrl);
+  await expect(
+    page.getByRole("link", { name: `Image source for ${item.title}` }),
+  ).toHaveAttribute("href", item.sourceUrl);
+}
+
+test("homepage screening preview stays curated and comment-free", async ({ page }) => {
+  await page.goto("/");
+
+  const preview = page.getByLabel("Screening preview");
+  await expect(preview.locator(".media-card")).toHaveCount(4);
+  await expect(preview.locator(".media-card-comment")).toHaveCount(0);
+  await expect(
+    preview.getByRole("heading", { name: "The Secret of My Success (1987)" }),
+  ).toHaveCount(0);
 });
 
 test("legacy movies and tv route redirects to screening", async ({ page }) => {

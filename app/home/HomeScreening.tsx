@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { SectionHeading } from "../SectionHeading";
 import { TrackedLink } from "../TrackedLink";
+import { VisualMediaCard } from "../VisualMediaCard";
 import { visualMedia } from "../site-data";
 
 const screeningPreviewTitles = [
@@ -34,37 +34,12 @@ export function HomeScreening() {
       </div>
       <div className="media-grid" aria-label="Screening preview">
         {screeningPreviewItems.map((item, index) => (
-          <article className="media-card" key={item.title}>
-            <a
-              className="media-image-link"
-              href={item.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={`${item.title} image source`}
-            >
-              <Image
-                src={item.image}
-                alt={`${item.title} poster or key art`}
-                fill
-                sizes="(max-width: 430px) 100vw, (max-width: 860px) 50vw, 25vw"
-                className={`media-image${item.fit === "contain" ? " contain" : ""}`}
-              />
-            </a>
-            <div className="media-card-copy">
-              <h3>
-                {item.itemUrl ? (
-                  <a href={item.itemUrl} target="_blank" rel="noreferrer">
-                    {item.title}
-                  </a>
-                ) : (
-                  item.title
-                )}
-              </h3>
-              <a href={item.sourceUrl} target="_blank" rel="noreferrer">
-                Source
-              </a>
-            </div>
-          </article>
+          <VisualMediaCard
+            item={item}
+            key={item.title}
+            priority={index < 3}
+            sizes="(max-width: 430px) 100vw, (max-width: 860px) 50vw, 25vw"
+          />
         ))}
       </div>
     </section>
