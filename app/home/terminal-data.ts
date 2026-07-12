@@ -34,16 +34,6 @@ export const terminalCommands: TerminalCommandDefinition[] = [
     linkLabel: "Open about in a new tab",
   },
   {
-    command: "music",
-    description: "Visit the listening room.",
-    responseLines: [
-      "Music room signal is strong.",
-      "Synths, fluorescent weather, tenderness, and ranked listening history await.",
-    ],
-    href: "/music",
-    linkLabel: "Open music in a new tab",
-  },
-  {
     command: "cats",
     description: "Open the cat galleries.",
     responseLines: [

@@ -17,15 +17,6 @@ const commandCases = [
     href: "/#about",
   },
   {
-    command: "music",
-    lines: [
-      "Music room signal is strong.",
-      "Synths, fluorescent weather, tenderness, and ranked listening history await.",
-    ],
-    linkLabel: "Open music in a new tab",
-    href: "/music",
-  },
-  {
     command: "cats",
     lines: [
       "Cat gallery unlocked.",
@@ -66,7 +57,7 @@ test("terminal page commands expose the expected output and links", async ({ pag
 
   await expect(page.getByText("Available commands:")).toBeVisible();
   await expect(
-    page.getByText("help  reset  hello  about  music  cats  arcade  contact"),
+    page.getByText("help  reset  hello  about  cats  arcade  contact"),
   ).toBeVisible();
 
   for (const commandCase of commandCases) {
@@ -91,14 +82,14 @@ test("terminal page reset clears command history back to the profile", async ({ 
 
   const terminalInput = page.getByLabel("Terminal command");
   await expect(terminalInput).toBeVisible();
-  await terminalInput.fill("music");
+  await terminalInput.fill("cats");
   await terminalInput.press("Enter");
 
-  await expect(page.getByText("Music room signal is strong.", { exact: true })).toBeVisible();
+  await expect(page.getByText("Cat gallery unlocked.", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "RESET" }).click();
 
   const terminal = page.getByRole("region", { name: "80s developer terminal" });
   await expect(terminal.getByText("Jason Pollard", { exact: true })).toBeVisible();
-  await expect(terminal.getByText("Music room signal is strong.", { exact: true })).not.toBeVisible();
+  await expect(terminal.getByText("Cat gallery unlocked.", { exact: true })).not.toBeVisible();
 });

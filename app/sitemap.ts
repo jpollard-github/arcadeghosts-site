@@ -6,7 +6,6 @@ const staticRoutes = [
   "",
   "/ambient",
   "/arcade",
-  "/music",
   "/screening",
   "/about",
   "/agents",

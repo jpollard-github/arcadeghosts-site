@@ -43,8 +43,7 @@ Ambient should primarily consume content the site already knows about:
 - cat photos
 - projects
 - writings
-- arcade and movie/music taste surfaces
-- Spotify-adjacent music surfaces already present on the site
+- arcade and movie taste surfaces
 
 Ambient should not start by inventing:
 
@@ -263,7 +262,6 @@ Let Ambient start responding to mood, listening, and time rather than feeling li
 
 ### Checklist
 
-- [ ] `[P0]` Define the first music-aware display treatment using existing site music data and Spotify-adjacent surfaces.
 - [x] `[P1]` Add time-of-day theme shifts such as morning, evening, and late-night modes.
 - [ ] `[P1]` Add weather-aware styling only if it improves atmosphere instead of clutter.
 - [ ] `[P1]` Decide whether “now playing” should be live, cached, or gracefully omitted when unavailable.
@@ -277,13 +275,10 @@ Let Ambient start responding to mood, listening, and time rather than feeling li
 
 ### Evidence / Sources
 
-- `app/music-data.ts`
-- `app/music/*`
 - music copy and mood language already present in the site
 
 ### Known Constraints
 
-- Spotify live integration is optional, not a requirement for the project to feel successful.
 - Weather and time should guide mood first, not become widgets.
 
 ### Progress Notes
@@ -323,7 +318,7 @@ Give Ambient its own calm motion vocabulary: gentle crossfades, quiet transition
 
 ### Evidence / Sources
 
-- Existing homepage and music-page atmosphere cues
+- Existing homepage atmosphere cues
 - future packet screenshots or local captures once the route exists
 
 ### Known Constraints
@@ -478,7 +473,7 @@ Deepen Ambient with richer recurring moods: seasons, anniversaries, memories, qu
 - [ ] `[P0]` Identify which memory-oriented sources already exist in the site and can be resurfaced safely.
 - [ ] `[P1]` Add seasonal content weighting.
 - [ ] `[P1]` Add simple “on this day” or “from another year” resurfacing if existing timestamps make it easy.
-- [ ] `[P1]` Add movies, arcade, or music-league flavored moments where they strengthen atmosphere.
+- [ ] `[P1]` Add movies or arcade-flavored moments where they strengthen atmosphere.
 - [ ] `[P2]` Add a small quotes or fragments layer only if it earns its place.
 
 ### Review Criteria
@@ -491,7 +486,7 @@ Deepen Ambient with richer recurring moods: seasons, anniversaries, memories, qu
 
 - `app/writings.ts`
 - cat photo archives
-- music and movie pages
+- movie pages
 - project timestamps
 
 ### Known Constraints

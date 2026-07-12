@@ -27,7 +27,7 @@ export default function TerminalPage() {
         </Link>
         <SectionHeading eyebrow="Terminal" title="The green-screen room has its own door now.">
           A small command line for the personal side of ArcadeGhosts: about,
-          music, cats, arcade, and the direct email route if you want to
+          cats, arcade, and the direct email route if you want to
           say hello.
         </SectionHeading>
         <HomeDevTerminal />

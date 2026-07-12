@@ -1,23 +1,5 @@
 import { expect, test } from "@playwright/test";
 
-test("music page renders curated listening content", async ({ page }) => {
-  await page.goto("/music");
-
-  await expect(
-    page.getByRole("heading", { name: "Songs for fluorescent weather." }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", {
-      name: "A listening time machine with five illuminated buttons.",
-    }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", {
-      name: "Years, months, and a few loud spikes in the archive.",
-    }),
-  ).toBeVisible();
-});
-
 test("arcade page renders cabinet favorites", async ({ page }) => {
   await page.goto("/arcade");
 
@@ -210,6 +192,7 @@ test(
     );
     expect(sitemapLocations).toContain("/ambient");
     expect(sitemapLocations).toContain("/tiny-thoughts");
+    expect(sitemapLocations).not.toContain("/music");
     expect(sitemapLocations).not.toContain("/updates");
     expect(sitemapLocations).not.toContain("/movies-tv");
     expect(sitemapLocations).not.toContain("/games/between-two-lodges");

@@ -12,16 +12,16 @@ import { absoluteUrl, siteConfig } from "../seo";
 import { writings } from "../writings";
 
 export const metadata: Metadata = {
-  title: "Jason Pollard's Writing, Music, Cats, and Arcade Ghosts",
+  title: "Jason Pollard's Writing, Cats, and Arcade Ghosts",
   description:
-    "ArcadeGhosts is Jason Pollard's personal site for essays, music signals, cat photos, arcade nostalgia, and curious little experiments.",
+    "ArcadeGhosts is Jason Pollard's personal site for essays, cat photos, arcade nostalgia, and curious little experiments.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "ArcadeGhosts | Jason Pollard",
     description:
-      "Essays, music signals, cat photos, arcade nostalgia, and curious little experiments.",
+      "Essays, cat photos, arcade nostalgia, and curious little experiments.",
     url: "/",
   },
 };

@@ -9,8 +9,8 @@ export default function Image() {
     eyebrow: "ArcadeGhosts",
     title: "Useful tools with a curious little heartbeat.",
     description:
-      "Writing, cats, music, arcade nostalgia, and curious little experiments from the neon forest.",
-    footer: ["Writing", "Music", "Arcades", "Cats"],
+      "Writing, cats, arcade nostalgia, and curious little experiments from the neon forest.",
+    footer: ["Writing", "Arcades", "Cats"],
     glow: "#29f0d4",
   });
 }

@@ -38,7 +38,6 @@ export const surpriseMeLinks = [
   { href: "/writings/my-first-cat" },
   { href: "/games/between-two-lodges" },
   { href: "/twin-peaks-self" },
-  { href: "/music" },
   { href: "/screening" },
   { href: "/arcade" },
   { href: "/cats/beverly-and-lucinda" },
@@ -71,7 +70,7 @@ export const funAndGamesCards = [
   {
     eyebrow: "Terminal",
     title: "Terminal",
-    text: "The green command line has its own room now if you want the old-screen version of the site&apos;s personal signal.",
+    text: "The green command line has its own room now if you want the old-screen version of the site's personal signal.",
     href: "/terminal",
     cta: "Open terminal",
   },
@@ -91,13 +90,6 @@ export const aboutCards = [
     text: `${visualMedia.length} screen signals: Twin Peaks, Severance, horror, curious comedies, and other resonant static.`,
     href: "/screening",
     cta: "Browse",
-  },
-  {
-    eyebrow: "Listening Room",
-    title: "Music",
-    text: "Synths, late-night tenderness, Music League, and songs for fluorescent weather.",
-    href: "/music",
-    cta: "Listen",
   },
   {
     eyebrow: "Ambient",

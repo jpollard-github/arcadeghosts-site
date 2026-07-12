@@ -29,7 +29,6 @@ export function ErrorState({
 
           <div className="error-actions">
             <Link href="/">Return To The Lodge</Link>
-            <Link href="/music">Tune The Signal</Link>
             {showRetry && onRetry ? (
               <button type="button" onClick={onRetry}>
                 Try Again

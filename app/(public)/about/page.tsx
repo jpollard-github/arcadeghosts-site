@@ -21,13 +21,6 @@ const aboutWarmCards = [
     cta: "Read A Few Signals",
   },
   {
-    eyebrow: "Music",
-    title: "Music",
-    text: "Synths, tenderness, playlists, Music League notes, and songs for fluorescent weather.",
-    href: "/music",
-    cta: "Step Into The Listening Room",
-  },
-  {
     eyebrow: "Cats",
     title: "Cats",
     text: "The softer household orbit: Beverly, Lucinda, Thomas, Jones, Missy, Cass, and the necessary cat evidence.",
