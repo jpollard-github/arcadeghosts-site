@@ -889,6 +889,24 @@ p {
   font-size: clamp(1rem, 1.45vw, 1.16rem);
 }
 
+.about-copy a {
+  color: var(--teal);
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.about-copy a:hover {
+  color: var(--amber);
+  text-decoration-thickness: 3px;
+}
+
+.about-copy a:focus-visible {
+  border-radius: 2px;
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+}
+
 .about-copy p,
 .writing-index-header > p,
 .writing-index-card p,
