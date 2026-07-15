@@ -3,8 +3,8 @@ import { funAndGamesCards } from "./data";
 
 export function HomeFunAndGames() {
   return (
-    <section className="content-section fun-games-section" id="fun-and-games">
-      <SectionHeading eyebrow="Fun and Games" title="Games, rooms, and playable static.">
+    <section className="content-section fun-games-section">
+      <SectionHeading id="fun-and-games" eyebrow="Fun and Games" title="Games, rooms, and playable static.">
         The playful side of the site: arcade glow, Twin Peaks-shaped detours,
         and one green terminal room with its own old-screen pulse.
       </SectionHeading>

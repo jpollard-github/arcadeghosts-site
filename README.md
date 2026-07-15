@@ -120,6 +120,23 @@ Run the focused mobile safety browser test:
 npm run test:mobile-safety
 ```
 
+## Homepage section anchors
+
+Homepage navigation uses native fragment links. Each public section keeps a stable ID on its visible
+heading wrapper (`writing`, `tiny-thoughts`, `fun-and-games`, `screening`, `cats`, and `about`). The
+shared `--anchor-offset` token and `scroll-margin-top` keep those headings below the fixed site logo;
+reduced-motion preferences disable smooth scrolling. Do not add JavaScript scrolling unless native
+fragment behavior cannot meet a documented requirement.
+
+`tests/e2e/home.spec.ts` clicks the homepage and footer fragment links, checks direct hash loading,
+and compares each target's bounding box with the fixed chrome at desktop and mobile widths. When
+changing homepage rhythm or navigation, also review full-page captures at desktop, tablet, and
+mobile sizes for unintended blank regions, overlap, horizontal overflow, awkward footer wrapping,
+and headings hidden behind fixed chrome.
+
+`/agents` remains directly reachable but is intentionally absent from public navigation and the
+sitemap. Its route metadata is `noindex, nofollow`, and `robots.txt` also disallows crawling it.
+
 ## Public data caching
 
 The Projects API uses a one-hour tagged Next Data Cache, while public Tiny Thoughts use a fifteen-minute tagged cache. Successful admin mutations immediately expire the relevant tag; admin reads and writes are never cached. Project and Tiny Thought JSON responses and the Tiny Thoughts RSS response are `no-store`, so the tagged server-side data cache remains the single freshness policy. Ambient remains request-specific for its query-driven signal selection while reusing cached Tiny Thoughts.

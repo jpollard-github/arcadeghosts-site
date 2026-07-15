@@ -95,6 +95,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/agents",
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
   openGraph: {
     title: "The Five Agents | ArcadeGhosts",
     description:

@@ -3,7 +3,6 @@ import { HomeAbout } from "../home/HomeAbout";
 import { HomeCats } from "../home/HomeCats";
 import { HomeFunAndGames } from "../home/HomeFunAndGames";
 import { HomeHero } from "../home/HomeHero";
-import { HomeHashScroller } from "../home/HomeHashScroller";
 import { HomeScreening } from "../home/HomeScreening";
 import { HomeTinyThoughts } from "../home/HomeTinyThoughts";
 import { HomeWriting } from "../home/HomeWriting";
@@ -74,8 +73,7 @@ export default function Home() {
   };
 
   return (
-    <main>
-      <HomeHashScroller />
+    <main className="home-page">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}

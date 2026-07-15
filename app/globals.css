@@ -12,6 +12,7 @@
   --line: rgba(248, 239, 227, 0.18);
   --panel: rgba(12, 14, 19, 0.72);
   --max: 1180px;
+  --anchor-offset: 7.5rem;
 }
 
 * {
@@ -77,6 +78,12 @@ body::before {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+a:focus-visible {
+  border-radius: 3px;
+  outline: 2px solid var(--amber);
+  outline-offset: 4px;
 }
 
 button,
@@ -706,7 +713,18 @@ p {
   width: min(var(--max), calc(100% - 2rem));
   margin: 0 auto;
   padding: clamp(4.5rem, 9vw, 8rem) 0;
-  scroll-margin-top: 5.5rem;
+  scroll-margin-top: var(--anchor-offset);
+}
+
+.home-page > .content-section,
+.home-page > .split-section {
+  padding-block: clamp(4rem, 7vw, 6rem);
+}
+
+.section-heading[id],
+.about-copy[id],
+#top {
+  scroll-margin-top: var(--anchor-offset);
 }
 
 .page-shell,
@@ -721,7 +739,7 @@ p {
 
 .section-shell {
   padding-block: clamp(3rem, 7vw, 5rem);
-  scroll-margin-top: 5.5rem;
+  scroll-margin-top: var(--anchor-offset);
 }
 
 .section-shell-tight {
@@ -882,7 +900,11 @@ p {
 }
 
 .about-copy {
-  max-width: 860px;
+  max-width: 720px;
+}
+
+.about-copy h2 {
+  max-width: 680px;
 }
 
 .about-copy p {
@@ -1260,14 +1282,6 @@ p {
 
 
 
-
-.card-grid,
-.media-grid,
-.tiny-thought-grid,
-.section-link-grid {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 1000px;
-}
 
 .writing-index-link {
   display: inline-flex;
@@ -2757,6 +2771,10 @@ p {
 }
 
 @media (max-width: 560px) {
+  :root {
+    --anchor-offset: 4.75rem;
+  }
+
   .page-shell,
   .section-shell {
     width: min(var(--max), calc(100% - 1.5rem));
@@ -2788,7 +2806,12 @@ p {
   .split-section {
     width: min(var(--max), calc(100% - 1.5rem));
     padding: 3.25rem 0;
-    scroll-margin-top: 4.75rem;
+    scroll-margin-top: var(--anchor-offset);
+  }
+
+  .home-page > .content-section,
+  .home-page > .split-section {
+    padding-block: 3.25rem;
   }
 
   .content-section + .content-section,
@@ -3388,5 +3411,11 @@ p {
     margin-bottom: 0.55rem;
     font-size: 1rem;
     line-height: 1.15;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }

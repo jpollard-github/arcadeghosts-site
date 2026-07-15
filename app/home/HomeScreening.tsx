@@ -16,8 +16,8 @@ const screeningPreviewItems = screeningPreviewTitles
 
 export function HomeScreening() {
   return (
-    <section className="content-section screening-section" id="screening">
-      <SectionHeading eyebrow="Screening" title="A few screen stories still glowing in the lobby.">
+    <section className="content-section screening-section">
+      <SectionHeading id="screening" eyebrow="Screening" title="A few screen stories still glowing in the lobby.">
         Twin Peaks, Severance, horror, curious comedies, and the bits of
         emotional weather that kept hanging around long enough to earn their
         own shelf.

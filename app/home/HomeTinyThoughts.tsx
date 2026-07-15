@@ -4,11 +4,11 @@ import { TinyThoughts } from "../TinyThoughts";
 
 export function HomeTinyThoughts() {
   return (
-    <section className="content-section tiny-thought-section" id="tiny-thoughts">
-      <SectionHeading eyebrow="Tiny Thoughts" title="Short signals from the counter.">
+    <section className="content-section tiny-thought-section">
+      <SectionHeading id="tiny-thoughts" eyebrow="Tiny Thoughts" title="Short signals from the counter.">
         Quick observations, lessons learned, funny experiences, opinions, and
         small notes that do not need to become full essays. Fresh counter
-        signals land here first, but the fuller archive lives in its own room now.
+        signals land here first, with the fuller archive in its own room.
       </SectionHeading>
       <div className="feed-links" aria-label="Tiny thought subscriptions">
         <TrackedLink

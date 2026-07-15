@@ -41,7 +41,7 @@ export function PublicFooter() {
         <div className="site-footer-copy">
           <p className="eyebrow">ArcadeGhosts</p>
           <p>
-            A modest footer for the rooms that are public right now.
+            An independent collection of writing, games, experiments, and small signals.
           </p>
         </div>
         <div className="site-footer-links">

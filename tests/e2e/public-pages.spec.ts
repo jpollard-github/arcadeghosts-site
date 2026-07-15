@@ -215,6 +215,7 @@ test(
     expect(projects.headers()["cache-control"]).toContain("no-store");
 
     expect(await robots.text()).toContain("Sitemap:");
+    expect(await robots.text()).toContain("Disallow: /agents");
     const sitemapText = await sitemap.text();
     const sitemapLocations = Array.from(
       sitemapText.matchAll(/<loc>([^<]+)<\/loc>/g),
@@ -225,6 +226,7 @@ test(
     expect(sitemapLocations).not.toContain("/music");
     expect(sitemapLocations).not.toContain("/updates");
     expect(sitemapLocations).not.toContain("/movies-tv");
+    expect(sitemapLocations).not.toContain("/agents");
     expect(sitemapLocations).not.toContain("/games/between-two-lodges");
     expect(sitemapLocations).toContain(
       "/games/between-two-lodges/index.html",
@@ -235,6 +237,18 @@ test(
     expect(Array.isArray(projectsJson.projects)).toBeTruthy();
   },
 );
+
+test("agents stays reachable but opts out of indexing and public discovery", async ({ page }) => {
+  await page.goto("/agents");
+
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+    "content",
+    /noindex, nofollow/i,
+  );
+
+  await page.goto("/");
+  await expect(page.locator('a[href="/agents"]')).toHaveCount(0);
+});
 
 test(
   "database-backed Tiny Thoughts endpoints respond with expected shapes",

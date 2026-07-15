@@ -31,8 +31,8 @@ export default function ArcadePage() {
       <section className="content-section arcade-section collection-section">
         <SectionHeading eyebrow="Arcade" title="Quarter-light favorites.">
           I would spend hours in arcades, following cabinet glow from one
-          obsession to the next. This room keeps the cabinets together without
-          making the homepage scroll forever.
+          obsession to the next. This room keeps those cabinets together under
+          their own quarter-lit glow.
         </SectionHeading>
         <div className="arcade-grid">
           {arcadeGames.map((game, index) => (

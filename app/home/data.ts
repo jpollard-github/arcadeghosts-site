@@ -68,7 +68,7 @@ export const funAndGamesCards = [
   {
     eyebrow: "Terminal",
     title: "Terminal",
-    text: "The green command line has its own room now if you want the old-screen version of the site's personal signal.",
+    text: "A green command line for the old-screen version of the site's personal signal.",
     href: "/terminal",
     cta: "Open terminal",
   },

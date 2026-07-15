@@ -3,13 +3,11 @@ import { catCards } from "./data";
 
 export function HomeCats() {
   return (
-    <section className="content-section cats-section" id="cats">
-      <div id="cats-heading">
-        <SectionHeading eyebrow="Cats" title="Cat rooms, no endless hallway.">
-          The cat galleries have moved into their own rooms so the homepage can
-          breathe again.
-        </SectionHeading>
-      </div>
+    <section className="content-section cats-section">
+      <SectionHeading id="cats" eyebrow="Cats" title="Cat rooms, no endless hallway.">
+        Two cat galleries: one present-tense room for Beverly and Lucinda, and
+        one memory room for Thomas, Jones, Missy, and Cass.
+      </SectionHeading>
       <div className="section-link-grid">
         {catCards.map((card) => (
           <a className="section-link-card" href={card.href} key={card.title}>

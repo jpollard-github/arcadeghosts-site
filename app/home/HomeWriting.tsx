@@ -6,9 +6,9 @@ export function HomeWriting() {
   const featuredWritings = writings.slice(0, 2);
 
   return (
-    <section className="split-section" id="writing">
+    <section className="split-section">
       <div>
-        <SectionHeading eyebrow="Writing" title="Essays from the booth by the window.">
+        <SectionHeading id="writing" eyebrow="Writing" title="Essays from the booth by the window.">
           Notes on technology, identity, attention, grief, comedy, and the
           suspiciously heroic act of trying again tomorrow.
         </SectionHeading>
