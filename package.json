@@ -11,7 +11,6 @@
     "build:timed": "node scripts/run-npm-script-with-timing.mjs build",
     "db:migrate": "node --env-file-if-exists=.env.local --import tsx scripts/migrate-database.ts",
     "db:migrate:status": "node --env-file-if-exists=.env.local --import tsx scripts/migrate-database.ts --status",
-    "ambient:scenes:validate": "node --import tsx scripts/validate-ambient-scenes.ts",
     "image:webp": "node --import tsx scripts/convert-image-to-webp.ts",
     "start": "next start",
     "lint": "eslint .",
@@ -30,7 +29,6 @@
     "test:e2e": "playwright test",
     "test:e2e:ci": "playwright test --grep-invert @database",
     "test:e2e:database": "playwright test --grep @database --workers=1",
-    "test:e2e:ambient": "playwright test tests/e2e/ambient.spec.ts --config=playwright.ambient.config.ts",
     "test:mobile-safety": "playwright test tests/e2e/mobile-safety.spec.ts",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:install": "playwright install chromium"

@@ -10,14 +10,12 @@ description: Verify an ArcadeGhosts code change before declaring it complete, re
    - pure TypeScript logic or data shapes
    - route handler, configuration, dependency, database, or cross-cutting behavior
    - public layout, navigation, or interaction
-   - Ambient or PWA
    - upload or authentication
 4. Run the smallest sufficient verification ladder:
    - docs or copy only: `npm run verify:fast`
    - pure logic: update focused unit tests, then `npm run verify`
    - route, config, dependency, database, or cross-cutting behavior: `npm run verify:full`
    - public UI: add the relevant Playwright spec or focused test command
-   - Ambient or PWA: `npm run ambient:scenes:validate`, `npm run verify`, and `npm run test:e2e:ambient`
    - upload: update and run `tests/unit/upload.test.ts`, then exercise the relevant admin flow when possible
    - authentication: add focused expiry, invalid-token, and unsafe-method tests
 5. If a command fails, diagnose the first causal failure. Do not paper over an environment failure with a production code change.

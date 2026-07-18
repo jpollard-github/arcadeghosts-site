@@ -4,7 +4,6 @@ import { absoluteUrl } from "./seo";
 
 const staticRoutes = [
   "",
-  "/ambient",
   "/arcade",
   "/screening",
   "/terminal",

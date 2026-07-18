@@ -108,53 +108,30 @@ test("tiny thoughts archive exposes rss", async ({ page }) => {
   ).toHaveAttribute("href", "/tiny-thoughts/rss.xml");
 });
 
-test("Ambient fits a landscape tablet and keeps display controls available", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 1280, height: 800 });
-  await page.goto("/ambient?type=cat");
-
-  await expect(
-    page.getByRole("button", { name: "Previous", exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "Next", exact: true }),
-  ).toBeVisible();
-
-  const overflow = await page.evaluate(() => ({
-    horizontal: document.documentElement.scrollWidth - window.innerWidth,
-    vertical: document.documentElement.scrollHeight - window.innerHeight,
-  }));
-
-  expect(overflow.horizontal).toBeLessThanOrEqual(1);
-  expect(overflow.vertical).toBeLessThanOrEqual(1);
-});
-
-test("Ambient install resources expose the expected manifest and uncached worker", async ({
+test("retired worker unregisters without intercepting requests", async ({
   request,
 }) => {
-  const [manifestResponse, workerResponse] = await Promise.all([
-    request.get("/manifest.webmanifest"),
-    request.get("/sw.js"),
-  ]);
+  const workerResponse = await request.get("/sw.js");
 
-  expect(manifestResponse.ok()).toBeTruthy();
   expect(workerResponse.ok()).toBeTruthy();
-  expect(manifestResponse.headers()["content-type"]).toMatch(
-    /application\/manifest\+json/,
-  );
-
-  const manifestJson = (await manifestResponse.json()) as {
-    start_url: string;
-    display: string;
-    orientation: string;
-  };
   const workerText = await workerResponse.text();
 
-  expect(manifestJson.start_url).toBe("/ambient");
-  expect(manifestJson.display).toBe("fullscreen");
-  expect(manifestJson.orientation).toBe("landscape");
+  expect(workerText).toContain("self.skipWaiting()");
+  expect(workerText).toContain("self.registration.unregister()");
+  expect(workerText).toContain("caches.delete(cacheName)");
+  expect(workerText).not.toContain('addEventListener("fetch"');
   expect(workerText).not.toContain("caches.open");
+});
+
+test("retired Ambient URLs redirect to normal public chrome", async ({ page }) => {
+  for (const route of ["/ambient", "/ambient/diagnostic-solid"]) {
+    await page.goto(route);
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.locator("body")).not.toHaveClass(/ambient-mode/);
+    await expect(page.locator("[data-ambient-root], [data-ambient-solid-diagnostic]")).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "ArcadeGhosts home" })).toBeVisible();
+    await expect(page.getByRole("contentinfo", { name: "Public site footer" })).toBeVisible();
+  }
 });
 
 test("removed public routes return not found", async ({ page }) => {
@@ -221,7 +198,7 @@ test(
       sitemapText.matchAll(/<loc>([^<]+)<\/loc>/g),
       ([, location]) => new URL(location).pathname,
     );
-    expect(sitemapLocations).toContain("/ambient");
+    expect(sitemapLocations).not.toContain("/ambient");
     expect(sitemapLocations).toContain("/tiny-thoughts");
     expect(sitemapLocations).not.toContain("/music");
     expect(sitemapLocations).not.toContain("/updates");

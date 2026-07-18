@@ -47,18 +47,14 @@ test("public cache invalidation expires only its intended tag", () => {
 test("public cache architecture stays focused on tagged data reads", async () => {
   const root = process.cwd();
   const read = (file: string) => readFile(path.join(root, file), "utf8");
-  const [home, ambient, revalidation, projects, tinyThoughts] =
-    await Promise.all([
+  const [home, revalidation, projects, tinyThoughts] = await Promise.all([
       read("app/(public)/page.tsx"),
-      read("app/(ambient)/ambient/page.tsx"),
       read("app/lib/admin-revalidation.ts"),
       read("app/lib/projects.ts"),
       read("app/lib/tiny-thoughts.ts"),
     ]);
 
-  for (const page of [home, ambient]) {
-    assert.doesNotMatch(page, /force-dynamic/);
-  }
+  assert.doesNotMatch(home, /force-dynamic/);
   assert.doesNotMatch(revalidation, /revalidatePath/);
   assert.match(projects, /publicCacheTags\.projects/);
   assert.match(tinyThoughts, /publicCacheTags\.tinyThoughts/);

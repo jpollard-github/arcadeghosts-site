@@ -28,7 +28,6 @@ The repo currently blends:
 Repository-specific skills live in `.agents/skills/`:
 
 - `verify-change` - selects and runs the appropriate verification checks for a change, then reports exact results and remaining risks.
-- `ambient-device-review` - reviews Ambient and PWA changes across automated browser checks and a separate Samsung tablet checklist.
 - `export-repo-review` - packages the current repository into a review ZIP and reveals the generated archive in Finder.
 - `release-writing` - prepares and validates repository-backed writing for publication without changing Jason's voice.
 - `add-screening-entry` - adds or updates repository-backed Screening entries, local poster art, links, and optional personal comments.
@@ -139,7 +138,11 @@ sitemap. Its route metadata is `noindex, nofollow`, and `robots.txt` also disall
 
 ## Public data caching
 
-The Projects API uses a one-hour tagged Next Data Cache, while public Tiny Thoughts use a fifteen-minute tagged cache. Successful admin mutations immediately expire the relevant tag; admin reads and writes are never cached. Project and Tiny Thought JSON responses and the Tiny Thoughts RSS response are `no-store`, so the tagged server-side data cache remains the single freshness policy. Ambient remains request-specific for its query-driven signal selection while reusing cached Tiny Thoughts.
+The Projects API uses a one-hour tagged Next Data Cache, while public Tiny Thoughts use a fifteen-minute tagged cache. Successful admin mutations immediately expire the relevant tag; admin reads and writes are never cached. Project and Tiny Thought JSON responses and the Tiny Thoughts RSS response are `no-store`, so the tagged server-side data cache remains the single freshness policy.
+
+## Retired experiments
+
+Ambient / First Glow was retired on 2026-07-18. Its historical design and device findings are preserved in [`docs/archive/ambient-v1-retired.md`](docs/archive/ambient-v1-retired.md). The temporary service-worker cleanup file and old-URL redirects can be deleted after a future release cycle once previously installed clients have had an opportunity to update.
 
 ## Database environments and migrations
 

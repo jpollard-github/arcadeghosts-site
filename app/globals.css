@@ -50,17 +50,6 @@ body {
     sans-serif;
 }
 
-body.ambient-mode {
-  height: 100vh;
-  height: 100dvh;
-  background: #08090c;
-  overflow: hidden;
-}
-
-body.ambient-mode::before {
-  display: none;
-}
-
 body::before {
   position: fixed;
   inset: 0;

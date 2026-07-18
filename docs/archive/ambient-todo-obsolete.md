@@ -1,4 +1,4 @@
-> **Archived and obsolete:** This file is preserved only as historical context. It must not be treated as an active backlog, roadmap, or source of current work. See `docs/ambient.md` for durable Ambient documentation.
+> **Archived and obsolete:** This file is preserved only as historical context. It must not be treated as an active backlog, roadmap, or source of current work. See `docs/archive/ambient-v1-retired.md` for the retirement record.
 
 # AMBIENT-TODO (obsolete archive)
 
@@ -17,7 +17,7 @@ Use it to decide:
 
 Read with:
 
-1. `docs/ambient.md`
+1. `docs/archive/ambient-v1-retired.md`
 2. this archived file (historical context only)
 3. `app/lib/tiny-thoughts.ts`
 4. `app/lib/projects.ts`
