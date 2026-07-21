@@ -75,8 +75,10 @@ test("listening page renders all albums with album-specific links", async ({ pag
     page.getByRole("heading", { name: "Albums I keep coming back to." }),
   ).toBeVisible();
   await expect(page.getByRole("link", { name: "Back Home" })).toBeVisible();
-  await expect(page.locator(".album-card")).toHaveCount(49);
-  await expect(page.getByRole("heading", { name: "Enema of the State" })).toBeVisible();
+  await expect(page.locator(".album-card")).toHaveCount(50);
+  await expect(
+    page.getByRole("heading", { name: "Drive: Original Motion Picture Soundtrack" }),
+  ).toBeVisible();
 
   const title = "Hysteria";
   const artist = "Def Leppard";

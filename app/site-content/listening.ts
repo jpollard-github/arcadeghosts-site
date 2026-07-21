@@ -350,4 +350,11 @@ export const listeningAlbums: readonly ListeningAlbum[] = [
     detailsUrl: "https://en.wikipedia.org/wiki/Enema_of_the_State",
     sourceUrl: "https://en.wikipedia.org/wiki/File:Blink-182_-_Enema_of_the_State_cover.jpg",
   },
+  {
+    artist: "Various Artists",
+    title: "Drive: Original Motion Picture Soundtrack",
+    image: "/images/listening/various-artists-drive-original-motion-picture-soundtrack.webp",
+    detailsUrl: "https://en.wikipedia.org/wiki/Drive_(soundtrack)",
+    sourceUrl: "https://en.wikipedia.org/wiki/File:Drive_(soundtrack).jpg",
+  },
 ] as const;

@@ -56,6 +56,7 @@ const expectedAlbums = [
   ["The Sisters of Mercy", "Floodland"],
   ["Heart", "Heart"],
   ["blink-182", "Enema of the State"],
+  ["Various Artists", "Drive: Original Motion Picture Soundtrack"],
 ] as const;
 
 function assertWebUrl(value: string, label: string) {
@@ -67,7 +68,7 @@ function assertWebUrl(value: string, label: string) {
 }
 
 test("listening albums preserve the complete curated order", () => {
-  assert.equal(listeningAlbums.length, 49);
+  assert.equal(listeningAlbums.length, 50);
   assert.deepEqual(
     listeningAlbums.map(({ artist, title }) => [artist, title]),
     expectedAlbums,
