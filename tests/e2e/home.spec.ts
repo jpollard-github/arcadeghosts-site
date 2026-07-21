@@ -4,6 +4,7 @@ const homeSectionLinks = [
   { href: "#writing", heading: "Essays from the booth by the window." },
   { href: "#tiny-thoughts", heading: "Short signals from the counter." },
   { href: "#fun-and-games", heading: "Games, rooms, and playable static." },
+  { href: "#listening", heading: "A few albums still humming through the walls." },
   { href: "#screening", heading: "A few screen stories still glowing in the lobby." },
   { href: "#cats", heading: "Cat rooms, no endless hallway." },
   { href: "#about", heading: "About ArcadeGhosts." },
@@ -59,6 +60,19 @@ test("homepage renders the hero and key sections", async ({ page }) => {
   await expect(
     mainNav.locator('a[href="#screening"]'),
   ).toBeVisible();
+  await expect(mainNav.locator("a")).toHaveCount(7);
+  const navHrefs = await mainNav
+    .locator("a")
+    .evaluateAll((links) => links.map((link) => link.getAttribute("href")));
+  expect(navHrefs).toEqual([
+    "#writing",
+    "#tiny-thoughts",
+    "#fun-and-games",
+    "#listening",
+    "#screening",
+    "#cats",
+    "#about",
+  ]);
   await expect(page.locator("#projects")).toHaveCount(0);
   await expect(mainNav.getByRole("link", { name: "Projects" })).toHaveCount(0);
   await expect(page.locator('footer a[href="/#projects"]')).toHaveCount(0);
@@ -115,9 +129,9 @@ test("footer section links work from another public route", async ({ page }) => 
 
 test("direct hash loading aligns a heading below the fixed chrome", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/#screening");
+  await page.goto("/#listening");
 
-  await expectTargetBelowFixedChrome(page, page.locator("#screening"));
+  await expectTargetBelowFixedChrome(page, page.locator("#listening"));
 });
 
 test("mobile anchor navigation uses the same stable offset", async ({ page }) => {
@@ -155,15 +169,18 @@ test("homepage grids do not reserve pathological off-screen space", async ({ pag
     };
 
     return {
-      contentVisibility: [".fun-games-grid", ".screening-section .media-grid", ".cats-section .section-link-grid"].map(
+      contentVisibility: [".fun-games-grid", ".listening-preview", ".screening-section .media-grid", ".cats-section .section-link-grid"].map(
         (selector) => getComputedStyle(document.querySelector(selector)!).contentVisibility,
       ),
-      screeningGap: gap(".fun-games-grid", "#screening"),
+      listeningGap: gap(".fun-games-grid", "#listening"),
+      screeningGap: gap(".listening-preview", "#screening"),
       catsGap: gap(".screening-section .media-grid", "#cats"),
     };
   });
 
-  expect(layout.contentVisibility).toEqual(["visible", "visible", "visible"]);
+  expect(layout.contentVisibility).toEqual(["visible", "visible", "visible", "visible"]);
+  expect(layout.listeningGap).toBeGreaterThan(80);
+  expect(layout.listeningGap).toBeLessThan(240);
   expect(layout.screeningGap).toBeGreaterThan(80);
   expect(layout.screeningGap).toBeLessThan(240);
   expect(layout.catsGap).toBeGreaterThan(80);

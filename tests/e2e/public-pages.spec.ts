@@ -68,6 +68,52 @@ test("homepage screening preview stays curated and comment-free", async ({ page 
   ).toHaveCount(0);
 });
 
+test("listening page renders all albums with album-specific links", async ({ page }) => {
+  await page.goto("/listening");
+
+  await expect(
+    page.getByRole("heading", { name: "Albums I keep coming back to." }),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "Back Home" })).toBeVisible();
+  await expect(page.locator(".album-card")).toHaveCount(49);
+  await expect(page.getByRole("heading", { name: "Enema of the State" })).toBeVisible();
+
+  const title = "Hysteria";
+  const artist = "Def Leppard";
+  const detailsUrl = "https://en.wikipedia.org/wiki/Hysteria_(Def_Leppard_album)";
+  const sourceUrl = "https://en.wikipedia.org/wiki/File:Def_Leppard_-_Hysteria_(vinyl_version).jpg";
+  const card = page.locator(".album-card").first();
+
+  await expect(card.getByRole("heading", { name: title }).getByRole("link")).toHaveAttribute(
+    "href",
+    detailsUrl,
+  );
+  await expect(card.getByText(artist, { exact: true })).toBeVisible();
+  await expect(
+    card.getByRole("link", { name: `View details for ${title} by ${artist}` }),
+  ).toHaveAttribute("href", detailsUrl);
+  await expect(
+    card.getByRole("link", { name: `Image source for ${title} by ${artist}` }),
+  ).toHaveAttribute("href", sourceUrl);
+  await expect(card.getByText("Image source", { exact: true })).toBeVisible();
+});
+
+test("homepage listening preview contains exactly the first six albums", async ({ page }) => {
+  await page.goto("/");
+
+  const preview = page.getByLabel("Listening preview");
+  await expect(preview.locator(".album-card")).toHaveCount(6);
+  await expect(preview.locator("h3")).toHaveText([
+    "Hysteria",
+    "Pretty Hate Machine",
+    "Escape",
+    "The Rise and Fall of a Midwest Princess",
+    "The Bones of What You Believe",
+    "Soundtrack from Twin Peaks",
+  ]);
+  await expect(preview.getByRole("heading", { name: "Enema of the State" })).toHaveCount(0);
+});
+
 test("legacy movies and tv route redirects to screening", async ({ page }) => {
   await page.goto("/movies-tv");
 
@@ -199,6 +245,7 @@ test(
       ([, location]) => new URL(location).pathname,
     );
     expect(sitemapLocations).not.toContain("/ambient");
+    expect(sitemapLocations).toContain("/listening");
     expect(sitemapLocations).toContain("/tiny-thoughts");
     expect(sitemapLocations).not.toContain("/music");
     expect(sitemapLocations).not.toContain("/updates");

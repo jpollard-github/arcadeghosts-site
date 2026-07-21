@@ -7,6 +7,7 @@ const footerGroups = [
       { href: "/writings", label: "Writing" },
       { href: "/#tiny-thoughts", label: "Tiny Thoughts" },
       { href: "/#fun-and-games", label: "Fun & Games" },
+      { href: "/#listening", label: "Listening" },
       { href: "/#screening", label: "Screening" },
       { href: "/#cats", label: "Cats" },
       { href: "/#about", label: "About" },

@@ -18,6 +18,14 @@ export const navItems: readonly HomeNavItem[] = [
   { label: "Tiny Thoughts", mobileLabel: "Tiny", href: "#tiny-thoughts", mobilePriority: "primary" },
   { label: "Fun & Games", mobileLabel: "Fun", href: "#fun-and-games", mobilePriority: "primary" },
   {
+    label: "Listening",
+    mobileLabel: "Listen",
+    href: "#listening",
+    mobilePriority: "primary",
+    ariaLabel: "Jump to the listening section",
+    title: "Listening section",
+  },
+  {
     label: "Screening",
     mobileLabel: "Screen",
     href: "#screening",
@@ -36,6 +44,7 @@ export const surpriseMeLinks = [
   { href: "/writings/my-first-cat" },
   { href: "/games/between-two-lodges" },
   { href: "/twin-peaks-self" },
+  { href: "/listening" },
   { href: "/screening" },
   { href: "/arcade" },
   { href: "/cats/beverly-and-lucinda" },
