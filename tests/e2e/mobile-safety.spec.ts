@@ -11,6 +11,7 @@ const routes = [
   "/writings",
   "/arcade",
   "/listening",
+  "/reading",
   "/screening",
   "/terminal",
   "/tiny-thoughts",
@@ -47,6 +48,15 @@ const tapTargetChecks = [
       ".album-image-link",
       ".album-card-copy h3 a",
       ".album-card-copy > a",
+    ],
+  },
+  {
+    route: "/reading",
+    selectors: [
+      ".back-link",
+      ".book-image-link",
+      ".book-card-copy h3 a",
+      ".book-card-copy > a",
     ],
   },
   {

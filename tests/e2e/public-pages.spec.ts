@@ -116,6 +116,64 @@ test("homepage listening preview contains exactly the first six albums", async (
   await expect(preview.getByRole("heading", { name: "Enema of the State" })).toHaveCount(0);
 });
 
+test("reading page renders every book with sourced cover links", async ({ page }) => {
+  await page.goto("/reading");
+
+  await expect(page.getByRole("heading", { name: "Books I keep carrying with me." })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Back Home" })).toBeVisible();
+  await expect(page.locator(".book-card")).toHaveCount(32);
+  await expect(page.getByRole("heading", { name: "Science of Logic" })).toBeVisible();
+  await expect(page.getByText("G. W. F. Hegel", { exact: true })).toBeVisible();
+
+  const title = "Way of the Peaceful Warrior";
+  const author = "Dan Millman";
+  const detailsUrl = "https://openlibrary.org/works/OL40816W/Way_of_the_peaceful_warrior";
+  const sourceUrl = "https://openlibrary.org/works/OL40816W/Way_of_the_peaceful_warrior";
+  const card = page.locator(".book-card").first();
+
+  await expect(card.getByRole("heading", { name: title }).getByRole("link")).toHaveAttribute(
+    "href",
+    detailsUrl,
+  );
+  await expect(card.getByText(author, { exact: true })).toBeVisible();
+  await expect(card.getByRole("link", { name: `View details for ${title} by ${author}` })).toHaveAttribute(
+    "href",
+    detailsUrl,
+  );
+  await expect(card.getByRole("link", { name: `Image source for ${title} by ${author}` })).toHaveAttribute(
+    "href",
+    sourceUrl,
+  );
+
+  const spyGuidebook = page.locator(".book-card").filter({ hasText: "The Spy’s Guidebook" });
+  await expect(
+    spyGuidebook.getByRole("link", { name: "View details for The Spy’s Guidebook by Falcon Travis" }),
+  ).toHaveAttribute("href", "https://obnb.uk/p10106181-the-spys-guidebook");
+  await expect(
+    spyGuidebook.getByRole("link", { name: "Image source for The Spy’s Guidebook by Falcon Travis" }),
+  ).toHaveAttribute("href", "https://obnb.uk/p10106181-the-spys-guidebook");
+  await expect(spyGuidebook.locator(".book-placeholder")).toHaveCount(0);
+});
+
+test("homepage reading preview stays explicitly curated", async ({ page }) => {
+  await page.goto("/");
+
+  const preview = page.getByLabel("Reading preview");
+  await expect(preview.locator(".book-card")).toHaveCount(5);
+  await expect(preview.locator("h3")).toHaveText([
+    "Way of the Peaceful Warrior",
+    "Misery",
+    "Grover and the Everything in the Whole Wide World Museum",
+    "The Book of Adventure Games",
+    "Being and Nothingness",
+  ]);
+  await expect(preview.getByRole("heading", { name: "Atlas Shrugged" })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Visit Reading Room" })).toHaveAttribute(
+    "href",
+    "/reading",
+  );
+});
+
 test("legacy movies and tv route redirects to screening", async ({ page }) => {
   await page.goto("/movies-tv");
 
@@ -248,6 +306,7 @@ test(
     );
     expect(sitemapLocations).not.toContain("/ambient");
     expect(sitemapLocations).toContain("/listening");
+    expect(sitemapLocations).toContain("/reading");
     expect(sitemapLocations).toContain("/tiny-thoughts");
     expect(sitemapLocations).not.toContain("/music");
     expect(sitemapLocations).not.toContain("/updates");

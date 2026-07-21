@@ -4,7 +4,7 @@
 
 The repo currently blends:
 
-- public pages for writing, personality, the repository-backed `/listening` and `/screening` collections, and experiments
+- public pages for writing, personality, the repository-backed `/listening`, `/screening`, and `/reading` collections, and experiments
 - a homepage with curated sections and Tiny Thoughts highlights
 - admin tools for updating site content
 - lightweight storage and upload workflows
@@ -122,7 +122,7 @@ npm run test:mobile-safety
 ## Homepage section anchors
 
 Homepage navigation uses native fragment links. Each public section keeps a stable ID on its visible
-heading wrapper (`writing`, `tiny-thoughts`, `fun-and-games`, `listening`, `screening`, `cats`, and `about`). The
+heading wrapper (`writing`, `tiny-thoughts`, `fun-and-games`, `listening`, `screening`, `reading`, `cats`, and `about`). The
 shared `--anchor-offset` token and `scroll-margin-top` keep those headings below the fixed site logo;
 reduced-motion preferences disable smooth scrolling. Do not add JavaScript scrolling unless native
 fragment behavior cannot meet a documented requirement.

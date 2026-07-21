@@ -33,6 +33,14 @@ export const navItems: readonly HomeNavItem[] = [
     ariaLabel: "Jump to the screening section",
     title: "Screening section",
   },
+  {
+    label: "Reading",
+    mobileLabel: "Read",
+    href: "#reading",
+    mobilePriority: "primary",
+    ariaLabel: "Jump to the reading section",
+    title: "Reading section",
+  },
   { label: "Cats", mobileLabel: "Cats", href: "#cats", mobilePriority: "primary" },
   { label: "About", mobileLabel: "About", href: "#about", mobilePriority: "primary" },
 ] as const;

@@ -10,6 +10,7 @@ const sitemapPaths = sitemapUrls.map((url) => new URL(url).pathname);
 test("sitemap includes canonical public routes and excludes redirect-only routes", () => {
   assert.equal(sitemapPaths.filter((path) => path === "/").length, 1);
   assert.ok(sitemapPaths.includes("/listening"));
+  assert.ok(sitemapPaths.includes("/reading"));
   assert.ok(sitemapPaths.includes("/screening"));
   assert.ok(!sitemapPaths.includes("/music"));
   assert.ok(!sitemapPaths.includes("/movies-tv"));

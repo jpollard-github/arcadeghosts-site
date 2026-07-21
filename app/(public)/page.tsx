@@ -4,6 +4,7 @@ import { HomeCats } from "../home/HomeCats";
 import { HomeFunAndGames } from "../home/HomeFunAndGames";
 import { HomeHero } from "../home/HomeHero";
 import { HomeListening } from "../home/HomeListening";
+import { HomeReading } from "../home/HomeReading";
 import { HomeScreening } from "../home/HomeScreening";
 import { HomeTinyThoughts } from "../home/HomeTinyThoughts";
 import { HomeWriting } from "../home/HomeWriting";
@@ -88,6 +89,7 @@ export default function Home() {
       <HomeFunAndGames />
       <HomeListening />
       <HomeScreening />
+      <HomeReading />
       <HomeCats />
       <HomeAbout />
     </main>
