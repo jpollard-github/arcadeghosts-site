@@ -30,6 +30,11 @@ test("screening page renders the media grid", async ({ page }) => {
       "https://www.impawards.com/1987/secret_of_my_success_xlg.html",
   });
   await assertScreeningCardLinks(page, {
+    title: "Stay",
+    detailsUrl: "https://en.wikipedia.org/wiki/Stay_(2005_film)",
+    sourceUrl: "https://www.impawards.com/2005/stay.html",
+  });
+  await assertScreeningCardLinks(page, {
     title: "Twin Peaks Season 1",
     detailsUrl:
       "https://en.wikipedia.org/wiki/List_of_Twin_Peaks_episodes#Season_1_(1990)",

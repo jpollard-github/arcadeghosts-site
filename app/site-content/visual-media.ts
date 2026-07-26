@@ -126,4 +126,10 @@ export const visualMedia: readonly VisualMediaItem[] = [
     sourceUrl:
       "https://www.impawards.com/1987/secret_of_my_success_xlg.html",
   },
+  {
+    title: "Stay",
+    image: "/images/movies-tv/stay-2005.webp",
+    detailsUrl: "https://en.wikipedia.org/wiki/Stay_(2005_film)",
+    sourceUrl: "https://www.impawards.com/2005/stay.html",
+  },
 ] as const;
