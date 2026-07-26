@@ -38,7 +38,7 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/blob": "^2.6.1",
     "image-dimensions": "^2.5.1",
-    "next": "^16.2.10",
+    "next": "^16.2.12",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
@@ -48,14 +48,17 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.1",
-    "eslint-config-next": "^16.2.10",
+    "eslint-config-next": "^16.2.12",
     "lighthouse": "^13.4.0",
     "sharp": "^0.35.3",
     "tsx": "^4.23.1",
     "typescript": "5.7.3"
   },
   "overrides": {
-    "postcss": "^8.5.15",
+    "postcss": "^8.5.18",
+    "next": {
+      "sharp": "^0.35.3"
+    },
     "@vercel/blob": {
       "undici": "6.27.0"
     }
