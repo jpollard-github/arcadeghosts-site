@@ -138,4 +138,10 @@ export const visualMedia: readonly VisualMediaItem[] = [
     detailsUrl: "https://en.wikipedia.org/wiki/Dragonfly_(2002_film)",
     sourceUrl: "https://en.wikipedia.org/wiki/Dragonfly_(2002_film)",
   },
+  {
+    title: "Wicker Park (2004)",
+    image: "/images/movies-tv/wicker-park-2004.webp",
+    detailsUrl: "https://en.wikipedia.org/wiki/Wicker_Park_(film)",
+    sourceUrl: "https://www.impawards.com/2004/wicker_park.html",
+  },
 ] as const;

@@ -48,6 +48,6 @@ test("visual media entries reference valid unique local images and web URLs", ()
   }
 });
 
-test("Dragonfly is the final screening entry", () => {
-  assert.equal(visualMedia.at(-1)?.title, "Dragonfly (2002)");
+test("Wicker Park is the final screening entry", () => {
+  assert.equal(visualMedia.at(-1)?.title, "Wicker Park (2004)");
 });
