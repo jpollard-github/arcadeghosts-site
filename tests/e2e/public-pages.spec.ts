@@ -35,6 +35,11 @@ test("screening page renders the media grid", async ({ page }) => {
     sourceUrl: "https://www.impawards.com/2005/stay.html",
   });
   await assertScreeningCardLinks(page, {
+    title: "Dragonfly (2002)",
+    detailsUrl: "https://en.wikipedia.org/wiki/Dragonfly_(2002_film)",
+    sourceUrl: "https://en.wikipedia.org/wiki/Dragonfly_(2002_film)",
+  });
+  await assertScreeningCardLinks(page, {
     title: "Twin Peaks Season 1",
     detailsUrl:
       "https://en.wikipedia.org/wiki/List_of_Twin_Peaks_episodes#Season_1_(1990)",

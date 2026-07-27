@@ -47,3 +47,7 @@ test("visual media entries reference valid unique local images and web URLs", ()
     }
   }
 });
+
+test("Dragonfly is the final screening entry", () => {
+  assert.equal(visualMedia.at(-1)?.title, "Dragonfly (2002)");
+});

@@ -132,4 +132,10 @@ export const visualMedia: readonly VisualMediaItem[] = [
     detailsUrl: "https://en.wikipedia.org/wiki/Stay_(2005_film)",
     sourceUrl: "https://www.impawards.com/2005/stay.html",
   },
+  {
+    title: "Dragonfly (2002)",
+    image: "/images/movies-tv/dragonfly-2002.webp",
+    detailsUrl: "https://en.wikipedia.org/wiki/Dragonfly_(2002_film)",
+    sourceUrl: "https://en.wikipedia.org/wiki/Dragonfly_(2002_film)",
+  },
 ] as const;
