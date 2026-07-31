@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   liveWithMeContent,
@@ -53,7 +54,7 @@ function LiveWithMeParagraph({
 }
 
 export default function LiveWithMePage() {
-  const { hero, sections, closing } = liveWithMeContent;
+  const { hero, sections, music, closing } = liveWithMeContent;
 
   return (
     <main className="live-with-me-page" id="top">
@@ -67,24 +68,40 @@ export default function LiveWithMePage() {
 
         <article className="live-with-me-letter" aria-labelledby="live-with-me-title">
           <header className="live-with-me-hero">
-            <p className="eyebrow">{hero.eyebrow}</p>
-            <p className="live-with-me-signal">{hero.signal}</p>
+            <div className="live-with-me-hero-kicker">
+              <p className="eyebrow">{hero.eyebrow}</p>
+              <p className="live-with-me-signal">{hero.signal}</p>
+            </div>
             <h1 id="live-with-me-title">{hero.heading}</h1>
             <p className="live-with-me-deck">{hero.deck}</p>
 
-            <div className="live-with-me-introduction">
-              {hero.introduction.map((paragraph, index) => (
-                <LiveWithMeParagraph paragraph={paragraph} key={index} />
-              ))}
-            </div>
+            <div className="live-with-me-opening">
+              <div className="live-with-me-opening-copy">
+                <div className="live-with-me-introduction">
+                  {hero.introduction.map((paragraph, index) => (
+                    <LiveWithMeParagraph paragraph={paragraph} key={index} />
+                  ))}
+                </div>
 
-            <aside
-              className="live-with-me-note"
-              aria-label="A small clarification"
-            >
-              <span aria-hidden="true" />
-              <p>{hero.note}</p>
-            </aside>
+                <aside
+                  className="live-with-me-note"
+                  aria-label="A small clarification"
+                >
+                  <p>{hero.note}</p>
+                </aside>
+              </div>
+
+              <figure className="live-with-me-portrait">
+                <Image
+                  src={hero.image.src}
+                  alt={hero.image.alt}
+                  width={hero.image.width}
+                  height={hero.image.height}
+                  sizes="(max-width: 720px) calc(100vw - 3rem), 360px"
+                  priority
+                />
+              </figure>
+            </div>
           </header>
 
           <div className="live-with-me-sections">
@@ -92,6 +109,7 @@ export default function LiveWithMePage() {
               <section
                 className={[
                   "live-with-me-section",
+                  `live-with-me-section-${section.alignment}`,
                   section.treatment === "practical"
                     ? "live-with-me-section-practical"
                     : "",
@@ -120,24 +138,26 @@ export default function LiveWithMePage() {
             ))}
           </div>
 
+          <p className="live-with-me-music">
+            <span>{music.label}</span>
+            <a href={music.href} target="_blank" rel="noopener noreferrer">
+              {music.linkText}
+            </a>
+          </p>
+
           <section
             className="live-with-me-closing"
             aria-labelledby="live-with-me-closing-heading"
           >
-            <p className="live-with-me-closing-signal">The porch light is on.</p>
             <h2 id="live-with-me-closing-heading">{closing.heading}</h2>
             <div className="live-with-me-closing-copy">
               {closing.paragraphs.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
-            <div className="live-with-me-actions">
-              <a className="live-with-me-primary-cta" href={liveWithMeMailto}>
-                {closing.primaryCta}
-              </a>
-              <Link href="/cats/beverly-and-lucinda">{closing.catCta}</Link>
-              <Link href="/">{closing.homeCta}</Link>
-            </div>
+            <a className="live-with-me-contact-link" href={liveWithMeMailto}>
+              {closing.contactText}
+            </a>
           </section>
         </article>
       </div>

@@ -7,10 +7,16 @@ export type LiveWithMeParagraph =
   | string
   | readonly (string | LiveWithMeTextLink)[];
 
+export type LiveWithMeSectionAlignment =
+  | "heading-left"
+  | "heading-right"
+  | "full";
+
 export type LiveWithMeSection = {
   id: string;
   heading: string;
   paragraphs: readonly LiveWithMeParagraph[];
+  alignment: LiveWithMeSectionAlignment;
   treatment?: "plain" | "practical";
 };
 
@@ -27,12 +33,12 @@ export const liveWithMeContent = {
     eyebrow: "For one specific person, eventually.",
     heading: "Live with me.",
     deck: "Not immediately. Let’s have dinner first.",
-    signal: "Not an application / An honest signal",
+    signal: "Not an application / an honest signal",
     introduction: [
       "I made this page because dating profiles are excellent at turning a human being into six photographs, three recreational verbs, and a demand to love travel.",
       "This is a little more honest.",
       [
-        "I’m Jason. I’m 53, single, and live in North Carolina with ",
+        "I’m Jason. I’m 53, single, and live in the Triad area of North Carolina with ",
         {
           href: "/cats/beverly-and-lucinda",
           text: "Beverly and Lucinda",
@@ -42,64 +48,66 @@ export const liveWithMeContent = {
     ] satisfies readonly LiveWithMeParagraph[],
     note:
       "This is not an invitation to move in. It is an invitation to imagine whether ordinary life together might be good.",
+    image: {
+      src: "/images/live-with-me/jason.webp",
+      alt: "Jason smiling at home with an orange cat behind him.",
+      width: 800,
+      height: 1067,
+    },
   },
   sections: [
     {
       id: "hoping-for",
       heading: "What I’m hoping for.",
+      alignment: "heading-left",
       paragraphs: [
-        "I’m looking for a woman who is warm, curious, affectionate, direct, funny, and emotionally available. Not perfect. Not optimized. Someone who asks real questions, initiates sometimes, says what she means, and wants to be known as much as she wants to be liked.",
+        "I’m looking for a woman who is warm, intelligent, witty, curious, affectionate, and capable of being both serious and ridiculous. Not perfect. Not optimized. Someone who asks real questions, says what she means, and wants to be known as much as she wants to be liked.",
         "I do not need us to share every interest. I do need us to be interested in each other’s worlds.",
-        "I’m looking for a real relationship, not a prolonged audition, a pen-pal arrangement, or a puzzle in which basic interest must be inferred from response times.",
-      ],
-    },
-    {
-      id: "what-i-bring",
-      heading: "What I bring.",
-      paragraphs: [
-        "I’m observant, loyal, funny, and intense in useful and occasionally ridiculous ways. I notice details. I remember things. I care deeply. I make things for people.",
-        "I can talk seriously without requiring the entire evening to become a tribunal. I have a dry sense of humor, a large interior world, and a strong preference for honesty over performance.",
-        "I am better at affection than at pretending not to want it.",
+        "I’m looking for a real relationship: mutual interest that becomes visible, affection that grows through ordinary time together, and two people who are genuinely excited to keep learning one another.",
+        "I’m looking for someone who wants to make room for shared time, closeness, and an ordinary life together.",
       ],
     },
     {
       id: "ordinary-life",
       heading: "The ordinary life I mean.",
+      alignment: "heading-right",
       paragraphs: [
         "Dinner out. Music in the car. Movies watched in twenty-minute installments because we keep talking. Small trips. Parallel creative work at the same table. A quiet bar that turns out to be perfect. Cats interrupting every important moment. One of us saying something appalling and the other laughing before pretending not to.",
-        "I like going places. I am not trying to build a life around hiking, marathons, dance classes, or proving every Saturday outdoors. Leisure does not always need moisture-wicking fabric.",
-        "A good shared life does not have to be constantly exciting. It should feel alive, chosen, affectionate, and safe enough for both people to remain recognizable.",
+        "I like going places. I am not trying to build a life around camping, hiking, marathons, dance classes, fitness culture, or proving every Saturday outdoors. Leisure does not always need moisture-wicking fabric.",
+        "A good shared life does not have to be constantly exciting. It should feel warm, alive, affectionate, and safe enough for both people to remain recognizable.",
+        "I want a relationship in which two people are visibly glad to have found one another, because ordinary life feels warmer, funnier, more interesting, and more alive together.",
       ],
     },
     {
-      id: "what-i-know",
-      heading: "What I know now.",
+      id: "what-i-bring",
+      heading: "What I bring.",
+      alignment: "full",
       paragraphs: [
-        "I do poorly with prolonged ambiguity, one-sided pursuit, emotional hide-and-seek, and relationships where one person must perform all the initiation.",
-        "I do not expect constant contact, instant certainty, or perfect communication. I do expect reciprocity. Interest should occasionally become visible without forensic analysis.",
-        "Silence may mean many things. I no longer want to build a home inside it.",
-        "I want two people who can say what is happening, repair what can be repaired, laugh when the machinery gets absurd, and choose one another without making the choice feel like a favor.",
+        "I’m observant, loyal, funny, and intense in useful and occasionally ridiculous ways. I notice details. I remember things. I care deeply. I make things for people.",
+        "I can talk seriously without requiring the entire evening to become a tribunal. I have a dry sense of humor, a large interior world, and a strong preference for honesty over performance.",
+        "I value closeness, but I also understand parallel time and the pleasure of two people being absorbed in different things in the same room.",
+        "I am better at affection than at pretending not to want it.",
       ],
     },
     {
-      id: "practical-truths",
-      heading: "A few practical truths.",
+      id: "things-that-matter",
+      heading: "A few things that matter.",
+      alignment: "heading-right",
       treatment: "practical",
       paragraphs: [
+        "I live in the Triad area of North Carolina. I’m looking for someone local or realistically nearby, and I’m not looking for a long-distance relationship.",
         "I’m not religious, and I’m not looking for a relationship organized around religion.",
+        "We do not need to agree on everything, but a Trump or MAGA worldview is a fundamental incompatibility.",
+        "Ambition is attractive. So is knowing how to stop working and participate in a life.",
         "My cats are family, furniture inspectors, and occasionally management.",
-        "I work remotely and spend a lot of time making things. I value closeness, but I also understand parallel time and the pleasure of two people being absorbed in different things in the same room.",
-        [
-          "I enjoy what is already on ",
-          { href: "/", text: "ArcadeGhosts" },
-          " and a great deal more. You do not need to arrive with the same soundtrack, reading list, or movie canon.",
-        ],
+        "You do not need to arrive with the same soundtrack, reading list, movie canon, or collection of overly specific personal websites.",
         "Kindness matters. Curiosity matters. Mutual effort matters. Chemistry also matters, despite its complete refusal to provide documentation.",
       ],
     },
     {
       id: "why-a-page",
       heading: "Why make a page for this?",
+      alignment: "heading-left",
       paragraphs: [
         "Because the existing interface is inadequate.",
         "Because dating profiles are good at listing preferences and bad at describing the texture of a person.",
@@ -108,15 +116,17 @@ export const liveWithMeContent = {
       ],
     },
   ] satisfies readonly LiveWithMeSection[],
+  music: {
+    label: "Music for driving after dark",
+    linkText: "Shadow Radio",
+    href: "https://open.spotify.com/playlist/37i9dQZF1E8HCrv0dQ8eW5?si=bc6c1985d0c542f2",
+  },
   closing: {
     heading: "Say hello.",
     paragraphs: [
-      "If this feels familiar rather than alarming, say hello.",
+      "If this made you curious, I’d be glad to hear from you.",
       "Tell me what on this site made you stay, what you are trying to build in your own life, or what song you would put on while driving somewhere after dark.",
-      "Low pressure. Complete sentences appreciated.",
     ],
-    primaryCta: "Send me a note",
-    catCta: "Meet Beverly and Lucinda",
-    homeCta: "Return to ArcadeGhosts",
+    contactText: "Send me a note",
   },
 } as const;
