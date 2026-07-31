@@ -11,6 +11,7 @@ const routes = [
   "/writings",
   "/arcade",
   "/listening",
+  "/live-with-me",
   "/reading",
   "/screening",
   "/terminal",
@@ -48,6 +49,14 @@ const tapTargetChecks = [
       ".album-image-link",
       ".album-card-copy h3 a",
       ".album-card-copy > a",
+    ],
+  },
+  {
+    route: "/live-with-me",
+    selectors: [
+      ".live-with-me-back-link",
+      ".live-with-me-primary-cta",
+      ".live-with-me-actions a",
     ],
   },
   {

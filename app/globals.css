@@ -3655,3 +3655,421 @@ p {
     scroll-behavior: auto;
   }
 }
+
+.about-signal {
+  margin-top: 1.75rem;
+  padding-left: 1rem;
+  border-left: 2px solid rgba(255, 198, 109, 0.6);
+}
+
+.live-with-me-page {
+  position: relative;
+  min-height: 100vh;
+  overflow: clip;
+  padding: clamp(6rem, 10vw, 8rem) 0 clamp(4rem, 8vw, 7rem);
+  background:
+    radial-gradient(circle at 82% 8%, rgba(255, 198, 109, 0.12), transparent 25rem),
+    radial-gradient(circle at 12% 36%, rgba(41, 240, 212, 0.08), transparent 28rem),
+    linear-gradient(180deg, rgba(7, 8, 11, 0.52), rgba(13, 42, 37, 0.16) 48%, rgba(7, 8, 11, 0.72));
+}
+
+.live-with-me-page::before {
+  position: absolute;
+  top: 14rem;
+  right: -12rem;
+  width: 32rem;
+  height: 32rem;
+  pointer-events: none;
+  content: "";
+  border: 1px solid rgba(255, 198, 109, 0.12);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 90px rgba(255, 198, 109, 0.04),
+    0 0 80px rgba(41, 240, 212, 0.04);
+}
+
+.live-with-me-shell {
+  position: relative;
+  width: min(980px, calc(100% - 2rem));
+  margin: 0 auto;
+}
+
+.live-with-me-back-link {
+  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.live-with-me-letter {
+  position: relative;
+}
+
+.live-with-me-hero {
+  max-width: 840px;
+  padding-bottom: clamp(4rem, 9vw, 7rem);
+}
+
+.live-with-me-signal {
+  display: inline-flex;
+  min-height: 2.4rem;
+  align-items: center;
+  margin: 0 0 1.6rem;
+  padding: 0.48rem 0.78rem;
+  border: 1px solid rgba(255, 198, 109, 0.28);
+  border-radius: 999px;
+  color: var(--amber);
+  font-family: "Courier New", "SFMono-Regular", Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.25;
+  text-transform: uppercase;
+  background: rgba(255, 198, 109, 0.06);
+}
+
+.live-with-me-hero h1 {
+  max-width: 900px;
+  margin-bottom: 1rem;
+  font-size: clamp(4.4rem, 11vw, 8.5rem);
+  line-height: 0.88;
+}
+
+.live-with-me-deck {
+  max-width: 700px;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.45rem, 3vw, 2.25rem);
+  line-height: 1.25;
+}
+
+.live-with-me-introduction {
+  max-width: 760px;
+}
+
+.live-with-me-introduction p,
+.live-with-me-section-copy p,
+.live-with-me-closing-copy p {
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+.live-with-me-introduction p {
+  color: var(--ink);
+  font-size: clamp(1.05rem, 1.7vw, 1.24rem);
+  line-height: 1.82;
+}
+
+.live-with-me-introduction p:nth-child(2) {
+  color: var(--amber);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+  font-style: italic;
+}
+
+.live-with-me-introduction a,
+.live-with-me-section-copy a {
+  color: var(--teal);
+  font-weight: 750;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.live-with-me-introduction a:hover,
+.live-with-me-section-copy a:hover {
+  color: var(--amber);
+}
+
+.live-with-me-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
+  max-width: 720px;
+  align-items: stretch;
+  margin-top: 2.25rem;
+  padding: 1.1rem 1.15rem;
+  border: 1px solid rgba(248, 239, 227, 0.13);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.live-with-me-note span {
+  width: 3px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--amber), var(--teal));
+  box-shadow: 0 0 18px rgba(255, 198, 109, 0.36);
+}
+
+.live-with-me-note p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.96rem;
+  line-height: 1.65;
+}
+
+.live-with-me-sections {
+  border-bottom: 1px solid var(--line);
+}
+
+.live-with-me-section {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.7fr) minmax(0, 1.45fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  padding: clamp(3.5rem, 8vw, 6.5rem) 0;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: var(--anchor-offset);
+}
+
+.live-with-me-section-heading span {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: var(--teal);
+  font-family: "Courier New", "SFMono-Regular", Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+.live-with-me-section-heading h2 {
+  max-width: 18rem;
+  margin: 0;
+  font-size: clamp(2rem, 4.2vw, 3.6rem);
+  line-height: 0.98;
+}
+
+.live-with-me-section-copy {
+  max-width: 650px;
+}
+
+.live-with-me-section-copy p {
+  color: var(--muted);
+  font-size: clamp(1.02rem, 1.45vw, 1.16rem);
+  line-height: 1.82;
+}
+
+.live-with-me-section-copy p:last-child {
+  margin-bottom: 0;
+}
+
+.live-with-me-section-copy p:nth-child(odd) {
+  color: #e3d5c7;
+}
+
+.live-with-me-section-practical {
+  margin: clamp(2rem, 5vw, 4rem) -1.5rem;
+  padding: clamp(2rem, 6vw, 4rem) 1.5rem;
+  border: 1px solid rgba(255, 198, 109, 0.18);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 198, 109, 0.1), transparent 24rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015)),
+    rgba(8, 9, 12, 0.56);
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.2);
+}
+
+.live-with-me-closing {
+  position: relative;
+  overflow: hidden;
+  margin-top: clamp(4rem, 9vw, 7rem);
+  padding: clamp(2rem, 6vw, 4.5rem);
+  border: 1px solid rgba(255, 198, 109, 0.22);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 84% 12%, rgba(255, 198, 109, 0.18), transparent 19rem),
+    radial-gradient(circle at 10% 90%, rgba(41, 240, 212, 0.11), transparent 22rem),
+    linear-gradient(145deg, rgba(26, 22, 19, 0.92), rgba(10, 28, 27, 0.88));
+  box-shadow:
+    0 32px 100px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.live-with-me-closing-signal {
+  margin-bottom: 0.7rem;
+  color: var(--amber);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.live-with-me-closing h2 {
+  max-width: 700px;
+  margin-bottom: 1.2rem;
+  font-size: clamp(3rem, 7vw, 5.8rem);
+}
+
+.live-with-me-closing-copy {
+  max-width: 680px;
+}
+
+.live-with-me-closing-copy p {
+  color: #eadccf;
+  font-size: clamp(1.02rem, 1.6vw, 1.18rem);
+  line-height: 1.75;
+}
+
+.live-with-me-closing-copy p:last-child {
+  color: var(--amber);
+}
+
+.live-with-me-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.live-with-me-actions a {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(248, 239, 227, 0.18);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-align: center;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.05);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    background 160ms ease;
+}
+
+.live-with-me-actions a:hover {
+  transform: translateY(-2px);
+  border-color: rgba(41, 240, 212, 0.42);
+  color: var(--ink);
+  background: rgba(41, 240, 212, 0.09);
+}
+
+.live-with-me-actions .live-with-me-primary-cta {
+  border-color: transparent;
+  color: #140e09;
+  background: var(--amber);
+  box-shadow: 0 0 36px rgba(255, 198, 109, 0.24);
+}
+
+.live-with-me-actions .live-with-me-primary-cta:hover {
+  border-color: transparent;
+  color: #08090c;
+  background: #ffd58f;
+}
+
+@media (max-width: 720px) {
+  .live-with-me-section {
+    grid-template-columns: 1fr;
+    gap: 1.35rem;
+  }
+
+  .live-with-me-section-heading h2 {
+    max-width: 30rem;
+  }
+
+  .live-with-me-section-practical {
+    margin-inline: -0.75rem;
+    padding-inline: 0.75rem;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .about-signal {
+    margin-top: 1.4rem;
+    padding-left: 0.8rem;
+  }
+
+  .live-with-me-page {
+    padding-top: 5.35rem;
+    padding-bottom: 3rem;
+  }
+
+  .live-with-me-page::before {
+    top: 10rem;
+    right: -14rem;
+    opacity: 0.6;
+  }
+
+  .live-with-me-shell {
+    width: calc(100% - 1.5rem);
+  }
+
+  .live-with-me-back-link {
+    margin-bottom: 2rem;
+  }
+
+  .live-with-me-hero {
+    padding-bottom: 3.75rem;
+  }
+
+  .live-with-me-signal {
+    max-width: 100%;
+    margin-bottom: 1.25rem;
+    white-space: normal;
+  }
+
+  .live-with-me-hero h1 {
+    font-size: clamp(3.25rem, 17vw, 4.8rem);
+    line-height: 0.9;
+  }
+
+  .live-with-me-deck {
+    font-size: 1.35rem;
+    line-height: 1.32;
+  }
+
+  .live-with-me-introduction p,
+  .live-with-me-section-copy p,
+  .live-with-me-closing-copy p {
+    font-size: 0.98rem;
+    line-height: 1.68;
+  }
+
+  .live-with-me-note {
+    gap: 0.8rem;
+    margin-top: 1.7rem;
+    padding: 0.95rem;
+  }
+
+  .live-with-me-section {
+    padding: 3.2rem 0;
+  }
+
+  .live-with-me-section-heading h2 {
+    font-size: clamp(2rem, 11vw, 2.85rem);
+  }
+
+  .live-with-me-section-practical {
+    margin-block: 1.5rem;
+    padding-block: 2.2rem;
+  }
+
+  .live-with-me-closing {
+    margin-top: 3.75rem;
+    padding: 1.3rem;
+    border-radius: 22px;
+  }
+
+  .live-with-me-closing h2 {
+    font-size: clamp(2.8rem, 14vw, 4rem);
+  }
+
+  .live-with-me-actions {
+    align-items: stretch;
+  }
+
+  .live-with-me-actions a {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-with-me-actions a {
+    transition-duration: 0s;
+  }
+}
