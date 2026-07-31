@@ -20,7 +20,6 @@ const footerGroups = [
     links: [
       { href: "/arcade", label: "Arcade Games" },
       { href: "/terminal", label: "Terminal" },
-      { href: "/live-with-me", label: "Live With Me" },
       { href: "/writings/rss.xml", label: "Writing RSS" },
       { href: "/tiny-thoughts/rss.xml", label: "Tiny Thoughts RSS" },
     ],

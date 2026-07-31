@@ -15,11 +15,6 @@ export function HomeAbout() {
           I live in North Carolina with my cats, {" "}
           <Link href="/cats/beverly-and-lucinda">Beverly and Lucinda</Link>.
         </p>
-        <p className="about-signal">
-          ArcadeGhosts is also, quietly, a signal flare. If you are curious
-          about the life behind the site, there is one more page.{" "}
-          <Link href="/live-with-me">Live with me</Link>.
-        </p>
       </div>
     </section>
   );

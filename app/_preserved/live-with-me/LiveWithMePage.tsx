@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import "./live-with-me.css";
+import jasonPortrait from "./assets/jason.webp";
 import {
   liveWithMeContent,
   liveWithMeMailto,
   type LiveWithMeParagraph,
-} from "../../site-content/live-with-me";
+} from "./content";
 
 const { metadata: pageMetadata } = liveWithMeContent;
 
@@ -93,7 +95,7 @@ export default function LiveWithMePage() {
 
               <figure className="live-with-me-portrait">
                 <Image
-                  src={hero.image.src}
+                  src={jasonPortrait}
                   alt={hero.image.alt}
                   width={hero.image.width}
                   height={hero.image.height}

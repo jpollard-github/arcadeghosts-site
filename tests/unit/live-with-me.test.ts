@@ -4,7 +4,7 @@ import {
   liveWithMeContent,
   liveWithMeMailto,
   type LiveWithMeParagraph,
-} from "../../app/site-content/live-with-me";
+} from "../../app/_preserved/live-with-me/content";
 
 function paragraphText(paragraph: LiveWithMeParagraph) {
   return typeof paragraph === "string"

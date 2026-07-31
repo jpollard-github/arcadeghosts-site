@@ -49,7 +49,6 @@ export const liveWithMeContent = {
     note:
       "This is not an invitation to move in. It is an invitation to imagine whether ordinary life together might be good.",
     image: {
-      src: "/images/live-with-me/jason.webp",
       alt: "Jason smiling at home with an orange cat behind him.",
       width: 800,
       height: 1067,
