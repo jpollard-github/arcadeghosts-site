@@ -12,6 +12,11 @@ export function HomeAbout() {
           ideas become playable, readable, or occasionally strange.
         </p>
         <p>
+          Notice what is real, protect what you love, make something that did
+          not exist before, and refuse to lie to yourself more than survival
+          requires.
+        </p>
+        <p>
           I live in North Carolina with my cats, {" "}
           <Link href="/cats/beverly-and-lucinda">Beverly and Lucinda</Link>.
         </p>
