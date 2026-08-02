@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { RelatedSignals } from "../../RelatedSignals";
 import { TwinPeaksSelfJourney } from "./TwinPeaksSelfJourney";
 
 export const metadata: Metadata = {
@@ -18,33 +17,6 @@ export const metadata: Metadata = {
     url: "/twin-peaks-self",
   },
 };
-
-const relatedSignals = [
-  {
-    href: "/games/between-two-lodges",
-    title: "Between Two Lodges",
-    description:
-      "A game-shaped Twin Peaks room full of clues, choices, recurring witnesses, and dream logic.",
-    reason: "Because this symbolic weather also has a more playful, exploratory sibling.",
-    cta: "Play the game",
-  },
-  {
-    href: "/screening",
-    title: "Screening",
-    description:
-      "The larger screen-signal room where Twin Peaks sits beside other strange, resonant obsessions.",
-    reason: "Because this project came from the same symbolic weather as the media that shaped it.",
-    cta: "Browse screen signals",
-  },
-  {
-    href: "/writings/it-aint-over-till-its-over",
-    title: "Thank You Yogi",
-    description:
-      "A writing piece about holding onto hope when the shape of the game says otherwise.",
-    reason: "Because both pieces ask what kind of story helps a person continue.",
-    cta: "Read the essay",
-  },
-];
 
 export default function TwinPeaksSelfPage() {
   return (
@@ -103,9 +75,6 @@ export default function TwinPeaksSelfPage() {
       </section>
 
       <TwinPeaksSelfJourney />
-      <section className="content-section">
-        <RelatedSignals items={relatedSignals} title="A few neighboring rooms." />
-      </section>
     </main>
   );
 }

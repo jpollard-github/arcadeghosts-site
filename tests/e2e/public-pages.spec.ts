@@ -312,9 +312,7 @@ test("writings index and rich writing detail render correctly", async ({ page })
   );
   expect(rawParagraphMarkers).toEqual([]);
 
-  await expect(
-    page.getByRole("region", { name: "A few nearby signals." }),
-  ).toBeVisible();
+  await expect(page.locator(".related-signals")).toHaveCount(0);
   const jsonLd = await page
     .locator('script[type="application/ld+json"]')
     .textContent();
@@ -342,6 +340,53 @@ test("writings index and rich writing detail render correctly", async ({ page })
       }),
     ).toBeVisible();
     await expect(page.locator(".writing-body p").first()).toBeVisible();
+  }
+});
+
+test("affected public pages omit related signals and retain their footer", async ({
+  page,
+}) => {
+  const affectedPages = [
+    { route: "/screening", heading: "Stories that keep following me around." },
+    { route: "/twin-peaks-self", heading: "The Lodges Within" },
+    {
+      route: "/cats/beverly-and-lucinda",
+      heading: "Beverly and Lucinda from 2025 to current.",
+    },
+    {
+      route: "/cats/thomas-jones-missy-cass",
+      heading: "Thomas, Jones, Missy, and Cass.",
+    },
+    {
+      route: "/writings/ai-its-safety-produces-your-insanity-final",
+      heading: "AI: Its Safety Produces Your Insanity",
+    },
+    {
+      route: "/writings/it-aint-over-till-its-over",
+      heading: "Thank You Yogi",
+    },
+    { route: "/writings/my-first-cat", heading: "My First Cat" },
+  ];
+
+  await page.setViewportSize({ width: 1280, height: 900 });
+
+  for (const affectedPage of affectedPages) {
+    await page.goto(affectedPage.route, { waitUntil: "domcontentloaded" });
+    await expect(
+      page.getByRole("heading", { name: affectedPage.heading, exact: true }).first(),
+    ).toBeVisible();
+    await expect(page.locator(".related-signals, .related-signal-card")).toHaveCount(0);
+
+    const footer = page.getByRole("contentinfo", { name: "Public site footer" });
+    await expect(footer).toBeVisible();
+    await expect(footer.getByRole("link").first()).toBeVisible();
+
+    const overflow = await page.evaluate(() => ({
+      root: document.documentElement.scrollWidth - window.innerWidth,
+      body: document.body.scrollWidth - window.innerWidth,
+    }));
+    expect(overflow.root).toBeLessThanOrEqual(1);
+    expect(overflow.body).toBeLessThanOrEqual(1);
   }
 });
 

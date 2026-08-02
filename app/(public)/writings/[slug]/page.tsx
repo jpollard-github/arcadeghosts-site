@@ -11,7 +11,6 @@ import {
   type WritingInline,
   type WritingListBlock,
 } from "../../../lib/writing-markdown";
-import { RelatedSignals } from "../../../RelatedSignals";
 import { absoluteUrl } from "../../../seo";
 import { writings } from "../../../writings";
 
@@ -231,7 +230,6 @@ export default async function WritingPage({ params }: PageProps) {
             </details>
           ) : null}
         </div>
-        <RelatedSignals items={writing.related} />
       </article>
     </main>
   );

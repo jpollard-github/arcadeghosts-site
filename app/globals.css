@@ -2654,77 +2654,6 @@ p {
   margin-top: 1.75rem;
 }
 
-.related-signals {
-  margin-top: clamp(3rem, 7vw, 5rem);
-  padding-top: 2rem;
-  border-top: 1px solid var(--line);
-}
-
-.related-signals h2 {
-  margin-bottom: 1rem;
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
-}
-
-.related-signals-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.related-signal-card {
-  display: grid;
-  gap: 0.8rem;
-  min-height: 15rem;
-  padding: 1.15rem;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background:
-    linear-gradient(135deg, rgba(255, 54, 95, 0.1), transparent 40%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)),
-    rgba(8, 9, 12, 0.82);
-  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.24);
-  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-}
-
-.related-signal-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(41, 240, 212, 0.5);
-  background:
-    linear-gradient(135deg, rgba(41, 240, 212, 0.14), transparent 40%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)),
-    rgba(8, 9, 12, 0.86);
-}
-
-.related-signal-card h3,
-.related-signal-card p,
-.related-signal-card small,
-.related-signal-card span {
-  margin: 0;
-}
-
-.related-signal-card h3 {
-  font-size: clamp(1.2rem, 2vw, 1.6rem);
-}
-
-.related-signal-card p {
-  color: var(--muted);
-}
-
-.related-signal-card small {
-  color: var(--ink);
-  font-size: 0.88rem;
-  line-height: 1.55;
-}
-
-.related-signal-card span {
-  margin-top: auto;
-  color: var(--amber);
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
 .collection-page {
   min-height: 100vh;
   padding-top: clamp(6rem, 10vw, 8rem);
@@ -3060,7 +2989,6 @@ p {
   .arcade-grid,
   .media-grid,
   .recent-signals-grid,
-  .related-signals-grid,
   .section-link-grid,
   .tiny-thought-grid,
   .tape-row,
@@ -3633,7 +3561,6 @@ p {
 
 .section-link-card,
   .writing-index-card,
-  .related-signal-card,
   .tiny-thought-card {
     box-shadow: 0 14px 34px rgba(0, 0, 0, 0.2);
   }
@@ -3724,8 +3651,7 @@ p {
     margin-top: 1.35rem;
   }
 
-  .media-intro-panel,
-  .related-signal-card {
+  .media-intro-panel {
     padding: 1rem;
   }
 
@@ -3740,33 +3666,6 @@ p {
   .media-intro-lead {
     font-size: 0.95rem;
     line-height: 1.54;
-  }
-
-  .related-signals {
-    margin-top: 2.5rem;
-    padding-top: 1.55rem;
-  }
-
-  .related-signals h2 {
-    margin-bottom: 0.85rem;
-    font-size: clamp(1.55rem, 8vw, 2.1rem);
-    line-height: 1.06;
-  }
-
-  .related-signal-card {
-    min-height: auto;
-    gap: 0.7rem;
-  }
-
-  .related-signal-card h3 {
-    font-size: clamp(1.15rem, 6.5vw, 1.45rem);
-    line-height: 1.1;
-  }
-
-  .related-signal-card p,
-  .related-signal-card small {
-    font-size: 0.92rem;
-    line-height: 1.5;
   }
 
   .cats-section .section-heading > p:last-child {

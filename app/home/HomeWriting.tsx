@@ -3,7 +3,7 @@ import { TrackedLink } from "../TrackedLink";
 import { writings } from "../writings";
 
 export function HomeWriting() {
-  const featuredWritings = writings.slice(0, 2);
+  const featuredWritings = writings.slice(0, 3);
 
   return (
     <section className="split-section">

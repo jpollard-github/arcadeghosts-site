@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { RelatedSignals } from "../../RelatedSignals";
 import { SectionHeading } from "../../SectionHeading";
 import { VisualMediaCard } from "../../VisualMediaCard";
 import { visualMedia } from "../../site-data";
@@ -21,36 +20,6 @@ export const metadata: Metadata = {
 };
 
 export default function ScreeningPage() {
-  const relatedSignals = [
-    {
-      href: "/twin-peaks-self",
-      title: "The Lodges Within",
-      description:
-        "The reflective Twin Peaks room where the same symbolic weather turns into a guided self-check.",
-      reason:
-        "Because some of these screen stories do not just entertain me. They become maps.",
-      cta: "Enter the reflective room",
-    },
-    {
-      href: "/games/between-two-lodges",
-      title: "Between Two Lodges",
-      description:
-        "A browser text adventure about clues, dreams, coffee, witnesses, and the uneasy air between two worlds.",
-      reason:
-        "Because the Twin Peaks signal here also spills into play, not just taste.",
-      cta: "Play the game",
-    },
-    {
-      href: "/arcade",
-      title: "Arcade",
-      description:
-        "Another nostalgia-lit room: favorite cabinets, cabinet art, and quarter-fed atmosphere.",
-      reason:
-        "Because media taste and arcade glow are part of the same larger haunted hobby shelf.",
-      cta: "Follow the cabinet glow",
-    },
-  ];
-
   return (
     <main className="collection-page" id="top">
       <a className="back-up-top" href="#top">
@@ -87,11 +56,6 @@ export default function ScreeningPage() {
             />
           ))}
         </div>
-        <RelatedSignals
-          eyebrow="Neighboring Signals"
-          items={relatedSignals}
-          title="If you came here for strange weather."
-        />
       </section>
     </main>
   );

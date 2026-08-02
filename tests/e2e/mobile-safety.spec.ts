@@ -10,6 +10,8 @@ const routes = [
   "/",
   "/writings",
   "/writings/ai-its-safety-produces-your-insanity-final",
+  "/writings/it-aint-over-till-its-over",
+  "/writings/my-first-cat",
   "/arcade",
   "/listening",
   "/reading",

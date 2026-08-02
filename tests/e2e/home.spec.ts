@@ -101,6 +101,20 @@ test("homepage renders the hero and key sections", async ({ page }) => {
   await expect(page.locator("#start-here")).toHaveCount(0);
   await expect(page.locator("main > section").nth(0)).toHaveClass(/hero/);
   await expect(page.locator("main > section").nth(1).locator("#writing")).toBeVisible();
+  const writingPreview = page.locator('section:has(#writing) .list-panel');
+  const writingPreviewLinks = writingPreview.locator('> a:not(.list-panel-more)');
+  await expect(writingPreviewLinks).toHaveCount(3);
+  const writingPreviewHrefs = await writingPreviewLinks.evaluateAll((links) =>
+    links.map((link) => link.getAttribute("href")),
+  );
+  expect(writingPreviewHrefs).toEqual([
+    "/writings/ai-its-safety-produces-your-insanity-final",
+    "/writings/it-aint-over-till-its-over",
+    "/writings/my-first-cat",
+  ]);
+  await expect(writingPreview.locator('> a.list-panel-more')).toHaveText(
+    "See the full writing room",
+  );
   await expect(page.getByText("80s Dev Terminal")).toHaveCount(0);
 });
 
