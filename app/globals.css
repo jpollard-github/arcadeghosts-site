@@ -2764,10 +2764,76 @@ p {
 }
 
 .writing-body p,
-.writing-body blockquote {
+.writing-body blockquote,
+.writing-body li {
   color: var(--ink);
   font-size: clamp(1.05rem, 1.65vw, 1.25rem);
   line-height: 1.85;
+}
+
+.writing-body h1,
+.writing-body h2,
+.writing-body h3,
+.writing-body h4,
+.writing-body h5,
+.writing-body h6 {
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.writing-body h1 {
+  margin: clamp(3.5rem, 8vw, 5.5rem) 0 1.4rem;
+  padding-top: clamp(2rem, 5vw, 3rem);
+  border-top: 1px solid var(--line);
+  font-size: clamp(2rem, 5vw, 3.25rem);
+}
+
+.writing-body h2 {
+  margin: clamp(2.8rem, 6vw, 4.25rem) 0 1.1rem;
+  color: var(--amber);
+  font-size: clamp(1.65rem, 3.5vw, 2.4rem);
+}
+
+.writing-body h3 {
+  margin: clamp(2.2rem, 5vw, 3.25rem) 0 0.9rem;
+  color: var(--teal);
+  font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+}
+
+.writing-body h4,
+.writing-body h5,
+.writing-body h6 {
+  margin: 2rem 0 0.8rem;
+  font-size: clamp(1.12rem, 2vw, 1.4rem);
+}
+
+.writing-body ol,
+.writing-body ul {
+  margin: 1.4rem 0 1.8rem;
+  padding-inline-start: clamp(1.4rem, 4vw, 2rem);
+}
+
+.writing-body li {
+  padding-inline-start: 0.3rem;
+  overflow-wrap: anywhere;
+}
+
+.writing-body li + li {
+  margin-top: 0.55rem;
+}
+
+.writing-body li > ol,
+.writing-body li > ul {
+  margin: 0.55rem 0 0.8rem;
+  padding-inline-start: 1.5rem;
+}
+
+.writing-body li > ol li,
+.writing-body li > ul li {
+  font-size: 0.95em;
+  line-height: 1.7;
 }
 
 .writing-body blockquote {
@@ -2786,7 +2852,103 @@ p {
   color: #d8fff8;
   font-family: "Courier New", "SFMono-Regular", Consolas, monospace;
   font-size: 0.88em;
+  overflow-wrap: anywhere;
+  white-space: break-spaces;
   background: rgba(41, 240, 212, 0.08);
+}
+
+.writing-body pre {
+  max-width: 100%;
+  margin: 1.75rem 0 2.25rem;
+  padding: clamp(0.9rem, 2.5vw, 1.25rem);
+  overflow-x: auto;
+  border: 1px solid rgba(41, 240, 212, 0.22);
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, rgba(41, 240, 212, 0.07), transparent 48%),
+    rgba(3, 8, 10, 0.92);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  overscroll-behavior-inline: contain;
+}
+
+.writing-body pre code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  padding: 0;
+  overflow-wrap: normal;
+  border: 0;
+  border-radius: 0;
+  color: #d8fff8;
+  font-size: clamp(0.82rem, 1.45vw, 0.94rem);
+  line-height: 1.65;
+  white-space: pre;
+  background: transparent;
+}
+
+.writing-addendum {
+  margin-top: clamp(3.5rem, 8vw, 5.5rem);
+  overflow: clip;
+  border: 1px solid rgba(41, 240, 212, 0.28);
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at top right, rgba(41, 240, 212, 0.09), transparent 35%),
+    rgba(8, 9, 12, 0.82);
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.24);
+}
+
+.writing-addendum summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1.15rem, 3vw, 1.6rem);
+  cursor: pointer;
+  list-style: none;
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.writing-addendum summary::-webkit-details-marker {
+  display: none;
+}
+
+.writing-addendum summary:hover {
+  color: var(--teal);
+  background: rgba(41, 240, 212, 0.07);
+}
+
+.writing-addendum summary:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: -4px;
+}
+
+.writing-addendum-title {
+  overflow-wrap: anywhere;
+  color: currentColor;
+  font-size: clamp(1.55rem, 4vw, 2.5rem);
+  font-weight: 900;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.writing-addendum-marker {
+  flex: 0 0 auto;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-0.2rem);
+  transition: transform 160ms ease;
+}
+
+.writing-addendum[open] .writing-addendum-marker {
+  transform: rotate(225deg) translate(-0.1rem, -0.1rem);
+}
+
+.writing-addendum-body {
+  min-width: 0;
+  padding: 0 clamp(1.15rem, 3vw, 1.6rem) clamp(1.15rem, 3vw, 1.6rem);
+  border-top: 1px solid var(--line);
 }
 
 

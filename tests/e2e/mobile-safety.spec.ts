@@ -9,6 +9,7 @@ const mobileWidths = [
 const routes = [
   "/",
   "/writings",
+  "/writings/ai-its-safety-produces-your-insanity-final",
   "/arcade",
   "/listening",
   "/reading",
@@ -161,3 +162,43 @@ for (const check of tapTargetChecks) {
     });
   });
 }
+
+test("long writing keeps readable type and contains code overflow at 390px", async ({ page }) => {
+  await preparePageForLayoutMeasurement(
+    page,
+    "/writings/ai-its-safety-produces-your-insanity-final",
+    { width: 390, height: 844 },
+  );
+
+  const measurements = await page.evaluate(() => {
+    const writingBody = document.querySelector<HTMLElement>(".writing-body");
+    const paragraph = writingBody?.querySelector<HTMLElement>("p");
+    const sectionHeading = writingBody?.querySelector<HTMLElement>("h2");
+    const listItem = writingBody?.querySelector<HTMLElement>("li");
+    const codeBlocks = Array.from(
+      writingBody?.querySelectorAll<HTMLElement>("pre") ?? [],
+    );
+
+    return {
+      paragraphFontSize: paragraph ? Number.parseFloat(getComputedStyle(paragraph).fontSize) : 0,
+      sectionHeadingFontSize: sectionHeading
+        ? Number.parseFloat(getComputedStyle(sectionHeading).fontSize)
+        : 0,
+      listItemFontSize: listItem ? Number.parseFloat(getComputedStyle(listItem).fontSize) : 0,
+      codeBlockCount: codeBlocks.length,
+      codeBlocksContainOverflow: codeBlocks.every((block) =>
+        ["auto", "scroll"].includes(getComputedStyle(block).overflowX),
+      ),
+      hasInternallyScrollableCode: codeBlocks.some(
+        (block) => block.scrollWidth > block.clientWidth,
+      ),
+    };
+  });
+
+  expect(measurements.paragraphFontSize).toBeGreaterThanOrEqual(16);
+  expect(measurements.sectionHeadingFontSize).toBeGreaterThanOrEqual(24);
+  expect(measurements.listItemFontSize).toBeGreaterThanOrEqual(16);
+  expect(measurements.codeBlockCount).toBe(7);
+  expect(measurements.codeBlocksContainOverflow).toBeTruthy();
+  expect(measurements.hasInternallyScrollableCode).toBeTruthy();
+});

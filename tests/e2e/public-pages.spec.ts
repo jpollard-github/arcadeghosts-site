@@ -195,22 +195,118 @@ test("legacy movies and tv route redirects to screening", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("writings index and a writing detail page render correctly", async ({
-  page,
-}) => {
+test("new writing is featured on the homepage", async ({ page }) => {
+  await page.goto("/");
+
+  const writingSection = page.locator("#writing").locator("xpath=ancestor::section[1]");
+  const essayLink = writingSection.getByRole("link", {
+    name: /AI: Its Safety Produces Your Insanity/,
+  });
+
+  await expect(essayLink).toBeVisible();
+  await expect(essayLink).toHaveAttribute(
+    "href",
+    "/writings/ai-its-safety-produces-your-insanity-final",
+  );
+});
+
+test("writings index and rich writing detail render correctly", async ({ page }) => {
   await page.goto("/writings");
 
   await expect(
     page.getByRole("heading", { name: "Essays from the booth by the window." }),
   ).toBeVisible();
 
-  await page.getByRole("link", { name: "Read piece" }).first().click();
+  const essayCard = page.locator(".writing-index-card").filter({
+    hasText: "AI: Its Safety Produces Your Insanity",
+  });
+  const essayLink = essayCard.getByRole("link", { name: "Read piece" });
 
-  await expect(page).toHaveURL(/\/writings\/.+/);
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(essayCard).toBeVisible();
+  await expect(essayLink).toHaveAttribute(
+    "href",
+    "/writings/ai-its-safety-produces-your-insanity-final",
+  );
+  await essayLink.click();
+
+  await expect(page).toHaveURL(
+    /\/writings\/ai-its-safety-produces-your-insanity-final$/,
+  );
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "AI: Its Safety Produces Your Insanity",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { level: 2, name: "The procedural hazmat suit" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { level: 2, name: "When a grep becomes a product" }),
+  ).toBeVisible();
+
+  const writingBody = page.locator(".writing-body");
+  await expect(writingBody.locator("ol").first()).toBeVisible();
+  await expect(writingBody.locator("ul").first()).toBeVisible();
+  await expect(
+    writingBody.getByText("Do I want this on the tablet?", { exact: true }),
+  ).toBeVisible();
+  await expect(writingBody.locator("pre > code")).toHaveCount(7);
+  await expect(writingBody.locator("code").filter({ hasText: "AGENTS.md" }).first()).toBeVisible();
+  await expect(
+    writingBody.getByRole("heading", {
+      level: 1,
+      name: "Addendum: The Good, the Bad, and the Ugly",
+    }),
+  ).toBeVisible();
+  await expect(
+    writingBody.getByRole("heading", { level: 3, name: "Related signals" }),
+  ).toBeVisible();
+  await expect(
+    writingBody.locator("p").filter({
+      hasText: /^I have learned when to stop prompting and start talking back\.$/,
+    }),
+  ).toBeVisible();
+
+  const rawParagraphMarkers = await writingBody.locator("p").evaluateAll((paragraphs) =>
+    paragraphs
+      .map((paragraph) => paragraph.textContent ?? "")
+      .filter((text) => text.startsWith("# ") || text.includes("```")),
+  );
+  expect(rawParagraphMarkers).toEqual([]);
+
   await expect(
     page.getByRole("region", { name: "A few nearby signals." }),
   ).toBeVisible();
+  const jsonLd = await page
+    .locator('script[type="application/ld+json"]')
+    .textContent();
+  expect(jsonLd).toContain("AI: Its Safety Produces Your Insanity");
+  const openGraphImageUrl = await page
+    .locator('meta[property="og:image"]')
+    .getAttribute("content");
+  expect(openGraphImageUrl).toContain(
+    "/writings/ai-its-safety-produces-your-insanity-final/",
+  );
+  const openGraphImage = await page.request.get(openGraphImageUrl ?? "");
+  assertStatusOk(openGraphImage, openGraphImageUrl ?? "writing Open Graph image");
+  expect(openGraphImage.headers()["content-type"]).toMatch(/image\/png/);
+
+  for (const existingWriting of [
+    { slug: "it-aint-over-till-its-over", title: "Thank You Yogi" },
+    { slug: "my-first-cat", title: "My First Cat" },
+  ]) {
+    await page.goto(`/writings/${existingWriting.slug}`);
+    await expect(
+      page.getByRole("heading", {
+        level: 1,
+        name: existingWriting.title,
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(page.locator(".writing-body p").first()).toBeVisible();
+  }
 });
 
 test("tiny thoughts archive exposes rss", async ({ page }) => {
@@ -307,6 +403,11 @@ test(
     );
     expect(projects.headers()["cache-control"]).toContain("no-store");
 
+    const writingsRssText = await writingsRss.text();
+    expect(writingsRssText).toContain("AI: Its Safety Produces Your Insanity");
+    expect(writingsRssText).toContain(
+      "/writings/ai-its-safety-produces-your-insanity-final",
+    );
     expect(await robots.text()).toContain("Sitemap:");
     expect(await robots.text()).toContain("Disallow: /agents");
     const sitemapText = await sitemap.text();
@@ -318,6 +419,9 @@ test(
     expect(sitemapLocations).toContain("/listening");
     expect(sitemapLocations).toContain("/reading");
     expect(sitemapLocations).toContain("/tiny-thoughts");
+    expect(sitemapLocations).toContain(
+      "/writings/ai-its-safety-produces-your-insanity-final",
+    );
     expect(sitemapLocations).not.toContain("/music");
     expect(sitemapLocations).not.toContain("/updates");
     expect(sitemapLocations).not.toContain("/movies-tv");

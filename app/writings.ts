@@ -10,6 +10,39 @@ export type WritingEntry = {
 
 export const writings: WritingEntry[] = [
   {
+    slug: "ai-its-safety-produces-your-insanity-final",
+    title: "AI: Its Safety Produces Your Insanity",
+    description:
+      "How AI turns caution into bureaucracy, weak premises into systems, and direct questions into exquisitely documented insanity.",
+    icon: "🤖",
+    related: [
+      {
+        href: "/#projects",
+        title: "Projects",
+        description:
+          "Software experiments and practical builds from across ArcadeGhosts.",
+        reason: "Because the essay grew from the friction of making software with AI.",
+        cta: "Explore the projects",
+      },
+      {
+        href: "/#tiny-thoughts",
+        title: "Tiny Thoughts",
+        description:
+          "Shorter observations that do not need to become full essays.",
+        reason: "Because some of the same questions arrive as smaller signals.",
+        cta: "Read smaller signals",
+      },
+      {
+        href: "/writings/it-aint-over-till-its-over",
+        title: "Thank You Yogi",
+        description:
+          "A Little League comeback and a message of hope that stayed.",
+        reason: "Because persistence matters, including knowing what is worth continuing.",
+        cta: "Read Thank You Yogi",
+      },
+    ],
+  },
+  {
     slug: "it-aint-over-till-its-over",
     title: "Thank You Yogi",
     description:
