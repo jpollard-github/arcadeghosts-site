@@ -208,6 +208,18 @@ test("new writing is featured on the homepage", async ({ page }) => {
     "href",
     "/writings/ai-its-safety-produces-your-insanity-final",
   );
+  await essayLink.click();
+
+  await expect(page).toHaveURL(
+    /\/writings\/ai-its-safety-produces-your-insanity-final$/,
+  );
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "AI: Its Safety Produces Your Insanity",
+      exact: true,
+    }),
+  ).toBeVisible();
 });
 
 test("writings index and rich writing detail render correctly", async ({ page }) => {
@@ -239,6 +251,15 @@ test("writings index and rich writing detail render correctly", async ({ page })
       exact: true,
     }),
   ).toBeVisible();
+  await expect(page).toHaveTitle(/AI: Its Safety Produces Your Insanity/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    /\/writings\/ai-its-safety-produces-your-insanity-final$/,
+  );
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+    "content",
+    "AI: Its Safety Produces Your Insanity",
+  );
   await expect(
     page.getByRole("heading", { level: 2, name: "The procedural hazmat suit" }),
   ).toBeVisible();
@@ -252,16 +273,31 @@ test("writings index and rich writing detail render correctly", async ({ page })
   await expect(
     writingBody.getByText("Do I want this on the tablet?", { exact: true }),
   ).toBeVisible();
+  await expect(
+    writingBody.locator("blockquote").filter({
+      hasText: /^Do I want this on the tablet\?$/,
+    }),
+  ).toBeVisible();
   await expect(writingBody.locator("pre > code")).toHaveCount(7);
   await expect(writingBody.locator("code").filter({ hasText: "AGENTS.md" }).first()).toBeVisible();
+
+  const addendum = writingBody.locator("details.writing-addendum");
   await expect(
-    writingBody.getByRole("heading", {
+    addendum.getByRole("heading", {
       level: 1,
       name: "Addendum: The Good, the Bad, and the Ugly",
     }),
   ).toBeVisible();
+  await expect(addendum).toHaveJSProperty("open", false);
   await expect(
-    writingBody.getByRole("heading", { level: 3, name: "Related signals" }),
+    addendum.locator("h3").filter({ hasText: /^Related signals$/ }),
+  ).toBeHidden();
+
+  await addendum.locator("summary").click();
+
+  await expect(addendum).toHaveJSProperty("open", true);
+  await expect(
+    addendum.getByRole("heading", { level: 3, name: "Related signals" }),
   ).toBeVisible();
   await expect(
     writingBody.locator("p").filter({

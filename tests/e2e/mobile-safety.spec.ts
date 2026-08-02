@@ -170,6 +170,10 @@ test("long writing keeps readable type and contains code overflow at 390px", asy
     { width: 390, height: 844 },
   );
 
+  const addendum = page.locator("details.writing-addendum");
+  await addendum.locator("summary").click();
+  await expect(addendum).toHaveJSProperty("open", true);
+
   const measurements = await page.evaluate(() => {
     const writingBody = document.querySelector<HTMLElement>(".writing-body");
     const paragraph = writingBody?.querySelector<HTMLElement>("p");
@@ -178,13 +182,19 @@ test("long writing keeps readable type and contains code overflow at 390px", asy
     const codeBlocks = Array.from(
       writingBody?.querySelectorAll<HTMLElement>("pre") ?? [],
     );
+    const addendumSummary = document.querySelector<HTMLElement>(
+      ".writing-addendum summary",
+    );
 
     return {
+      rootOverflow: document.documentElement.scrollWidth - window.innerWidth,
+      bodyOverflow: document.body.scrollWidth - window.innerWidth,
       paragraphFontSize: paragraph ? Number.parseFloat(getComputedStyle(paragraph).fontSize) : 0,
       sectionHeadingFontSize: sectionHeading
         ? Number.parseFloat(getComputedStyle(sectionHeading).fontSize)
         : 0,
       listItemFontSize: listItem ? Number.parseFloat(getComputedStyle(listItem).fontSize) : 0,
+      addendumSummaryHeight: addendumSummary?.getBoundingClientRect().height ?? 0,
       codeBlockCount: codeBlocks.length,
       codeBlocksContainOverflow: codeBlocks.every((block) =>
         ["auto", "scroll"].includes(getComputedStyle(block).overflowX),
@@ -198,6 +208,9 @@ test("long writing keeps readable type and contains code overflow at 390px", asy
   expect(measurements.paragraphFontSize).toBeGreaterThanOrEqual(16);
   expect(measurements.sectionHeadingFontSize).toBeGreaterThanOrEqual(24);
   expect(measurements.listItemFontSize).toBeGreaterThanOrEqual(16);
+  expect(measurements.addendumSummaryHeight).toBeGreaterThanOrEqual(40);
+  expect(measurements.rootOverflow).toBeLessThanOrEqual(1);
+  expect(measurements.bodyOverflow).toBeLessThanOrEqual(1);
   expect(measurements.codeBlockCount).toBe(7);
   expect(measurements.codeBlocksContainOverflow).toBeTruthy();
   expect(measurements.hasInternallyScrollableCode).toBeTruthy();
