@@ -39,14 +39,14 @@
     "@vercel/blob": "^2.6.1",
     "image-dimensions": "^2.5.1",
     "next": "^16.2.12",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",
     "@types/node": "24.13.3",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "eslint": "^9.39.1",
     "eslint-config-next": "^16.2.12",
     "lighthouse": "^13.4.0",
