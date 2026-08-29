@@ -56,6 +56,11 @@ test("homepage renders the hero and key sections", async ({ page }) => {
     }),
   ).toBeVisible();
   await expect(
+    page.getByText(
+      "Software engineer, writer, arcade obsessive, cat person, and incurably curious human in North Carolina.",
+    ),
+  ).toBeVisible();
+  await expect(
     page.getByText("It's a place for things I make, things I love, and the strange connections between them."),
   ).toBeVisible();
   await expect(
@@ -95,6 +100,10 @@ test("homepage renders the hero and key sections", async ({ page }) => {
   await expect(about.getByRole("link", { name: "Beverly and Lucinda" })).toHaveAttribute(
     "href",
     "/cats/beverly-and-lucinda",
+  );
+  await expect(about.getByRole("link", { name: "send me a note" })).toHaveAttribute(
+    "href",
+    "mailto:jason@arcadeghosts.org",
   );
   await expect(about.locator(".section-link-card")).toHaveCount(0);
   await expect(mainNav.locator('a[href="#start-here"]')).toHaveCount(0);

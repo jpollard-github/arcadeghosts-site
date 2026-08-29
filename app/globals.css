@@ -406,6 +406,12 @@ p {
   margin-bottom: 0;
 }
 
+.hero-copy .hero-identity {
+  margin-bottom: 0.9rem;
+  color: #fff4e7;
+  font-weight: 760;
+}
+
 .hero-terminal {
   width: min(100%, 42rem);
   margin-top: 2rem;

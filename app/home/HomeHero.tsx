@@ -51,6 +51,10 @@ export function HomeHero() {
         <p className="eyebrow">Jason Pollard / ArcadeGhosts</p>
         <h1>A personal signal from the neon woods.</h1>
         <div className="hero-copy">
+          <p className="hero-identity">
+            Software engineer, writer, arcade obsessive, cat person, and
+            incurably curious human in North Carolina.
+          </p>
           <p>
             ArcadeGhosts is my personal corner of the internet: writing, cats,
             old arcade ghosts, and pieces of whatever I&apos;m trying to

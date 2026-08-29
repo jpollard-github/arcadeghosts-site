@@ -1,0 +1,4 @@
+interface:
+  display_name: "Object"
+  short_description: "Challenge proposed work before meaningful commitment"
+  default_prompt: "Use $object to assess whether this proposed action is justified by the available evidence."

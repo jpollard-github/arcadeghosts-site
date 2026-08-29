@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { businessContact } from "../lib/business-config";
 
 export function HomeAbout() {
   return (
@@ -19,6 +20,10 @@ export function HomeAbout() {
         <p>
           I live in North Carolina with my cats, {" "}
           <Link href="/cats/beverly-and-lucinda">Beverly and Lucinda</Link>.
+        </p>
+        <p>
+          If something here gives you a reason to continue a conversation, {" "}
+          <a href={businessContact.emailHref}>send me a note</a>.
         </p>
       </div>
     </section>
