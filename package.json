@@ -58,9 +58,6 @@
     "postcss": "^8.5.18",
     "next": {
       "sharp": "^0.35.3"
-    },
-    "@vercel/blob": {
-      "undici": "6.27.0"
     }
   }
 }
