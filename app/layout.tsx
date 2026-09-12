@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
-import { absoluteUrl, siteConfig } from "./seo";
+import { absoluteUrl, defaultOgImageAlt, siteConfig } from "./seo";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -34,20 +34,20 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: siteConfig.url,
     siteName: siteConfig.name,
-    title: siteConfig.title,
+    title: siteConfig.socialTitle,
     description: siteConfig.description,
     images: [
       {
         url: absoluteUrl(siteConfig.ogImage),
         width: 1200,
         height: 630,
-        alt: "ArcadeGhosts neon forest diner social preview",
+        alt: defaultOgImageAlt,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.title,
+    title: siteConfig.socialTitle,
     description: siteConfig.description,
     images: [absoluteUrl(siteConfig.ogImage)],
   },

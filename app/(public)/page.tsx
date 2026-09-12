@@ -13,17 +13,10 @@ import { absoluteUrl, siteConfig } from "../seo";
 import { writings } from "../writings";
 
 export const metadata: Metadata = {
-  title: "Jason Pollard's Writing, Cats, and Arcade Ghosts",
-  description:
-    "ArcadeGhosts is Jason Pollard's personal site for essays, cat photos, arcade nostalgia, and curious little experiments.",
+  title: { absolute: siteConfig.title },
+  description: siteConfig.description,
   alternates: {
     canonical: "/",
-  },
-  openGraph: {
-    title: "ArcadeGhosts | Jason Pollard",
-    description:
-      "Essays, cat photos, arcade nostalgia, and curious little experiments.",
-    url: "/",
   },
 };
 
